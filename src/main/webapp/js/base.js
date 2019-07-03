@@ -66,7 +66,6 @@ function getEnums(name) {
     var item = sessionStorage.getItem(name);
     //判断字典中存在则直接返回
     if (item) {
-        console.log(JSON.parse(item))
         return JSON.parse(item);
     }
     $.ajax({
@@ -119,29 +118,5 @@ function FormatDate(datetime, fmt) {
 
 function closeTab() {
     parent.layui.element.tabDelete('layadmin-layout-tabs', location.pathname + location.search); //删除tab
-}
-
-/**
- * 根据用户编号进行登录
- */
-function bianhaoByLogin(bianhao) {
-    var user;
-    $.ajax({
-        type: "POST", //提交方式
-        url: "/user/bianhaoBYloginOk",//路径
-        async: false,
-        data: {
-            'userBianhao': bianhao,
-        },//数据，这里使用的是Json格式进行传输
-        success: function (response) {//返回数据根据结果进行相应的处理
-            if (response.data.status == 0) {
-                alert(response.data.errmsg)
-                return
-            }
-            user = JSON.parse(response).data;
-            localStorage.setItem("layuiAdmin", JSON.stringify(user));
-        }
-    });
-    return user;
 }
 

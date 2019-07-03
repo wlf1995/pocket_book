@@ -10,13 +10,13 @@ import java.util.List;
 /**
  * The Interface UserService.
  */
-public interface SystemUserServiceI  {
+public interface SystemUserServiceI {
 
-      SystemUser findByUserName(String userName);
+    SystemUser findByUserName(String userName);
 
-      List<SystemUser> getSystemUserByName(String name, int id);
+    List<SystemUser> getSystemUserByName(String name, int id);
 
-      SystemUser getSystemUserByBianhao(String bianhao);
+    SystemUser getSystemUserByBianhao(String bianhao);
 
     /**
      * 获取修改密码天数
@@ -24,7 +24,7 @@ public interface SystemUserServiceI  {
      * @param systemUser_id
      * @return
      */
-      int getUpdatePassWordDay(int systemUser_id);
+    int getUpdatePassWordDay(int systemUser_id);
 
     /**
      * 根据id或者name 获得用户
@@ -41,15 +41,15 @@ public interface SystemUserServiceI  {
     List<String> getUserBianhaoByIds(String ids);
 
     /**
+     * @return com.ibicn.hr.bean.sys.SystemUser
      * @Author 田华健
      * @Description 编辑用户时验证用户名，编号是不是重复
      * @Date 11:38 2019/2/22
      * @Param userName
      * @Param userBianhao
      * @Param id
-     * @return com.ibicn.hr.bean.sys.SystemUser
      **/
-      SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, int id);
+    SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, int id);
 
     Page<SystemUser> list(SystemUser data, BaseModel baseModel);
 

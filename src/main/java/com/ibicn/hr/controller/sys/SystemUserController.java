@@ -2,6 +2,9 @@ package com.ibicn.hr.controller.sys;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ibicn.hr.ENUM.EnumUserStatus;
+import com.ibicn.hr.ENUM.EnumYesOrNo;
+import com.ibicn.hr.bean.sys.Bangongqu;
 import com.ibicn.hr.bean.sys.SystemRole;
 import com.ibicn.hr.bean.sys.SystemUser;
 import com.ibicn.hr.controller.base.BaseController;
@@ -13,10 +16,6 @@ import com.ibicnCloud.util.StringUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.web.subject.WebSubject;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,13 +46,13 @@ public class SystemUserController extends BaseController {
     }
 
     @RequestMapping("get")
-    public Result get(SystemUser data, HttpServletRequest request) {
+    public Result get(SystemUser data) {
         SystemUser user = userService.getById(data.getId());
         return Result.ok(getByMap(user));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(SystemUser data, HttpServletRequest request) {
+    public Result saveOK(SystemUser data) {
         if (StringUtil.isBlank(data.getUserName())) {
             return Result.failure("用户名必填");
         }
@@ -68,19 +67,40 @@ public class SystemUserController extends BaseController {
         if (checkUser != null) {
             return Result.failure("用户编号重复，请重新设置");
         }
-        SystemUser user = new SystemUser();
-        user.setRegTime(new Date());
-        user.setCreatedTime(new Date());
-        user.setUpdateedTime(new Date());
-        user.setEmail(data.getEmail());
-        user.setType(0);
-        user.setUserBianhao(data.getUserBianhao());
-        user.setUserName(data.getUserName());
-        user.setPassword(MD5Util.md5(data.getPassword()));
-        user.setRealName(data.getRealName());
-        user.setUserStatus(data.getUserStatusIndex());
-        user.setUpdatePassWordDay(new Date());
-        userService.save(user);
+        if (data.getUserStatus() == null) {
+            return Result.failure("用户状态不能为空");
+        }
+        if (data.getSex() == null) {
+            return Result.failure("性别不能为空");
+        }
+        if (StringUtil.isEmpty(data.getIdCard())) {
+            return Result.failure("身份证号不能为空");
+        }
+        if (StringUtil.isEmpty(data.getMobile())) {
+            return Result.failure("手机号不能为空");
+        }
+        if (data.getZhengzhiMianmao() == null) {
+            return Result.failure("政治面貌不能为空");
+        }
+        if (StringUtil.isEmpty(data.getBangongquId())) {
+            return Result.failure("办公区不能为空");
+        }
+        if (data.getXueli() == null) {
+            return Result.failure("学历不能为空");
+        }
+        if (data.getRuzhiDate() == null) {
+            return Result.failure("入职时间不能为空");
+        }
+
+        Bangongqu byId = bangongquService.getById(StringUtil.parseInt(data.getBangongquId()));
+        data.setBangongqu(byId);
+        data.setRegTime(new Date());
+        data.setCreatedTime(new Date());
+        data.setUpdateedTime(new Date());
+        data.setPassword(MD5Util.md5(data.getPassword()));
+        data.setUpdatePassWordDay(new Date());
+        data.setZazhiStatus(EnumYesOrNo.YES);
+        userService.save(data);
         return Result.ok();
     }
 
@@ -102,12 +122,58 @@ public class SystemUserController extends BaseController {
         if (checkUser != null) {
             return Result.failure("用户编号重复，请重新设置");
         }
+        if (data.getUserStatus() == null) {
+            return Result.failure("用户状态不能为空");
+        }
+        if (data.getSex() == null) {
+            return Result.failure("性别不能为空");
+        }
+        if (StringUtil.isEmpty(data.getIdCard())) {
+            return Result.failure("身份证号不能为空");
+        }
+        if (StringUtil.isEmpty(data.getMobile())) {
+            return Result.failure("手机号不能为空");
+        }
+        if (data.getZhengzhiMianmao() == null) {
+            return Result.failure("政治面貌不能为空");
+        }
+        if (StringUtil.isEmpty(data.getBangongquId())) {
+            return Result.failure("办公区不能为空");
+        }
+        if (data.getXueli() == null) {
+            return Result.failure("学历不能为空");
+        }
+        if (data.getRuzhiDate() == null) {
+            return Result.failure("入职时间不能为空");
+        }
+        if(data.getLizhiDate()!=null){
+            if(data.getLizhiDate().compareTo(data.getRuzhiDate())==-1){
+                return Result.failure("离职时间不能早于入职时间");
+            }
+            user.setZazhiStatus(EnumYesOrNo.NO);
+        }else {
+            user.setZazhiStatus(EnumYesOrNo.YES);
+        }
+        user.setLizhiDate(data.getLizhiDate());
+        user.setMobile(data.getMobile());
+        user.setSex(data.getSex());
+        user.setChushengRiqi(data.getChushengRiqi());
+        user.setXueli(data.getXueli());
+        user.setZhengzhiMianmao(data.getZhengzhiMianmao());
+        user.setIdCard(data.getIdCard());
+        user.setRuzhiDate(data.getRuzhiDate());
+
         user.setEmail(data.getEmail());
         user.setUserName(data.getUserName());
         if (StringUtil.isNotBlank(data.getPassword())) {
             user.setPassword(MD5Util.md5(data.getPassword()));
             user.setUpdatePassWordDay(new Date());
         }
+        Bangongqu byId = bangongquService.getById(StringUtil.parseInt(data.getBangongquId()));
+        if(byId==null){
+            return Result.failure("办公区不存在");
+        }
+        user.setBangongqu(byId);
         user.setRealName(data.getRealName());
         user.setUserBianhao(data.getUserBianhao());
         user.setUserStatus(data.getUserStatusIndex());
@@ -126,6 +192,23 @@ public class SystemUserController extends BaseController {
         String code = (String) session.getAttribute("checkCode");
         if (!code.equals(vercode)) {
             return Result.failure("验证码不正确");
+        }
+
+        if (StringUtil.isEmpty(user.getUserName())) {
+            return Result.failure("用户名不能为空");
+        }
+        if (StringUtil.isEmpty(user.getPassword())) {
+            return Result.failure("密码不能为空");
+        }
+        SystemUser usesByNameAndBianhaoNoId = userService.getUsesByNameAndBianhaoNoId(user.getUserName(), user.getUserBianhao(), 0);
+        if (usesByNameAndBianhaoNoId == null) {
+            return Result.failure("此用户不存在");
+        }
+        if (usesByNameAndBianhaoNoId.getLizhiDate() != null) {
+            return Result.failure("此用户已离职");
+        }
+        if (usesByNameAndBianhaoNoId.getUserStatus() != null && usesByNameAndBianhaoNoId.getUserStatus().getIndex() == EnumUserStatus.TINGYONG.getIndex()) {
+            return Result.failure("此用户已停用");
         }
         try {
             JSONObject jsonObject = new JSONObject();
@@ -156,42 +239,6 @@ public class SystemUserController extends BaseController {
             e.printStackTrace();
         }
         return Result.ok("出现错误");
-    }
-
-
-    /**
-     * 根据用户编号进行登录方法
-     *
-     * @return
-     */
-    @RequestMapping("/bianhaoBYloginOk")
-    public Result bianhaoBYloginOk(String userBianhao, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (StringUtil.isBlank(userBianhao)) {
-            return Result.failure("未获取到用户编号，无法登陆。请重试");
-        }
-        if (userBianhao.indexOf("&") != -1) {
-            userBianhao = userBianhao.split("&")[0];
-        }
-        if (userBianhao.indexOf("=") != -1) {
-            userBianhao = userBianhao.split("=")[1];
-        }
-        SystemUser user = userService.getSystemUserByBianhao(userBianhao);
-        PrincipalCollection principals = new SimplePrincipalCollection(user, "MobileRealm");
-        WebSubject.Builder builder = new WebSubject.Builder(request, response);
-        builder.principals(principals);
-        builder.authenticated(true);
-        WebSubject subject = builder.buildWebSubject();
-        ThreadContext.bind(subject);
-        CookieUtil.setCookie(request, response, "userName", user.getUserName(), 60 * 60 * 12, true);
-        CookieUtil.setCookie(request, response, "ZongheUrl", systemConfigService.getZongheUrl(), 60 * 60 * 12);
-        CookieUtil.setCookie(request, response, "heSystemId", systemConfigService.getZongheSystemId(), 60 * 60 * 12);
-        CookieUtil.setCookie(request, response, "ZongheToken", systemConfigService.getZongheToken(), 60 * 60 * 12);
-        request.getSession().setAttribute("admin", user);
-        SystemUser user1 = new SystemUser();
-        user1.setRealName(user.getRealName());
-        user1.setId(user.getId());
-        user1.setUserBianhao(user.getUserBianhao());
-        return Result.ok(user1);
     }
 
     /**
@@ -239,7 +286,7 @@ public class SystemUserController extends BaseController {
         String[] id = ids.split(",");
         Set<SystemRole> roles = new HashSet<>();
         for (int i = 0; i < CollectionUtil.size(id); i++) {
-            if(StringUtil.isEmpty(id[i])){
+            if (StringUtil.isEmpty(id[i])) {
                 continue;
             }
             SystemRole role = systemRoleServiceI.getById(StringUtil.parseInt(id[i]));
@@ -253,37 +300,6 @@ public class SystemUserController extends BaseController {
         return Result.ok();
     }
 
-    /**
-     * 用户公司授权
-     */
-    /*@RequestMapping("/saveAuthoCompany")
-    public Result saveAuthoCompany(SystemUser data, String ids, HttpServletRequest request) {
-        SystemUser user = userService.getById(data.getId());
-        if (user == null) {
-            writeString("未获取到用户", null);
-            return;
-        }
-        if (StringUtil.isBlank(ids)) {
-            writeString("", null);
-            return;
-        }
-        String[] id = ids.split(",");
-        Set<Company> companys = new HashSet<>();
-        for (int i = 0; i < CollectionUtil.size(id); i++) {
-            if (StringUtil.parseInt(id[i]) == 0) {
-                continue;
-            }
-            Company company = companyServiceI.getById(StringUtil.parseInt(id[i]));
-            if (company == null) {
-                writeString("未获取到公司", null);
-                return;
-            }
-            companys.add(company);
-        }
-        user.setCompanys(companys);
-        userService.update(user);
-        writeString("", null);
-    }*/
     @RequestMapping("/loginout")
     public Result logout() {
         TokenManager.logout();
@@ -370,7 +386,6 @@ public class SystemUserController extends BaseController {
     private Map getByMap(SystemUser user) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", user.getId());
-        map.put("type", user.getType());
         map.put("realName", user.getRealName());
         map.put("userName", user.getUserName());
         map.put("email", user.getEmail());
@@ -381,33 +396,21 @@ public class SystemUserController extends BaseController {
         map.put("regTime", user.getRegTime());
         map.put("userStatus", user.getUserStatus());
         map.put("avatar", user.getAvatar());
+
+        map.put("mobile", user.getMobile());
+        map.put("sex", user.getSex());
+        map.put("chushengRiqi", user.getChushengRiqi());
+        map.put("xueli", user.getXueli());
+        map.put("zhengzhiMianmao", user.getZhengzhiMianmao());
+        map.put("IdCard", user.getIdCard());
+        map.put("ruzhiDate", user.getRuzhiDate());
+        map.put("lizhiDate", user.getLizhiDate());
+        map.put("zazhiStatus", user.getZazhiStatus());
+        if (user.getBangongqu() != null) {
+            map.put("bangongquId", user.getBangongqu().getId());
+            map.put("bangongquName", user.getBangongqu().getName());
+        }
         return map;
     }
-    /**
-     * 根据当前用户获得用户
-     */
-   /* @RequestMapping("getByuser")
-    public Result getByuser(Integer companyId) {
-        List<SystemUser> getCompany = new ArrayList<>();
-        if (companyId != null) {
-            getCompany = userService.getByCompany(companyId);
-        } else {
-            SystemUser systemUser = userService.getById(TokenManager.getToken().getId());
-            Set<Company> userCompanys = systemUser.getCompanys();
-            for (Company company : userCompanys) {
-                getCompany.addAll(userService.getByCompany(company.getCompanyId()));
-            }
-        }
-        Set<SystemUser> res = new HashSet<>(getCompany);
-        JSONArray array = new JSONArray();
-        for (SystemUser user : res) {
-            JSONObject object = new JSONObject();
-            object.put("id", user.getId());
-            object.put("realName", user.getRealName());
-            array.add(object);
-        }
-        writeString("", array);
-
-    }*/
 
 }

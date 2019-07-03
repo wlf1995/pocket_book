@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +35,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if(StringUtil.isNotEmpty(username)){
-                Predicate p2 = criteriaBuilder.like(root.get("userName"), username);
+                Predicate p2 = criteriaBuilder.equal(root.get("userName"), username);
                 list.add(p2);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
@@ -52,7 +53,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if(StringUtil.isNotEmpty(name)){
-                Predicate p2 = criteriaBuilder.like(root.get("realName"), name);
+                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%"+name+"%");
                 list.add(p2);
             }
             if (id > 0) {
@@ -73,9 +74,13 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-
+            if(StringUtil.isNotEmpty(data.getBangongquId())){
+                Join<Object, Object> bangongqu = root.join("bangongqu");
+                Predicate id = criteriaBuilder.equal(bangongqu.get("id"), data.getBangongquId());
+                list.add(id);
+            }
             if(StringUtil.isNotEmpty(data.getRealName())){
-                Predicate p2 = criteriaBuilder.like(root.get("realName"), data.getRealName());
+                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%"+data.getRealName()+"%");
                 list.add(p2);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
@@ -104,7 +109,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if(StringUtil.isNotEmpty(bianhao)){
-                Predicate p2 = criteriaBuilder.like(root.get("userBianhao"), bianhao);
+                Predicate p2 = criteriaBuilder.equal(root.get("userBianhao"), bianhao);
                 list.add(p2);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
@@ -135,7 +140,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if(StringUtil.isNotEmpty(name)){
-                Predicate p2 = criteriaBuilder.like(root.get("realName"), name);
+                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%"+name+"%");
                 list.add(p2);
             }
             if (id > 0) {

@@ -3,24 +3,22 @@ package com.ibicn.hr.ENUM;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
- * 基本枚举类型，表示信息的状态
+ * 性别
  * @author Administrator
  *
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum EnumBaseStatus implements IntegerValuedEnum  {
-	正常("正常", 0, "正常"),停用("停用", 1, "停用");
-	
-
+public enum EnumSex implements IntegerValuedEnum  {
+    男("男", 0, "男"),女("女", 1, "女");
 	// 成员变量
 	private String name;
 
 	private int index;
-	
+
 	private String description;
-	
+
 	//构造方法
-	private EnumBaseStatus(String name, int index, String description) {
+	private EnumSex(String name, int index, String description) {
 		this.name = name;
 		this.index = index;
 		this.description = description;

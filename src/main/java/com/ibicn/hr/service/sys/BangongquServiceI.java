@@ -11,7 +11,7 @@ public interface BangongquServiceI {
     void delete(Integer id);
 
     /**
-     * 获取所有橘色
+     * 获取所有办公区
      * @return
      */
     List<Bangongqu> getAllBangonqu();

@@ -1,15 +1,11 @@
 package com.ibicn.hr.controller.sys;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.ibicn.hr.bean.sys.SystemMenu;
 import com.ibicn.hr.bean.sys.Bangongqu;
 import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageUtil;
 import com.ibicn.hr.util.Result;
 import com.ibicn.hr.util.StatusCode;
-import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +22,11 @@ public class BangongquController extends BaseController {
     public Result list(Bangongqu data, BaseModel baseModel, HttpServletRequest request) {
         Page<Bangongqu> pr = bangongquService.list(data, baseModel.setOrder("asc"));
         List<Bangongqu> content = pr.getContent();
-        List<Map> list=new ArrayList<>();
-        for(Bangongqu role:content){
+        List<Map> list = new ArrayList<>();
+        for (Bangongqu role : content) {
             list.add(getByMap(role));
         }
-        return Result.ok(PageUtil.getPageUtil(pr,list));
+        return Result.ok(PageUtil.getPageUtil(pr, list));
     }
 
     @RequestMapping("get")
@@ -77,6 +73,18 @@ public class BangongquController extends BaseController {
         bangongquService.delete(id);
         return Result.ok();
     }
+    @RequestMapping("getByDict")
+    public Result getByDict() {
+        List<Bangongqu> content = bangongquService.getAllBangonqu();
+        List<Map> list = new ArrayList<>();
+        for (Bangongqu bangongqu : content) {
+            HashMap<String,Object> map=new HashMap<>();
+            map.put("id", bangongqu.getId());
+            map.put("name", bangongqu.getName());
+            list.add(map);
+        }
+        return Result.ok(list);
+    }
 
     private Result check(Bangongqu data) {
         if (StringUtil.isBlank(data.getName())) {
@@ -85,16 +93,16 @@ public class BangongquController extends BaseController {
         return Result.ok();
     }
 
-    private Map getByMap(Bangongqu data){
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("id",data.getId());
-        map.put("name",data.getName());
-        map.put("bianhao",data.getBianhao());
-        map.put("address",data.getAddress());
-        map.put("cityName",data.getCityName());
-        map.put("longitude",data.getLongitude());
-        map.put("latitude",data.getLatitude());
-        map.put("createdTime",data.getCreatedTime());
+    private Map getByMap(Bangongqu data) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", data.getId());
+        map.put("name", data.getName());
+        map.put("bianhao", data.getBianhao());
+        map.put("address", data.getAddress());
+        map.put("cityName", data.getCityName());
+        map.put("longitude", data.getLongitude());
+        map.put("latitude", data.getLatitude());
+        map.put("createdTime", data.getCreatedTime());
         return map;
     }
 }

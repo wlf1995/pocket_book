@@ -32,7 +32,7 @@ public class SystemRoleServiceImpl implements SystemRoleServiceI {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (StringUtil.isNotEmpty(data.getName())) {
-                Predicate p1 = criteriaBuilder.like(root.get("name"), data.getName());
+                Predicate p1 = criteriaBuilder.like(root.get("name"), "%"+data.getName()+"%");
                 list.add(p1);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));

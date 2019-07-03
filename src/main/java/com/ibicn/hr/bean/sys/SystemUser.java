@@ -2,10 +2,10 @@ package com.ibicn.hr.bean.sys;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ibicn.hr.ENUM.EnumUserStatus;
-import com.ibicn.hr.ENUM.EnumUtil;
+import com.ibicn.hr.ENUM.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -44,15 +44,52 @@ public class SystemUser implements Serializable {
     @Column(name = "realname")
     private String realName;
 
+    @ManyToOne
+    @JoinColumn(name = "bangongquid")
+    private Bangongqu bangongqu;
+    //手机号
+    @Column(name = "mobile")
+    private String mobile;
+    //性别
+    @Column(name = "sex")
+    private EnumSex sex;
+
+    //出生日期
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "chushengriqi")
+    private Date chushengRiqi;
+    //学历
+    @Column(name = "xueli")
+    private EnumXueli xueli;
+
+    //政治面貌
+    @Column(name = "zhengzhimianmao")
+    private EnumZhengzhiMianmao zhengzhiMianmao;
+
+    //身份证号
+    @Column(name = "idcard")
+    private String IdCard;
+
+    //入职时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "ruzhidate")
+    private Date ruzhiDate;
+    //离职时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "lizhidate")
+    private Date lizhiDate;
+
     @Column(name = "creattime")
     private Date createdTime;
     @Column(name = "updatetime")
     private Date updateedTime;
     @Column(name = "updatepasswordday")
     private Date updatePassWordDay;
-
+    //在职状态
+    @Column(name = "zazhistatus")
+    private EnumYesOrNo zazhiStatus;
     /**
-     * 微信头像
+     * 头像
      */
     @Column(name = "avatar")
     private String avatar;
@@ -62,15 +99,16 @@ public class SystemUser implements Serializable {
     private EnumUserStatus userStatus;
 
     @Transient
+    private String xueliIndex;
+    @Transient
+    private String sexIndex;
+    @Transient
+    private String zhengzhiMianmaoIndex;
+    @Transient
     private String userStatusIndex;
 
     @Transient
-    private String projectIds;
-    /**
-     * type为1代表微信登陆
-     */
-    @Column(name = "type")
-    private Integer type;
+    private String bangongquId;
 
     @ManyToMany(targetEntity = SystemRole.class, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -87,17 +125,19 @@ public class SystemUser implements Serializable {
         this.userStatus = (EnumUserStatus) EnumUtil.valueOf(EnumUserStatus.class, userStatusIndex);
     }
 
-    /**
-     * 判断是否是管理组中的人员
-     * @return
-     */
-    public boolean IsAdmin() {
-        for (SystemRole systemRole : roles) {
-            if (systemRole.getName().indexOf("管理") != -1) {
-                return true;
-            }
-        }
-        return false;
+    public void setXueliIndex(String xueliIndex) {
+        this.xueliIndex = xueliIndex;
+        this.xueli = (EnumXueli) EnumUtil.valueOf(EnumXueli.class, xueliIndex);
+    }
+
+    public void setSexIndex(String sexIndex) {
+        this.sexIndex = sexIndex;
+        this.sex = (EnumSex) EnumUtil.valueOf(EnumSex.class, sexIndex);
+    }
+
+    public void setZhengzhiMianmaoIndex(String zhengzhiMianmaoIndex) {
+        this.zhengzhiMianmaoIndex = zhengzhiMianmaoIndex;
+        this.zhengzhiMianmao = (EnumZhengzhiMianmao) EnumUtil.valueOf(EnumZhengzhiMianmao.class, zhengzhiMianmaoIndex);
     }
 
 }

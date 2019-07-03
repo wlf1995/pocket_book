@@ -9,38 +9,55 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/css/element/index.css">
 </head>
 <body>
 <script src="/js/base.js"></script>
-<div class="layui-fluid" >
+<div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
-            <div class="layui-card">
+            <div class="layui-card" id="user">
                 <div class="layui-card-header">用户管理</div>
                 <div class="layui-card-body" style="padding: 15px;">
                     <div class="layui-form-item layui-form" lay-filter="formDIV">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户真实姓名</label>
+                            <label class="layui-form-label">真实姓名</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="realName" id="name" placeholder="用户真实姓名"
                                        autocomplete="off" class="layui-input" search="true">
                             </div>
                         </div>
-
-                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="submit" id="search">搜索</button>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">办公区</label>
+                            <div class="layui-input-inline">
+                                <el-select v-model="bgvalue" filterable placeholder="请选择办公区">
+                                    <el-option
+                                            v-for="item in bangongquList"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item.id">
+                                    </el-option>
+                                </el-select>
+                                <input type="hidden" v-model="bgvalue" name="bangongquId" search="true">
+                            </div>
+                        </div>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="submit" id="search">搜索
+                        </button>
                         <a class="layui-btn" id="opensave" style="width: 250px; background-color: #00a65a">新增用户</a>
                     </div>
                     <hr class="layui-bg-gray">
                 </div>
 
                 <div class="layui-card-body">
-                    <table class="layui-table" id="user" >
+                    <table class="layui-table">
                         <thead>
                         <tr>
                             <th lay-data="{field:'id', width:80, sort: true}">ID</th>
                             <th lay-data="{field:'userName', width:80}">用户名</th>
                             <th lay-data="{field:'user', width:80}">用户编号</th>
                             <th lay-data="{field:'realName', width:80}">真实姓名</th>
+                            <th lay-data="{field:'banggongquName', width:80}">办公区</th>
+                            <th lay-data="{field:'zazhiStatus', width:80}">在职状态</th>
                             <th lay-data="{field:'userStatus.name', width:80}">用户状态</th>
                             <th lay-data="{field:'createdTime', width:80, sort: true}">创建时间</th>
                             <th lay-data="{field:'caozuo', width:80, sort: true}">操作</th>
@@ -52,12 +69,15 @@
                             <td>{{it.userName}}</td>
                             <td>{{it.userBianhao}}</td>
                             <td>{{it.realName}}</td>
+                            <td>{{it.bangongquName}}</td>
+                            <td><span v-if="it.zazhiStatus">{{it.zazhiStatus.name}}</span></td>
                             <td>{{it.userStatus.name}}</td>
                             <td>{{it.createdTime | FormatDate}}</td>
                             <td>
-                                <a class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="detail" v-on:click=openupdate(it.id)>编辑</a>
-                                <a class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="detail" v-on:click=openshouquan(it.id)>角色授权</a>
-                                <a class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="detail" v-on:click=openshouquancompany(it.id)>公司授权</a>
+                                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail"
+                                   v-on:click=openupdate(it.id)>编辑</a>
+                                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail"
+                                   v-on:click=openshouquan(it.id)>角色授权</a>
                             </td>
                         </tr>
                         </tbody>
@@ -74,6 +94,10 @@
 <script>
     $(function () {
         load();
+        $('#search').click(function () {
+            cp = 1;
+            vm.list();
+        });
         $('#opensave').click(function () {
             opensave();
         })

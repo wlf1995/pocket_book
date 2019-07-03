@@ -42,51 +42,12 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">排序号</label>
+                        <label class="layui-form-label">排序号<span style="color: red">*</span></label>
                         <div class="layui-input-block">
                             <input type="text" name="sort" id="sort" save="true" placeholder="排序号" autocomplete="off"
                                    class="layui-input">
                         </div>
                     </div>
-                    <!--<div class="layui-form-item">
-                        <label class="layui-form-label">菜单类型</label>
-                        <div class="layui-input-block layui-form" id="selecttype">
-                            <el-select v-model="value" placeholder="请选择" v-on:change="changeval()" >
-                                <el-option
-                                        v-for="item in options"
-                                        :key="item.index"
-                                        :label="item.name"
-                                        :value="item.index">
-                                </el-option>
-                            </el-select>
-                            <input type="hidden"  id="typeIndex" name="typeIndex" save="true">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">父级菜单</label>
-                        <div class="layui-input-block" id="parent">
-                            <el-select
-                                    v-model="value"
-                                    filterable
-                                    remote
-                                    clearable
-                                    reserve-keyword
-                                    placeholder="请输入名称搜索"
-                                    :remote-method="remoteMethod"
-                                    :loading="loading"
-                                    v-on:change="changeval()" >
-                                <el-option
-                                        v-for="item in options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                </el-option>
-                            </el-select>
-                            <input type="hidden"  id="parentMenu" name="parentMenu.id" save="true" value="0">
-                        </div>
-                    </div>
--->
-
                     <div class="layui-form-item">
                         <label class="layui-form-label">菜单类型</label>
                         <div class="layui-input-block" id="selecttype">

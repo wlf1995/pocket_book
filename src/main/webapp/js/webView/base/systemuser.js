@@ -7,14 +7,18 @@ function load() {
     vm = new Vue({
         el: "#user",
         data: {
-            datas: []
+            bgvalue:'',
+            datas: [],
+            bangongquList:[],
         },
         created: function () {
+            axios({
+                method: 'post',
+                url: '/bangongqu/getByDict',
+            }).then(function (response) {
+                vm.bangongquList=response.data.data;
+            })
             this.list();
-            $('#search').click(function () {
-                cp = 1;
-                vm.list();
-            });
         },
         updated: function () {
             page();
@@ -134,11 +138,26 @@ function getdata(id) {
     var getdata = new Vue({
         el: "#formDIV",
         data: {
+            value:'',
+            bgvalue:'',
+            xueli:'',
+            sex:'',
+            zhengzhiMianmao:'',
+            ruzhiDate:'',
+            lizhiDate:'',
+            chushengRiqi:'',
+            sexoptions:[],
+            xuelioptions:[],
+            zhengzhiMianmaooptions:[],
+            bangongquList:[],
             data: [],
             statusoption:[],
-            value:''
         },
         created: function () {
+            this.sexoptions=getEnums("EnumSex");
+            this.zhengzhiMianmaooptions=getEnums("EnumZhengzhiMianmao");
+            this.xuelioptions=getEnums("EnumXueli");
+            this.statusoption = getEnums('EnumUserStatus');
             axios({
                 method: 'post',
                 url: '/user/get',
@@ -147,10 +166,18 @@ function getdata(id) {
                 }
             }).then(function (response) {
                 getdata.data = response.data.data;
-                getdata.statusoption = getEnums('EnumUserStatus');
-                console.log(getdata.statusoption);
                 getdata.value = response.data.data.userStatus.index;
+                getdata.bgvalue = response.data.data.bangongquId;
+                getdata.xueli = response.data.data.xueli.index;
+                getdata.sex= response.data.data.sex.index;
+                getdata.zhengzhiMianmao= response.data.data.zhengzhiMianmao.index;
                 getdata.changeval();
+            })
+            axios({
+                method: 'post',
+                url: '/bangongqu/getByDict',
+            }).then(function (response) {
+                getdata.bangongquList=response.data.data;
             })
         },
         methods:{
@@ -204,64 +231,37 @@ function userStatus() {
         el: "#selectuserstatus",
         data: {
             value:'',
-            options: []
+            bgvalue:'',
+            xueli:'',
+            sex:'',
+            chushengRiqi:'',
+            ruzhiDate:'',
+            lizhiDate:'',
+            chushengRiqi:'',
+            zhengzhiMianmao:'',
+            options: [],
+            sexoptions:[],
+            xuelioptions:[],
+            zhengzhiMianmaooptions:[],
+            bangongquList:[],
         },
         created: function () {
+            this.options=getEnums("EnumUserStatus");
+            this.sexoptions=getEnums("EnumSex");
+            this.zhengzhiMianmaooptions=getEnums("EnumZhengzhiMianmao");
+            this.xuelioptions=getEnums("EnumXueli");
             axios({
                 method: 'post',
-                url: '/selectEnum',
-                params: {
-                    name:'EnumUserStatus',
-                    index:0
-                }
+                url: '/bangongqu/getByDict',
             }).then(function (response) {
-                selecttype.options=response.data;
-
+                selecttype.bangongquList=response.data.data;
             })
         },
         methods:{
             changeval:function () {
                 $('#userStatusIndex').val(selecttype.value);
-            }
+            },
         }
     })
-}
-
-
-function authoCompany(id) {
-    console.log(id);
-    var ve=new Vue({
-        el: "#companys",
-        data: {
-            data:[],
-            defaultProps: {
-                children: 'childs',
-                label: 'name'
-            },
-            checks:[]
-        },
-        created:function () {
-            this.load(id);
-        },
-        methods:{
-            load:function (id) {
-                axios({
-                    method: 'post',
-                    url: '/user/authoCompany',
-                    params: {
-                        id:id
-                    }
-                }).then(function (response) {
-                    ve.data=response.data.data.companys;
-                    ve.checks=response.data.data.checks;
-
-                })
-                $('#userid').val(id);
-            },
-            getCheckedKeys:function () {
-                $('#ids').val(ve.$refs.companys.getCheckedKeys());
-            }
-        }
-    });
 }
 
