@@ -47,7 +47,7 @@ public interface SystemUserServiceI  {
      * @Param userName
      * @Param userBianhao
      * @Param id
-     * @return com.ibicn.bean.base.SystemUser
+     * @return com.ibicn.hr.bean.sys.SystemUser
      **/
       SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, int id);
 

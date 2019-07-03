@@ -68,8 +68,9 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
 	/**
 	 * 表示当访问拒绝时是否已经处理了；如果返回true表示需要继续处理；如果返回false表示该拦截器实例已经处理了，将直接返回即可。
 	 */
+	@Override
 	protected boolean onAccessDenied(ServletRequest request,
-                                     ServletResponse response) throws Exception {
+									 ServletResponse response) throws Exception {
 		// Subject subject = getSubject(request, response);
 		Subject subject = SecurityUtils.getSubject();
 		if (!subject.isAuthenticated() && !subject.isRemembered()) {

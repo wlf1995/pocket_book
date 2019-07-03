@@ -65,7 +65,6 @@ layui.define(['laytpl', 'layer'], function(exports){
     
     options.data = options.data || {};
     options.headers = options.headers || {};
-    
     if(request.tokenName){
       //自动给参数传入默认 token
       options.data[request.tokenName] = request.tokenName in options.data 
@@ -86,7 +85,7 @@ layui.define(['laytpl', 'layer'], function(exports){
       ,success: function(res){
         var statusCode = response.statusCode;
         //只有 response 的 code 一切正常才执行 done
-        if(res[response.statusName] == statusCode.ok) {
+        if(res[response.statusName] == statusCode.ok||res[response.statusName] == 200) {
           typeof options.done === 'function' && options.done(res);
         }
 
