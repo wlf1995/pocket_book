@@ -47,7 +47,7 @@ function load() {
                     title: false,
                     closeBtn: 0,
                     maxmin: true,
-                    area: ['60%', '40%'],
+                    area: ['60%', '80%'],
                     content: ['/webView/base/bangongqu_update.html'],
                     success: function (layero, index) {
                         var iframe = window['layui-layer-iframe' + index];
@@ -99,7 +99,7 @@ function opensave() {
         title: false,
         closeBtn: 0,
         maxmin: true,
-        area: ['60%', '40%'],
+        area: ['60%', '80%'],
         content: ['/webView/base/bangongqu_save.html'],
         end: function () {
             vm.list();

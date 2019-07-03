@@ -41,29 +41,31 @@ public class BangongquController extends BaseController {
 
     @RequestMapping("saveOK")
     public Result saveOK(Bangongqu data, HttpServletRequest request) {
-        Bangongqu role = new Bangongqu();
         Result check = check(data);
         if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
             return check;
         }
-        role.setName(data.getName());
-        role.setCreatedTime(new Date());
-        bangongquService.save(role);
+        bangongquService.save(data);
         return Result.ok();
     }
 
     @RequestMapping("updateOK")
     public Result updateOK(Bangongqu data, HttpServletRequest request) {
-        Bangongqu role = bangongquService.getById(data.getId());
-        if (role == null) {
-            return Result.failure("未获取到角色");
+        Bangongqu bangongqu = bangongquService.getById(data.getId());
+        if (bangongqu == null) {
+            return Result.failure("未获取到办公区");
         }
         Result check = check(data);
         if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
             return check;
         }
-        role.setName(data.getName());
-        bangongquService.update(role);
+        bangongqu.setName(data.getName());
+        bangongqu.setBianhao(data.getBianhao());
+        bangongqu.setAddress(data.getAddress());
+        bangongqu.setCityName(data.getCityName());
+        bangongqu.setLatitude(data.getLatitude());
+        bangongqu.setLongitude(data.getLongitude());
+        bangongquService.update(bangongqu);
         return Result.ok();
     }
 
