@@ -187,9 +187,6 @@ public class SystemUserController extends BaseController {
         CookieUtil.setCookie(request, response, "heSystemId", systemConfigService.getZongheSystemId(), 60 * 60 * 12);
         CookieUtil.setCookie(request, response, "ZongheToken", systemConfigService.getZongheToken(), 60 * 60 * 12);
         request.getSession().setAttribute("admin", user);
-
-        JSONObject jsonObject = new JSONObject();
-
         SystemUser user1 = new SystemUser();
         user1.setRealName(user.getRealName());
         user1.setId(user.getId());
@@ -201,7 +198,7 @@ public class SystemUserController extends BaseController {
      * 用户角色授权
      */
     @RequestMapping("/authoUser")
-    public Result authoUser(SystemUser data, HttpServletRequest request) {
+    public Result authoUser(SystemUser data) {
         SystemUser user = userService.getById(data.getId());
         if (user == null) {
             return Result.failure("未获取到用户");
@@ -231,17 +228,20 @@ public class SystemUserController extends BaseController {
      * 用户角色授权
      */
     @RequestMapping("/saveAutho")
-    public Result saveAutho(SystemUser data, String ids, HttpServletRequest request) {
+    public Result saveAutho(SystemUser data, String ids) {
         SystemUser user = userService.getById(data.getId());
         if (user == null) {
             return Result.failure("未获取到用户");
         }
         if (StringUtil.isBlank(ids)) {
-            return Result.failure("角色id为空");
+            return Result.failure("必须要有一个角色");
         }
         String[] id = ids.split(",");
         Set<SystemRole> roles = new HashSet<>();
         for (int i = 0; i < CollectionUtil.size(id); i++) {
+            if(StringUtil.isEmpty(id[i])){
+                continue;
+            }
             SystemRole role = systemRoleServiceI.getById(StringUtil.parseInt(id[i]));
             if (role == null) {
                 return Result.failure("未获取到角色");
