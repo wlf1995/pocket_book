@@ -185,8 +185,10 @@ function autho(id) {
                     }
                 }).then(function (response) {
                     ve.data=response.data.data.roles;
+                    if(response.data.data.checks){
+                        $('#ids').val(response.data.data.checks.join(","));
+                    }
                     ve.checks=response.data.data.checks;
-
                 })
                 $('#userid').val(id);
             },
