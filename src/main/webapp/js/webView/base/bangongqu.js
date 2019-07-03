@@ -35,7 +35,6 @@ function load() {
                     url: '/bangongqu/list',
                     params: data
                 }).then(function (response) {
-                    console.log(response)
                     vm.datas = response.data.data.content;
                     total = response.data.data.total;
                 })
