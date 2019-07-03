@@ -6,13 +6,15 @@ import com.ibicn.hr.ENUM.EnumMenuType;
 import com.ibicn.hr.ENUM.EnumUtil;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "systemmenu")
 public class SystemMenu implements Serializable {

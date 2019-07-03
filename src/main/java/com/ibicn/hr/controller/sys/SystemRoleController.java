@@ -118,7 +118,7 @@ public class SystemRoleController extends BaseController {
     }
 
     @RequestMapping("saveAutho")
-    public Result saveAutho(Integer roleid, String ids, HttpServletRequest request) {
+    public Result saveAutho(Integer roleid, String ids) {
         SystemRole role = systemRoleServiceI.getById(roleid);
         if (role == null) {
             return Result.failure("未获取到授权角色");
@@ -137,7 +137,7 @@ public class SystemRoleController extends BaseController {
         }
         role.setMenus(menus);
         systemRoleServiceI.update(role);
-        return Result.ok(role);
+        return Result.ok();
     }
 
 

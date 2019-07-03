@@ -22,17 +22,7 @@ public class TokenManager {
 	 */
 	public static SystemUser getToken(){
 		Object principal = SecurityUtils.getSubject().getPrincipal();
-		String s = JSON.toJSONString(principal);
-		JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(principal));
-		if (jsonObject==null){
-			return null;
-		}
-		SystemUser token = new SystemUser();
-		token.setId(jsonObject.getInteger("id"));
-		token.setUserBianhao(jsonObject.getString("userBianhao"));
-		token.setUserName(jsonObject.getString("userName"));
-		token.setRealName(jsonObject.getString("realName"));
-		token.setAvatar(jsonObject.getString("avatar"));
+		SystemUser token = (SystemUser) principal;
 		return token ;
 	}
 	
