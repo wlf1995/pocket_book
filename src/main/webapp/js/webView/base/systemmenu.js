@@ -37,7 +37,7 @@ function load() {
                 }).then(function (response) {
                     console.log(response.data.data.content);
                     vm.datas = response.data.data.content;
-                    total = response.data.total;
+                    total = response.data.data.total;
                 })
                 layer.close(load);
             },
