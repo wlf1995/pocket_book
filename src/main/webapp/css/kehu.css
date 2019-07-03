@@ -1,0 +1,226 @@
+*{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+}
+body{
+    background: #f2f2f2;
+}
+.back{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 2px solid #cecece;
+    background: #fff;
+}
+.back>a{
+    margin-left: 10px;
+    font-size: 18px;
+    text-decoration: none;
+    color: #333;
+}
+/*搜索栏*/
+.weui-cells{
+    margin-top:0px ;
+    margin-bottom: 10px;
+}
+.button_sp_area{
+    margin-left: 10px;
+    margin-top: 2px;
+}
+.button_sp_two{
+    margin-left: 10px;
+    margin-top: -8px;
+}
+
+/*.search-select{*/
+    /*width: 30%;*/
+/*}*/
+/*.search-input{*/
+    /*width: 50%;*/
+/*}*/
+.weui-cell_select-before .weui-select{
+    width: 100%;
+}
+
+/*.search{*/
+    /*width: 100%;*/
+    /*height: 50px;*/
+    /*background: #fff;*/
+    /*margin-bottom: 10px;*/
+    /*overflow: hidden;*/
+/*}*/
+/*.whole{*/
+    /*width: 74%;*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+    /*float: left;*/
+    /*display: inline;*/
+    /*border: 1px solid #f3f4f8;*/
+    /*border-radius: 20px;*/
+    /*margin-top: 8px;*/
+    /*margin-bottom: 8px;*/
+    /*margin-left: 10%;*/
+    /*overflow: hidden;*/
+    /*background: #f3f4f8;*/
+/*}*/
+/*.weui-cell__hd>.search_type{*/
+    /*width: 30%;*/
+    /*float: left;*/
+    /*display: inline;*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+    /*border: 0;*/
+    /*outline: none;*/
+/*}*/
+/*.search_type>option{*/
+    /*font-size: 12px;*/
+/*}*/
+/*.search_value{*/
+    /*width: 54%;*/
+    /*float: left;*/
+    /*display: inline;*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+    /*border: 0;*/
+    /*outline: none;*/
+    /*padding-left: 10px;*/
+/*}*/
+
+/*.search_input{*/
+    /*width: 54%;*/
+    /*float: left;*/
+    /*display: inline;*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+    /*border: 0;*/
+    /*outline: none;*/
+    /*padding-left: 10px;*/
+    /*background: #f3f4f8;*/
+/*}*/
+/*.weui-cell__hd>.search_type_else{*/
+    /*width: 60%;*/
+    /*float: left;*/
+    /*display: inline;*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+    /*border: 0;*/
+    /*outline: none;*/
+    /*background: #f3f4f8;*/
+/*}*/
+/*.weui-cell_select-before .weui-cell__hd:before {*/
+    /*display: none;*/
+/*}*/
+/*.weui-icon-search{*/
+    /*float: right;*/
+    /*margin-top: 8px;*/
+/*}*/
+/*.search_btn{*/
+    /*width: 10%;*/
+    /*float: left;*/
+    /*display: inline;*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+    /*background: url("/image/search.png") no-repeat 0px 10px;*/
+    /*background-size: contain;*/
+    /*background-color: #f3f4f8;*/
+    /*border: 0;*/
+    /*outline: none;*/
+/*}*/
+/*.cancel{*/
+    /*float: left;*/
+    /*color: #cfcfcf;*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+    /*margin-left: 10px;*/
+    /*margin-top: 10px;*/
+/*}*/
+
+/*订单列表*/
+.order{
+    width: 100%;
+}
+.order-module{
+    width: 100%;
+    background: #fff;
+    margin-bottom: 10px;
+}
+.order-top{
+    overflow: hidden;
+    /*height: 0.8rem;*/
+    /*line-height: 0.8rem;*/
+    border-bottom: 1px solid #e5e5e5;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 10px;
+}
+.order-number{
+    float: left;
+    color: #c7c7c7;
+    margin-top: 12px;
+    font-size: 14px;
+}
+.order-type{
+    float: right;
+    width: 60%;
+}
+.order-condition{
+    float: right;
+    text-align: center;
+    width: 65px;
+    height: 26px;
+    line-height: 26px;
+    /*color: #fff;*/
+    /*border-radius: 15px;*/
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 0;
+}
+.order-condition-else{
+    text-align: center;
+    width: 65px;
+    height: 26px;
+    line-height: 26px;
+    /*color: #fff;*/
+    /*border-radius: 15px;*/
+    font-size: 12px;
+    padding: 0;
+}
+.more{
+    display: none;
+}
+/*三种状态*/
+
+.fail{
+     color: #ff4141;
+    border: 1px solid #ff4141;
+
+}
+.approval{
+    color: #ff9052;
+    border: 1px solid #ff9052;
+}
+
+
+.order-name{
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.order-price{
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.order-bottom{
+    overflow: hidden;
+    margin:5px 10px ;
+    padding-bottom: 10px;
+    color: #cecece;
+}
+.create-name{
+    float: left;
+}
+.create-at{
+    float: right;
+}

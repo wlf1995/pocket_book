@@ -1,0 +1,129 @@
+package com.ibicn.hr.controller.sys;
+
+import com.ibicn.hr.bean.sys.SystemMenu;
+import com.ibicn.hr.controller.base.BaseController;
+import com.ibicn.hr.util.BaseModel;
+import com.ibicn.hr.util.PageUtil;
+import com.ibicn.hr.util.Result;
+import com.ibicn.hr.util.StatusCode;
+import com.ibicnCloud.util.StringUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+@RestController
+@RequestMapping("/systemmenu")
+public class SystemMenuController extends BaseController {
+
+    @RequestMapping("list")
+    public Result list(SystemMenu data, BaseModel baseModel, HttpServletRequest request) {
+        Page<SystemMenu> page = systemMenuServiceI.list(data, baseModel.setOrder("asc").setSort("id,sort"));
+        List<SystemMenu> content = page.getContent();
+        List<Map> list=new ArrayList<>();
+        for(SystemMenu menu:content){
+            list.add(getByMap(menu));
+        }
+        return Result.ok(PageUtil.getPageUtil(page,list));
+    }
+
+    @RequestMapping("get")
+    public Result get(SystemMenu data, HttpServletRequest request) {
+        SystemMenu menu = systemMenuServiceI.getById(data.getId());
+        return Result.ok(getByMap(menu));
+    }
+
+    @RequestMapping("saveOK")
+    public Result saveOK(SystemMenu data, HttpServletRequest request) {
+        SystemMenu menu = new SystemMenu();
+        if (data.getParentMenu() != null && data.getParentMenu().getId() > 0) {
+            SystemMenu parent = systemMenuServiceI.getById(data.getParentMenu().getId());
+            if (menu.isIfSetParent(parent)) {
+                menu.setParentMenu(parent);
+            } else {
+                return Result.failure("不能设置为上级节点,会造成循环!");
+            }
+        }
+        Result check = check(data);
+        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+            return check;
+        }
+        menu.setPath(data.getPath());
+        menu.setIcon(data.getIcon());
+        menu.setName(data.getName());
+        menu.setSort(data.getSort());
+        menu.setType(data.getType());
+        menu.setCreatedTime(new Date());
+        systemMenuServiceI.save(menu);
+        return Result.ok();
+    }
+
+    @RequestMapping("updateOK")
+    public Result updateOK(SystemMenu data, HttpServletRequest request) {
+        SystemMenu menu = systemMenuServiceI.getById(data.getId());
+        if (menu == null) {
+            return Result.failure("未获取到菜单");
+        }
+        if (data.getParentMenu() != null && data.getParentMenu().getId() > 0) {
+            SystemMenu parent = systemMenuServiceI.getById(data.getParentMenu().getId());
+            if (menu.isIfSetParent(parent)) {
+                menu.setParentMenu(parent);
+            } else {
+                return Result.failure("不能设置为上级节点,会造成循环!");
+            }
+        } else {
+            menu.setParentMenu(null);
+        }
+        Result check = check(data);
+        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+            return check;
+        }
+        menu.setIcon(data.getIcon());
+        menu.setName(data.getName());
+        menu.setSort(data.getSort());
+        menu.setType(data.getType());
+        menu.setPath(data.getPath());
+        systemMenuServiceI.update(menu);
+        return Result.ok();
+    }
+
+    @RequestMapping("getParent")
+    public Result getParentMenu(SystemMenu data, HttpServletRequest request) {
+        List<SystemMenu> menuOrNotInMenu = systemMenuServiceI.getMenuOrNotInMenu(data.getName(), data.getId());
+
+        List<Map> list=new ArrayList<>();
+        for(SystemMenu menu:menuOrNotInMenu){
+            list.add(getByMap(menu));
+        }
+        return Result.ok(list);
+    }
+
+
+    private Result check(SystemMenu data) {
+        if (StringUtil.isBlank(data.getPath())) {
+            return Result.failure("路径不能为空");
+        }
+        if (StringUtil.isBlank(data.getName())) {
+            return Result.failure("名称不能为空");
+        }
+        if (data.getSort()!=null) {
+            return Result.failure("顺序不能为空");
+        }
+        if (StringUtil.isBlank(data.getTypeIndex())) {
+            return Result.failure("类型不能为空");
+        }
+        return Result.ok();
+    }
+
+    private Map getByMap(SystemMenu menu){
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("id",menu.getId());
+        map.put("name",menu.getName());
+        map.put("path",menu.getPath());
+        map.put("type",menu.getType());
+        map.put("createdTime",menu.getCreatedTime());
+        return map;
+    }
+}

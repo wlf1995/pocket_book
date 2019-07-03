@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>上传文件</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/css/element/index.css">
+    <style>
+        .layui-form-label {
+            width: 43px;
+            padding-left: 5px;
+        }
+
+        .layui-input-block {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<script src="/js/base.js"></script>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">文件列表</div>
+                <div class="layui-card-body" style="padding: 15px;">
+                    <div class="layui-form-item layui-form" lay-filter="formDIV" id="searchs">
+                        <div class="layui-inline" style="margin-right: 0%;">
+                            <label class="layui-form-label" style="width: 70px;">创建人</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="systemUser.userName" id="name" placeholder="创建人"
+                                       autocomplete="off" class="layui-input" search="true">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">公司</label>
+                            <div class="layui-input-block">
+                                <el-select
+                                        style="width:80%"
+                                        v-model="companysValue"
+                                        filterable
+                                        remote
+                                        clearable
+                                        reserve-keyword
+                                        placeholder="请输入名称搜索"
+                                        :remote-method="remoteMethodCompanys"
+                                        :loading="loading"
+                                        v-on:change="changeval('companys')">
+                                    <el-option
+                                            v-for="company in companys"
+                                            :key="company.companyid"
+                                            :label="company.companyName"
+                                            :value="company.companyid">
+                                    </el-option>
+                                </el-select>
+                                <input type="hidden" id="company" name="company.companyId" search="true">
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="margin-right: 10%;">
+                            <label class="layui-form-label" style="width: 70px;">日期</label>
+                            <div class="layui-input-inline">
+                                <el-date-picker
+                                        v-model="addTime"
+                                        type="daterange"
+                                        unlink-panels
+                                        value-format="yyyy-MM-dd"
+                                        range-separator="至"
+                                        start-placeholder="开始日期"
+                                        end-placeholder="结束日期">
+                                </el-date-picker>
+                                <input type="hidden" name="addTime" id="addTime" search="true">
+                            </div>
+                        </div>
+                        <a class="layui-btn" id="search" style="width:150px; background-color: #00a65a;">搜索</a>
+                        <a class="layui-btn" id="openUpload" style="width:150px; background-color: #00a65a">添加记录</a>
+                    </div>
+
+                    <hr class="layui-bg-gray">
+                </div>
+
+                <div class="layui-card-body" id="upFiletable">
+                    <table class="layui-table" lay-even style="display: none" lay-filter="upFiletable">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'id', width:70, sort: true,event:'id'}">
+                                ID
+                            </th>
+                            <th lay-data="{field:'userName',width:150,   sort: true}">创建人</th>
+                            <th lay-data="{field:'company',width:150,   sort: true}">公司</th>
+                            <th lay-data="{field:'createdTime', width:200,  sort: true}">上传时间</th>
+                            <th lay-data="{field:'note',edit: 'text',event:'note'}">备注</th>
+                            <th lay-data="{field:'file',edit: 'text',event:'note'}">文件</th>
+                            <th lay-data="{field:'caozuo',width:150}">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="item in datas">
+                            <td>{{item.id}}</td>
+                            <td>{{item.systemUser.userName}}</td>
+                            <td>{{item.company.companyName}}</td>
+                            <td>{{item.createdTime | FormatDate}}</td>
+                            <td>{{item.note}}</td>
+                            <td>
+                                <div v-for="(url,index) in item.fileUrls.split(',')" class="layui-btn-group" v-if="url.length>1">
+                                    <a class="layui-btn layui-btn-primary layui-btn-sm"
+                                       :href="url"
+                                       target="_blank">附件{{index+1}}.{{url.toLowerCase().split('.').splice(-1)[0]}}</a>
+                                </div>
+                            </td>
+                            <td>
+                                <a class="layui-btn layui-btn-xs layui-btn-normal"
+                                   lay-event="edit">编辑</a>
+                                <a class="layui-btn layui-btn-xs layui-btn-normal" style="background-color: red"
+                                   lay-event="del">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="layui-card-body" id="page">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/webView/base/upload.js"></script>
+<script>
+    $(function () {
+        load();
+        $('#openUpload').click(function () {
+            opensave();
+        });
+        $('#search').click(function () {
+            $("#addTime").val(selects.addTime);
+            cp = 1;
+            vm.list();
+        });
+        layui.config({
+            base: '/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['table', 'laytpl'], function () {
+            var table = layui.table;
+            //监听工具条
+            table.on('tool(upFiletable)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除此记录么', function (index) {
+                        delData(obj);
+                        obj.del();
+                        layer.close(index);
+                    });
+                }else if(obj.event==='edit'){
+                    openupdate(data.id);
+                }
+
+            });
+        });
+    });
+</script>
+</body>
+</html>

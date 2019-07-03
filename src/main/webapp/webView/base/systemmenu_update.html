@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>菜单管理-新增菜单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/css/element/index.css">
+</head>
+<script src="/js/base.js"></script>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card layui-form" lay-filter="formDIV" id="formDIV">
+
+                <input type="hidden" name="id" id="id" v-model="data.id" update="true">
+                <div class="layui-card-header">修改菜单</div>
+                <div class="layui-card-body" style="padding: 15px;">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">菜单名称<span style="color: red">*</span></label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" update="true" placeholder="菜单名称，10字以内" autocomplete="off"
+                                   class="layui-input" v-model="data.name">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">菜单路径<span style="color: red">*</span></label>
+                        <div class="layui-input-block">
+                            <input type="text" name="path" update="true" placeholder="菜单路径" autocomplete="off"
+                                   class="layui-input" v-model="data.path">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">图标</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="icon" id="icon" update="true" placeholder="图标" autocomplete="off"
+                                   class="layui-input" v-model="data.icon">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">排序号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sort" id="sort" update="true" placeholder="排序号" autocomplete="off"
+                                   class="layui-input" v-model="data.sort">
+
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">菜单类型</label>
+                        <div class="layui-input-block">
+                            <el-select v-model="typeval" placeholder="请选择" v-on:change="changetypeval()">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.index"
+                                        :label="item.name"
+                                        :value="item.index">
+                                </el-option>
+                            </el-select>
+                            <input type="hidden" id="typeIndex" name="typeIndex" update="true">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">父级菜单</label>
+                        <div class="layui-input-block">
+                            <el-select
+                                    v-model="parentval"
+                                    value-model="name"
+                                    filterable
+                                    remote
+                                    clearable
+                                    reserve-keyword
+                                    placeholder="请输入名称搜索"
+                                    :remote-method="remoteMethod"
+                                    :loading="loading"
+                                    v-on:change="changeparentval()">
+                                <el-option
+                                        v-for="item in parents"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                            <input type="hidden" id="parentMenu" name="parentMenu.id" update="true" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="submit"
+                                    onclick="subimitdata('update','/systemmenu/updateOK')">保存
+                            </button>
+                            <a class="layui-btn layui-btn-primary" onclick="clowsview()">取消</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/webView/base/systemmenu.js"></script>
+<script>
+    $(function () {
+    });
+</script>
+</body>
+</html>

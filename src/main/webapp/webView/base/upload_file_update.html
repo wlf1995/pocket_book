@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>修改记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/css/element/index.css">
+    <style>
+        .el-input__inner {
+            height: 38px;
+            width: 113%;
+        }
+
+        .layui-inline {
+            width: 40%;
+        }
+
+        .layui-input {
+            width: 90%;
+        }
+
+        .layui-form-item {
+            margin-left: 20%
+        }
+
+        .layui-textarea {
+            width: 90%;
+        }
+
+        .layui-form-pane .layui-form-label {
+            width: 140px;
+        }
+
+        .el-date-editor.el-input, .el-date-editor.el-input__inner {
+            width: 80%;
+        }
+
+        .layui-edge {
+            display: none;
+        }
+    </style>
+</head>
+<script src="/js/base.js"></script>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+
+            <div class="layui-card">
+                <div class="layui-card-header">修改记录</div>
+                <div class="layui-card-body" style="padding: 15px;" >
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item" id="updateUpLoad">
+                            <div class="layui-inline">
+                                <input type="hidden" name="id" v-model="datas.id"/>
+                                <label class="layui-form-label">公司<span style="color: red;">*</span></label>
+                                <div class="layui-input-block">
+                                    <el-select
+                                            style="width:80%"
+                                            v-model="companysValue"
+                                            filterable
+                                            remote
+                                            clearable
+                                            reserve-keyword
+                                            placeholder="请先选择公司"
+                                            :loading="loading"
+                                            v-on:change="changeval('companys')">
+                                        <el-option
+                                                v-for="company in companys"
+                                                :key="company.companyid"
+                                                :label="company.companyName"
+                                                :value="company.companyid">
+                                        </el-option>
+                                    </el-select>
+                                    <input type="hidden" id="company" name="company.companyId" lay-verify="company"
+                                           save="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text fankui">
+                            <label class="layui-form-label">上传附件</label>
+                            <div class="layui-input-block" id="containerQiniuCardPhoto">
+                                <div class="layui-upload-drag" id="test-upload-drag">
+                                    <i class="layui-icon" id="uploadFiles"></i>
+                                    <p>点击上传，或将文件拖拽到此处</p>
+                                </div>
+                                <p style="font-size: 12px;color:darkgray">
+                                    可上传5个附件每个附件大小不得超过8M。附件支持的格式有：jpg|png|gif|bmp|jpeg|zip|rar|doc|docx|xls|xlsx|pdf</p>
+                            </div>
+                            <div class="layui-input-block" id="fujianDIV">
+                                <input type="hidden" id="fileUrls" name="fileUrls" save="true"/>
+                                <p style="font-size: 12px;color:green" id="qiniuProgressCardPhoto"></p>
+                                <script id="fujianModel" type="text/html">
+                                    <div class="layui-btn-group fujianClass" id="fujian{{ d.id }}" url="{{d.url}}">
+                                        <a class="layui-btn layui-btn-primary layui-btn-sm" href="{{d.url}}"
+                                           target="_blank">附件{{ d.id }}{{d.arr}}</a>
+                                        <a onclick="removeMe(this)"
+                                           class="layui-btn layui-btn-primary layui-btn-sm"><i class="layui-icon">&#xe640;</i></a>
+                                    </div>
+                                </script>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" style="width: 90%;">备注</label>
+                            <div class="layui-input-block">
+                                <textarea name="note" placeholder="请输入备注" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-layout-admin">
+                            <div class="layui-input-block">
+                                <div class="layui-footer" style="left: 0;">
+                                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="submit">保存
+                                    </button>
+                                    <a class="layui-btn layui-btn-primary" onclick="clowsview()">取消</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="/js/webView/base/upload.js"></script>
+<script type="text/javascript" src="/js/plupload/plupload.full.min.js"></script>
+<script type="text/javascript" src="/js/plupload/i18n/zh_CN.js"></script>
+<script type="text/javascript" src="/js/qiniu.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['upload', 'laytpl'], function () {
+        var admin = layui.admin
+            , form = layui.form
+            , laytpl = layui.laytpl
+            ,$ = layui.$;
+        form.render();
+        //自定义验证规则
+        form.verify({
+            company: function (value) {
+                if (!value) {
+                    return '请选择公司';
+                }
+            },
+        });
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            var fileUrls="";
+            $(".fujianClass").each(function() {
+                if (fileUrls != "") {
+                    fileUrls += ',' + $(this).attr("url");
+                } else {
+                    fileUrls += $(this).attr("url");
+                }
+            });
+            $("#fileUrls").val(fileUrls);
+            data.field.fileUrls=fileUrls;
+            openUpdateOK(data);
+            return false;
+        });
+        var uploader = Qiniu.uploader({
+            runtimes: 'html5,flash,html4',
+            browse_button: 'test-upload-drag',
+            uptoken_url: '/config/getToken',
+            container: 'containerQiniuCardPhoto',
+            domain: 'http://cdn.bjguolian.cn/',
+            max_file_size: '8mb',
+            flash_swf_url: '/js/plupload/Moxie.swf',
+            dragdrop: true,
+            drop_element: 'containerQiniuCardPhoto',
+            chunk_size: '4mb',
+            unique_names: true,
+            filters: [{
+                title: 'ImageInfo',
+                extensions: 'jpg,png,gif,bmp,jpeg,zip,rar,doc,docx,xls,xlsx,pdf'
+            }],
+            auto_start: true,
+            init: {
+                'FilesAdded': function (up, files) {
+                    plupload.each(files, function (file) {
+                        // 文件添加进队列后,处理相关的事情
+                    });
+                },
+                'BeforeUpload': function (up, file) {
+                    //文件超过5个,不让上传
+                    var fujianSize = 0;
+                    $(".fujianClass").each(function () { // 遍历多选框
+                        fujianSize++;
+                    });
+                    if (fujianSize >= 5) {
+                        layer.msg("文件超过5个!")
+                        up.stop();
+                    }
+                },
+                'UploadProgress': function (up, file) {
+                    // 每个文件上传时,处理相关的事情
+                    var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+                    $("#qiniuProgressCardPhoto").text("上传进度：" + file.percent + "%；上传速度：" + formetFileSize(file.speed) + "/s ");
+                },
+                'FileUploaded': function (up, file, info) {
+
+                    //获得上传后的文件路径,以及私有空间拼接token
+                    var domain = up.getOption('domain');
+                    var res = $.parseJSON(info);
+                    var sourceLink = '/config/getFile?file=' + domain + res.key;
+                    var pos = "." + sourceLink.replace(/.+\./, "");
+                    var id=$(".fujianClass").length+1;
+                    //获取模板
+                    var data = { //数据
+                        "id": id,
+                        "url": sourceLink,
+                        "arr": pos,
+                    };
+                    var getTpl = fujianModel.innerHTML;
+                    laytpl(getTpl).render(data, function (html) {
+                        $("#fujianDIV").append(html);
+                    });
+                },
+                'Error': function (up, err, errTip) {
+                    //上传出错时,处理相关的事情
+                    $("#uploadasCardPhoto").show();
+                    $("#qiniuProgressCardPhoto").text("错误：" + errTip);
+                },
+                'UploadComplete': function () {
+                    //队列文件处理完毕后,处理相关的事情
+                },
+                'Key': function (up, file) {
+                    // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+                    // 该配置必须要在 unique_names: false , save_key: false 时才生效
+
+                    var key = "";
+                    // do something with key here
+                    return key;
+                }
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

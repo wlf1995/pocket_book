@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>人事信息管理系统</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all"><link>
+  <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all"><link>
+</head>
+<script src="/js/base.js"></script>
+<script src='/layuiadmin/layui/layui.js'></script>
+<body class="layui-layout-body">
+<div id="LAY_app">
+  <div class="layui-layout layui-layout-admin" id="leftmenu">
+    <div class="layui-header">
+      <!-- 头部区域 -->
+      <ul class="layui-nav layui-layout-left">
+        <li class="layui-nav-item layadmin-flexible" >
+          <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+            <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+          </a>
+        </li>
+        <li class="layui-nav-item layui-hide-xs" >
+          <a href="http://www.ibicn.com" target="_blank" title="前台">
+            <i class="layui-icon layui-icon-website"></i>
+          </a>
+        </li>
+        <li class="layui-nav-item" >
+          <a href="javascript:;" layadmin-event="refresh" title="刷新">
+            <i class="layui-icon layui-icon-refresh-3"></i>
+          </a>
+        </li>
+      </ul>
+      <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+
+        <li class="layui-nav-item layui-hide-xs" >
+          <a href="javascript:;" layadmin-event="theme" title="模板">
+            <i class="layui-icon layui-icon-theme"></i>
+          </a>
+        </li>
+
+        <li class="layui-nav-item" >
+          <a href="javascript:;">
+            <cite id="realName">{{realName}}</cite>
+          </a>
+          <dl class="layui-nav-child">
+            <dd><a lay-href="views/set/user/info.html">基本资料</a></dd>
+            <dd><a lay-href="views/set/user/password.html">修改密码</a></dd>
+            <hr>
+            <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
+          </dl>
+        </li>
+
+        <li class="layui-nav-item layui-hide-xs" >
+          <a href="javascript:;" layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
+        </li>
+        <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" >
+          <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 侧边菜单 -->
+    <div class="layui-side layui-side-menu" >
+      <div class="layui-side-scroll">
+        <div class="layui-logo" lay-href="./webView/act/task_list.html">
+          <span style="font-weight: 700;font-size: 20px;">人事信息管理系统</span>
+        </div>
+        <ul class="layui-nav layui-nav-tree" lay-filter="test">
+          <li class="layui-nav-item" v-for="item in menus">
+            <a href="javascript:;">{{item.name}}</a>
+            <dl class="layui-nav-child">
+              <dd v-for="child in item.childs">
+                <a  href="javascript:;" v-bind:lay-href="child.path"  v-bind:lay-tips="child.name" lay-direction="2" style="height: 30px;vertical-align: middle; line-height: 30px;">
+                  <i class="layui-icon layui-icon-danxuankuanghouxuan" style="font-weight: bold;color:#2894FF;margin-top: -14px"></i>
+                  <cite style="vertical-align: middle;">{{child.name}}</cite>
+                </a>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 页面标签 -->
+    <div class="layadmin-pagetabs" id="LAY_app_tabs">
+      <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+      <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+      <div class="layui-icon layadmin-tabs-control layui-icon-down">
+        <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+          <li class="layui-nav-item" >
+            <a href="javascript:;"></a>
+            <dl class="layui-nav-child layui-anim-fadein">
+              <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+              <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+              <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+      <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+        <ul class="layui-tab-title" id="LAY_app_tabsheader">
+          <li v-if="isMobile" lay-id="./webView/act/shenpi.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+          <li v-if="!isMobile" lay-id="./webView/act/task_list.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- 主体内容 -->
+    <div class="layui-body" id="LAY_app_body">
+      <div class="layadmin-tabsbody-item layui-show">
+        <iframe v-if="isMobile" src="./webView/act/shenpi.html" frameborder="0" class="layadmin-iframe"></iframe>
+        <iframe v-if="!isMobile" src="./webView/act/task_list.html" frameborder="0" class="layadmin-iframe"></iframe>
+      </div>
+    </div>
+
+    <!-- 辅助元素，一般用于移动设备下遮罩 -->
+    <div class="layadmin-body-shade" layadmin-event="shade"></div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var indeve=new Vue({
+        el:"#leftmenu",
+        data:{
+            menus:[[${menu}]],
+            realName:[[${realName}]],
+            isMobile:[[${isMobile}]]
+        },
+        created:function () {
+        }
+    });
+    //ios页面不兼容问题
+    var ua = navigator.userAgent.toLowerCase();
+    if(/iphone|ipad|ipod|android/.test(ua)){
+        $(".layui-nav-child ").find("a").removeAttr("lay-tips");
+    }
+    /*]]>*/
+</script>
+
+<script>
+    layui.config({
+        base: './layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use('index', function() {
+        var $ = layui.$
+            , setter = layui.setter
+            , admin = layui.admin
+            , form = layui.form
+            , router = layui.router()
+            , search = router.search;
+    });
+</script>
+
+
+</body>
+</html>

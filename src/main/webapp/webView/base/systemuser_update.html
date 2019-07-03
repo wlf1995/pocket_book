@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户管理-修改用户</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/css/element/index.css">
+</head>
+<script src="/js/base.js"></script>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card layui-form" lay-filter="formDIV" id="formDIV">
+                <div class="layui-card-header">修改用户</div>
+                <div class="layui-card-body" style="padding: 15px;">
+
+                    <input type="hidden" name="id" id="id" v-model="data.id" update="true">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名称<span style="color: red">*</span></label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userName" update="true" placeholder="用户名称，10字以内" autocomplete="off"
+                                   class="layui-input" v-model="data.userName">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="password" update="true" placeholder="密码" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userBianhao" update="true" placeholder="用户编号" autocomplete="off"
+                                   class="layui-input" v-model="data.userBianhao">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">真实姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="realName" update="true" placeholder="真实姓名" autocomplete="off"
+                                   class="layui-input" v-model="data.realName">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">email</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="email" update="true" placeholder="email" autocomplete="off"
+                                   class="layui-input" v-model="data.email">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户状态</label>
+                        <div class="layui-input-block">
+                            <el-select v-model="value" placeholder="请选择" v-on:change="changeval()">
+                                <el-option
+                                        v-for="item in statusoption"
+                                        :key="item.index"
+                                        :label="item.name"
+                                        :value="item.index">
+                                </el-option>
+                            </el-select>
+                            <input type="hidden" id="userStatusIndex" name="userStatusIndex" update="true">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-layout-admin">
+                <div class="layui-input-block">
+                    <div class="layui-footer" style="left: 0;">
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="submit"
+                                onclick="subimitdata('update','/user/updateOK')">保存
+                        </button>
+                        <a class="layui-btn layui-btn-primary" onclick="clowsview()">取消</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/js/webView/base/systemuser.js"></script>
+<script>
+    $(function () {
+    });
+</script>
+</body>
+</html>
