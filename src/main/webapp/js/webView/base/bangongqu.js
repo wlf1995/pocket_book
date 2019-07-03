@@ -35,8 +35,9 @@ function load() {
                     url: '/bangongqu/list',
                     params: data
                 }).then(function (response) {
+                    console.log(response)
                     vm.datas = response.data.data.content;
-                    total = response.data.total;
+                    total = response.data.data.total;
                 })
                 layer.close(load);
             },
