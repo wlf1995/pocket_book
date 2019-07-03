@@ -117,6 +117,7 @@ function getdata(id) {
                     id: id,
                 }
             }).then(function (response) {
+                debugger
                 getdata.data = response.data.data;
                 getdata.options = getEnums('EnumMenuType');
                 getdata.typeval = response.data.data.type.index;
@@ -145,7 +146,7 @@ function getdata(id) {
                         url: '/systemmenu/getParent',
                         params: {
                             name: query,
-                            id: id
+                            id: 0
                         }
                     }).then(function (response) {
                         getdata.parents = response.data.data;
@@ -190,6 +191,7 @@ function selectparent(name, id) {
                         }
                     }).then(function (response) {
                         parentopt.options = response.data.data;
+                        console.log(parentopt.options)
                     })
                 }
             },
@@ -208,19 +210,11 @@ function selectType(index) {
         el: "#selecttype",
         data: {
             value: '',
-            options: []
+            options: getEnums('EnumMenuType')
         },
         created: function () {
-            axios({
-                method: 'post',
-                url: '/selectEnum',
-                params: {
-                    name: 'EnumMenuType',
-                    index: index
-                }
-            }).then(function (response) {
-                selecttype.options = response.data;
-            })
+            // selecttype.options = getEnums('EnumMenuType');
+            // console.log(this.options )
         },
         methods: {
             changeval: function () {

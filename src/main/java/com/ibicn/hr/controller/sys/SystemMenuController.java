@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/systemmenu")
@@ -39,7 +41,8 @@ public class SystemMenuController extends BaseController {
     public Result saveOK(SystemMenu data, HttpServletRequest request) {
         SystemMenu menu = new SystemMenu();
         if (data.getParentMenu() != null && data.getParentMenu().getId() > 0) {
-            SystemMenu parent = systemMenuServiceI.getById(data.getParentMenu().getId());
+            Integer id = data.getParentMenu().getId();
+            SystemMenu parent = systemMenuServiceI.getById(id);
             if (menu.isIfSetParent(parent)) {
                 menu.setParentMenu(parent);
             } else {
@@ -108,7 +111,7 @@ public class SystemMenuController extends BaseController {
         if (StringUtil.isBlank(data.getName())) {
             return Result.failure("名称不能为空");
         }
-        if (data.getSort()!=null) {
+        if (data.getSort()==null) {
             return Result.failure("顺序不能为空");
         }
         if (StringUtil.isBlank(data.getTypeIndex())) {
@@ -122,8 +125,15 @@ public class SystemMenuController extends BaseController {
         map.put("id",menu.getId());
         map.put("name",menu.getName());
         map.put("path",menu.getPath());
+        map.put("sort",menu.getSort());
         map.put("type",menu.getType());
         map.put("createdTime",menu.getCreatedTime());
+        if (menu.getParentMenu()!=null){
+            SystemMenu menu1=new SystemMenu();
+            menu1.setId(menu.getParentMenu().getId());
+            menu1.setName(menu.getParentMenu().getName());
+            map.put("parentMenu",menu1);
+        }
         return map;
     }
 }

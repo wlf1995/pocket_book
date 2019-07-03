@@ -43,9 +43,11 @@ public class SystemMenuServiceImpl implements SystemMenuServiceI {
     public List<SystemMenu> getMenuOrNotInMenu(String name, int id) {
         Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            // 第一个userId为CloudServerDao中的字段，第二个userId为参数
-            Predicate p1 = criteriaBuilder.like(root.get("name"), name);
-            list.add(p1);
+            if (StringUtil.isNotEmpty(name)&&!" ".equals(name)){
+                // 第一个userId为CloudServerDao中的字段，第二个userId为参数
+                Predicate p1 = criteriaBuilder.like(root.get("name"), name);
+                list.add(p1);
+            }
             if (id > 0) {
                 Predicate p2 = criteriaBuilder.equal(root.get("id"), id);
                 list.add(p2);
@@ -180,7 +182,8 @@ public class SystemMenuServiceImpl implements SystemMenuServiceI {
 
     @Override
     public SystemMenu getById(Integer id) {
-        return menuDao.getOne(id);
+        SystemMenu one = menuDao.getOne(id);
+        return one;
     }
 
     @Override

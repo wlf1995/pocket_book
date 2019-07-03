@@ -108,7 +108,7 @@ public class SystemMenu implements Serializable {
             return false;
         }
         SystemMenu systemMenu = (SystemMenu) o;
-        return systemMenu.id .equals(this.id);
+        return systemMenu.id ==(this.id);
     }
 
     /**
