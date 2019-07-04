@@ -15,6 +15,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -149,9 +151,29 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         return hashMap;
     }
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Override
-    public HashMap<String, Object> getRLzhiByDept(String beginDate, String endDate) {
-        return null;
+    public List<HashMap<String,Object>>  getRLzhiByDept(String beginDate, String endDate) {
+        String wheresql = "";
+        String wheresql1 = "";
+        if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
+//            get("ruzhiDate"), DateUtil.getParseDate(beginDate), DateUtil.getParseDateTime(endDate + " 23:59:59"));
+            wheresql += " and ruzhiDate>= ?0 and ruzhiDate<=?1";
+            wheresql1 += " and lizhiDate>= ?0 and lizhiDate<=?1";
+        }
+        Query query = entityManager.createNativeQuery("SELECT d.id, d.NAME," +
+                "( SELECT count( u.id ) FROM systemuser u WHERE u.lizhidate IS NOT NULL AND u.deptid = d.id " + wheresql + " ) as ruzhiCount," +
+                "( SELECT count( u.id ) FROM systemuser u WHERE u.deptid = d.id " + wheresql1 + ") as lizhiCount " +
+                "FROM systemdept d  WHERE 1 = 1 GROUP BY d.id");
+        if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
+            query.setParameter(0,beginDate);
+            query.setParameter(1,endDate+ " 23:59:59");
+        }
+        List<HashMap<String,Object>> resultList = query.getResultList();
+
+        return resultList;
     }
 
     @Override

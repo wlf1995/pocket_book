@@ -408,8 +408,8 @@ public class SystemUserController extends BaseController {
      */
     @RequestMapping("getRLzhiByDept")
     public Result getRLzhiByDept(String beginDate,String endDate){
-        HashMap<String,Object> map= userService.getRLzhiByDept(beginDate,endDate);
-        return Result.ok();
+        List<HashMap<String,Object>> map= userService.getRLzhiByDept(beginDate,endDate);
+        return Result.ok(map);
     }
     private Map getByMap(SystemUser user) {
         Map<String, Object> map = new HashMap<>();

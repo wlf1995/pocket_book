@@ -72,5 +72,5 @@ public interface SystemUserServiceI {
      * @param beginDate
      * @param endDate
      */
-    HashMap<String, Object> getRLzhiByDept(String beginDate, String endDate);
+    List<HashMap<String,Object>> getRLzhiByDept(String beginDate, String endDate);
 }
