@@ -74,18 +74,17 @@ public class SystemDeptController extends BaseController {
         if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
             return check;
         }
-        Boolean die = this.isDie(data.getId(), data.getParentDept().getId());
-        if (die){
-            return Result.failure("设置父部门冲突,请重新选择");
-        }
-        if(data.getParentDept()!=null&&data.getParentDept().getId()==0){
+        if (data.getParentDept()!=null&&data.getParentDept().getId()!=null){
+            Boolean die = this.isDie(data.getId(), data.getParentDept().getId());
+            if (die){
+                return Result.failure("设置父部门冲突,请重新选择");
+            }
+        }else {
             data.setParentDept(null);
         }
         systemDept.setName(data.getName());
         systemDept.setSysUser(data.getSysUser());
-        if (data.getParentDept()!=null){
-            systemDept.setParentDept(data.getParentDept());
-        }
+        systemDept.setParentDept(data.getParentDept());
         systemDeptServiceI.update(systemDept);
         return Result.ok();
     }
