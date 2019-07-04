@@ -109,7 +109,13 @@ public class SystemUser implements Serializable {
 
     @Transient
     private String bangongquId;
+    //所在部门
+    @ManyToOne
+    @JoinColumn(name = "deptid")
+    private SystemDept dept;
 
+    @Transient
+    private String deptid;
     @ManyToMany(targetEntity = SystemRole.class, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "userid", referencedColumnName = "id", nullable = false, updatable = false),

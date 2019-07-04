@@ -5,6 +5,7 @@ import com.ibicn.hr.bean.sys.SystemUser;
 import com.ibicn.hr.util.BaseModel;
 import org.springframework.data.domain.Page;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -42,7 +43,6 @@ public interface SystemUserServiceI {
 
     /**
      * @return com.ibicn.hr.bean.sys.SystemUser
-     * @Author 田华健
      * @Description 编辑用户时验证用户名，编号是不是重复
      * @Date 11:38 2019/2/22
      * @Param userName
@@ -58,4 +58,19 @@ public interface SystemUserServiceI {
     void update(SystemUser user);
 
     SystemUser getById(Integer id);
+
+    /**
+     * @param
+     * @return java.util.HashMap<java.lang.String, java.lang.Object>
+     * @Description 获取在职离职人员统计
+     * @Date 0:42 2019/7/4
+     **/
+    HashMap<String, Object> getRLzhi(Integer deptid,String beginDate,String endDate);
+
+    /**
+     *根据部门统计在职离职人数
+     * @param beginDate
+     * @param endDate
+     */
+    HashMap<String, Object> getRLzhiByDept(String beginDate, String endDate);
 }

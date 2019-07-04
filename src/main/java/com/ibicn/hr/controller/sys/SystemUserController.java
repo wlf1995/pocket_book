@@ -382,7 +382,25 @@ public class SystemUserController extends BaseController {
         }
         return Result.ok(listUser);
     }
+    /**
+     * 入职离职总人数
+     * 可根据部门进行统计,部门为空时为所有
+     * 时间为空时为所有
+     */
+    @RequestMapping("getRLzhi")
+    public Result getRLzhi(Integer deptid,String beginDate,String endDate){
+        HashMap<String,Object> map= userService.getRLzhi(deptid,beginDate,endDate);
+        return Result.ok(map);
+    }
 
+    /**
+     * 入职离职总人数
+     */
+    @RequestMapping("getRLzhiByDept")
+    public Result getRLzhiByDept(String beginDate,String endDate){
+        HashMap<String,Object> map= userService.getRLzhiByDept(beginDate,endDate);
+        return Result.ok();
+    }
     private Map getByMap(SystemUser user) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", user.getId());

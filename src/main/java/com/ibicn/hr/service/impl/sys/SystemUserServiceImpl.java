@@ -4,6 +4,7 @@ import com.ibicn.hr.bean.sys.SystemUser;
 import com.ibicn.hr.dao.sys.SystemUserDao;
 import com.ibicn.hr.service.sys.SystemUserServiceI;
 import com.ibicn.hr.util.BaseModel;
+import com.ibicn.hr.util.DateUtil;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     public SystemUser findByUserName(String username) {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if(StringUtil.isNotEmpty(username)){
+            if (StringUtil.isNotEmpty(username)) {
                 Predicate p2 = criteriaBuilder.equal(root.get("userName"), username);
                 list.add(p2);
             }
@@ -48,12 +50,12 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         }
     }
 
-	@Override
-	public List<SystemUser> getSystemUserByName(String name,int id) {
+    @Override
+    public List<SystemUser> getSystemUserByName(String name, int id) {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if(StringUtil.isNotEmpty(name)){
-                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%"+name+"%");
+            if (StringUtil.isNotEmpty(name)) {
+                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%" + name + "%");
                 list.add(p2);
             }
             if (id > 0) {
@@ -74,13 +76,13 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if(StringUtil.isNotEmpty(data.getBangongquId())){
+            if (StringUtil.isNotEmpty(data.getBangongquId())) {
                 Join<Object, Object> bangongqu = root.join("bangongqu");
                 Predicate id = criteriaBuilder.equal(bangongqu.get("id"), data.getBangongquId());
                 list.add(id);
             }
-            if(StringUtil.isNotEmpty(data.getRealName())){
-                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%"+data.getRealName()+"%");
+            if (StringUtil.isNotEmpty(data.getRealName())) {
+                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%" + data.getRealName() + "%");
                 list.add(p2);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
@@ -105,16 +107,64 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     }
 
     @Override
+    public HashMap<String, Object> getRLzhi(Integer deptid, String beginDate, String endDate) {
+        //入职人数
+        Specification<SystemUser> specification1 = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+            List<Predicate> list = new ArrayList<>();
+            if (deptid != null) {
+                Join<Object, Object> dept = root.join("dept");
+                Predicate id = criteriaBuilder.equal(dept.get("id"), deptid);
+                list.add(id);
+            }
+            if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
+                Predicate ge = criteriaBuilder.between(root.get("ruzhiDate"), DateUtil.getParseDate(beginDate), DateUtil.getParseDateTime(endDate + " 23:59:59"));
+                list.add(ge);
+            }
+//            Predicate p2 = criteriaBuilder.isNull(root.get("lizhiDate"));
+//            list.add(p2);
+            return criteriaBuilder.and(list.toArray(new Predicate[0]));
+        };
+        //离职人数
+        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+            List<Predicate> list = new ArrayList<>();
+            if (deptid != null) {
+                Join<Object, Object> dept = root.join("dept");
+                Predicate id = criteriaBuilder.equal(dept.get("id"), deptid);
+                list.add(id);
+            }
+            if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
+                Predicate ge = criteriaBuilder.between(root.get("lizhiDate"), DateUtil.getParseDate(beginDate), DateUtil.getParseDateTime(endDate + " 23:59:59"));
+                list.add(ge);
+            }
+            Predicate p2 = criteriaBuilder.isNotNull(root.get("lizhiDate"));
+            list.add(p2);
+            return criteriaBuilder.and(list.toArray(new Predicate[0]));
+        };
+
+        long lizhiCount = systemUserDao.count(specification);
+        long ruzhiCount = systemUserDao.count(specification1);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("lizhiCount", lizhiCount);
+        hashMap.put("ruzhiCount", ruzhiCount);
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, Object> getRLzhiByDept(String beginDate, String endDate) {
+        return null;
+    }
+
+    @Override
     public SystemUser getSystemUserByBianhao(String bianhao) {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if(StringUtil.isNotEmpty(bianhao)){
+            if (StringUtil.isNotEmpty(bianhao)) {
                 Predicate p2 = criteriaBuilder.equal(root.get("userBianhao"), bianhao);
                 list.add(p2);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<SystemUser> list =systemUserDao.findAll(specification);
+        List<SystemUser> list = systemUserDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list.get(0);
         }
@@ -139,8 +189,8 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     public List<SystemUser> getUser(String name, int id) {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if(StringUtil.isNotEmpty(name)){
-                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%"+name+"%");
+            if (StringUtil.isNotEmpty(name)) {
+                Predicate p2 = criteriaBuilder.like(root.get("realName"), "%" + name + "%");
                 list.add(p2);
             }
             if (id > 0) {
@@ -175,19 +225,19 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     @Override
     public List<String> getUserBianhaoByIds(String ids) {
         String[] split = ids.split(",");
-        List<Integer> list1 =new ArrayList<>();
-        for (int i=0;i<split.length;i++){
-            if(StringUtil.isEmpty(split[i])){
+        List<Integer> list1 = new ArrayList<>();
+        for (int i = 0; i < split.length; i++) {
+            if (StringUtil.isEmpty(split[i])) {
                 continue;
             }
             list1.add(StringUtil.parseInt(split[i]));
         }
 
         List<SystemUser> list = systemUserDao.findAllById(list1);
-        List<String> bianhaoList=new ArrayList<>();
+        List<String> bianhaoList = new ArrayList<>();
 
         if (CollectionUtil.size(list) > 0) {
-            for (SystemUser user:list){
+            for (SystemUser user : list) {
                 bianhaoList.add(user.getUserBianhao());
             }
             return bianhaoList;
@@ -196,27 +246,27 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     }
 
     /**
+     * @return com.ibicn.hr.bean.sys.SystemUser
      * @Author 田华健
      * @Description 编辑用户时验证用户名，编号是不是重复
      * @Date 11:38 2019/2/22
      * @Param userName
      * @Param userBianhao
      * @Param id
-     * @return com.ibicn.hr.bean.sys.SystemUser
      **/
     @Override
     public SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, int id) {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if(id != 0){
+            if (id != 0) {
                 Predicate p1 = criteriaBuilder.notEqual(root.get("id"), id);
                 list.add(p1);
             }
-            if(StringUtil.isNotBlank(userName)){
+            if (StringUtil.isNotBlank(userName)) {
                 Predicate p2 = criteriaBuilder.equal(root.get("userName"), userName);
                 list.add(p2);
             }
-            if(StringUtil.isNotBlank(userBianhao)){
+            if (StringUtil.isNotBlank(userBianhao)) {
                 Predicate p3 = criteriaBuilder.equal(root.get("userBianhao"), userBianhao);
                 list.add(p3);
             }

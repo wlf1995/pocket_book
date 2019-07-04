@@ -13,16 +13,41 @@
 </head>
 <body>
 <script src="/js/base.js"></script>
-<div class="layui-fluid" >
+<script src="/layuiadmin/lib/extend/echarts.js"></script>
+<div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12">
+        <div class="layui-col-md12" id="index">
             <div class="layui-card">
                 <div class="layui-card-header">
                     <h2>首页</h2>
                 </div>
-
-                <div class="layui-card-body" style="height: 500px">
-                      欢迎进入人事信息管理系统
+                <div class="layui-card-body">
+                    <div align="center">
+                        <h3> 欢迎进入人事信息管理系统</h3>
+                    </div>
+                    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                    <div>
+                        <el-date-picker
+                                v-model="date"
+                                type="daterange"
+                                unlink-panels
+                                value-format="yyyy-MM-dd"
+                                start-placeholder="开始日期"
+                                size="small"
+                                end-placeholder="结束日期">
+                        </el-date-picker>
+                        <el-select v-model="deptId" size="small" placeholder="请选择部门">
+                            <el-option
+                                    v-for="item in deptList"
+                                    :key="item.index"
+                                    :label="item.name"
+                                    :value="item.index">
+                            </el-option>
+                        </el-select>
+                        <el-button type="primary" size="small" @click="zlZhiClick" icon="el-icon-search">搜索</el-button>
+                    </div>
+                    <div id="main" style="height:500px;"></div>
+                    <div id="main1" style="height:500px;"></div>
                 </div>
             </div>
         </div>
@@ -30,6 +55,176 @@
 </div>
 <script>
 
+    var vm = new Vue({
+        el: "#index",
+        data: {
+            date: [],
+            deptId: '',
+            deptList: [],
+        },
+        mounted: function () {
+            genData(this.date, this.deptId);
+            zhuxingtu();
+        },
+        methods: {
+            zlZhiClick: function () {
+                genData(this.date, this.deptId);
+                zhuxingtu();
+            }
+        }
+    });
+
+
+    function genData(date, deptId) {
+        var load = layer.load(1);
+        var parmar = {
+            deptId: deptId,
+        }
+        if (date.length == 2) {
+            parmar.beginDate = date[0];
+            parmar.endDate = date[1];
+        }
+        axios({
+            method: 'post',
+            url: "/user/getZLzhi",
+            params: parmar
+        }).then(function (response) {
+            layer.close(load);
+            if (response.data.code == '200') {
+                var data = response.data.data;
+                if (data.ruzhiCount == '0' && data.lizhiCount == '0') {
+                    alert("入职离职人员为0");
+                }
+                initZLzhi({
+                    text: '人员数量统计',
+                    subtext: '入职/离职',
+                    x: 'top'
+                }, data, "main");
+            }
+            layer.msg(response.data.msg);
+        })
+    }
+
+    //在职离职总人数图
+    function initZLzhi(title, data, tagId) {
+        var legendData = ["入职", "离职"];
+        var seriesData = [];
+        var selected = {};
+        seriesData.push({
+            name: "入职",
+            value: data.ruzhiCount
+        });
+        seriesData.push({
+            name: "离职",
+            value: data.lizhiCount
+        });
+        var option = {
+            title: title,
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+                data: legendData,
+                selected: selected
+            },
+            series: [
+                {
+                    name: '人数',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['40%', '50%'],
+                    data: seriesData,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById(tagId));
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }
+
+function zhuxingtu() {
+
+    // 基于准备好的dom，初始化echarts实例
+
+    var xAxisData = [];
+    var data1 = [];
+    var data2 = [];
+
+    for (var i = 0; i < 10; i++) {
+        xAxisData.push('部门' + i);
+        data1.push(i + 1);
+        data2.push(-(i + 1));
+    }
+    var itemStyle = {
+        normal: {},
+        emphasis: {
+            barBorderWidth: 1,
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowOffsetY: 0,
+            shadowColor: 'rgba(0,0,0,0.5)'
+        }
+    };
+    var myChart = echarts.init(document.getElementById('main1'));
+    // 指定图表的配置项和数据
+    myChart.setOption({
+        // backgroundColor: '#eee',
+        title: {
+            text: '入职/离职柱状图统计'
+        },
+        tooltip: {},
+        legend: {
+            data: ['入职', '离职'],
+            align: 'center',
+            left: 10
+        },
+        xAxis: {
+            data: xAxisData,
+            name: 'X Axis',
+            silent: false,
+            axisLine: {onZero: true},
+            splitLine: {show: false},
+            splitArea: {show: false}
+        },
+        yAxis: {
+            splitArea: {show: false}
+        },
+        grid: {
+            left: 100
+        },
+        series: [
+            {
+                name: '入职',
+                type: 'bar',
+                stack: 'one',
+                itemStyle: itemStyle,
+                data: data1
+            },
+            {
+                name: '离职',
+                type: 'bar',
+                stack: 'one',
+                itemStyle: itemStyle,
+                data: data2
+            },
+
+        ]
+    });
+}
 </script>
 </body>
 </html>

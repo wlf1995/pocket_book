@@ -1,5 +1,7 @@
 package com.ibicn.hr.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,12 +21,29 @@ public class DateUtil {
         String forma1t = simpleDateFormat.format(date);
         return forma1t;
     }
-
+    public static Date parse(String format, String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        Date forma1t = null;
+        try {
+            forma1t = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return forma1t;
+    }
     public static String getFormatDate(Date date) {
         return format(format_DATE, date);
     }
 
     public static String getFormatDateTime(Date date) {
         return format(format_DATE_TIME, date);
+    }
+
+    public static Date getParseDate(String date) {
+        return parse(format_DATE, date);
+    }
+
+    public static Date getParseDateTime(String date) {
+        return parse(format_DATE_TIME, date);
     }
 }
