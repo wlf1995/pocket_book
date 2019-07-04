@@ -40,6 +40,7 @@ function load() {
                     params: data
                 }).then(function (response) {
                     vm.datas = response.data.data.content;
+                    console.log(vm.datas);
                     total = response.data.data.total;
                 })
                 layer.close(load);
@@ -140,6 +141,7 @@ function getdata(id) {
         data: {
             value:'',
             bgvalue:'',
+            deptvalue:'',
             xueli:'',
             sex:'',
             zhengzhiMianmao:'',
@@ -150,6 +152,7 @@ function getdata(id) {
             xuelioptions:[],
             zhengzhiMianmaooptions:[],
             bangongquList:[],
+            deptList:[],
             data: [],
             statusoption:[],
         },
@@ -168,6 +171,7 @@ function getdata(id) {
                 getdata.data = response.data.data;
                 getdata.value = response.data.data.userStatus.index;
                 getdata.bgvalue = response.data.data.bangongquId;
+                getdata.deptvalue = response.data.data.deptId;
                 getdata.xueli = response.data.data.xueli.index;
                 getdata.sex= response.data.data.sex.index;
                 getdata.zhengzhiMianmao= response.data.data.zhengzhiMianmao.index;
@@ -178,6 +182,12 @@ function getdata(id) {
                 url: '/bangongqu/getByDict',
             }).then(function (response) {
                 getdata.bangongquList=response.data.data;
+            })
+            axios({
+                method: 'post',
+                url: '/systemdept/getByDict',
+            }).then(function (response) {
+                getdata.deptList=response.data.data;
             })
         },
         methods:{
@@ -232,6 +242,7 @@ function userStatus() {
         data: {
             value:'',
             bgvalue:'',
+            deptvalue:'',
             xueli:'',
             sex:'',
             chushengRiqi:'',
@@ -244,6 +255,7 @@ function userStatus() {
             xuelioptions:[],
             zhengzhiMianmaooptions:[],
             bangongquList:[],
+            deptList:[],
         },
         created: function () {
             this.options=getEnums("EnumUserStatus");
@@ -255,6 +267,12 @@ function userStatus() {
                 url: '/bangongqu/getByDict',
             }).then(function (response) {
                 selecttype.bangongquList=response.data.data;
+            })
+            axios({
+                method: 'post',
+                url: '/systemdept/getByDict',
+            }).then(function (response) {
+                selecttype.deptList=response.data.data;
             })
         },
         methods:{

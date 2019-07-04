@@ -92,6 +92,11 @@ public class SystemUserController extends BaseController {
             return Result.failure("入职时间不能为空");
         }
 
+        if (data.getDept()!=null&&data.getDept().getId()!=null){
+
+        }else {
+            data.setDept(null);
+        }
         Bangongqu byId = bangongquService.getById(StringUtil.parseInt(data.getBangongquId()));
         data.setBangongqu(byId);
         data.setRegTime(new Date());
@@ -153,6 +158,11 @@ public class SystemUserController extends BaseController {
             user.setZazhiStatus(EnumYesOrNo.NO);
         }else {
             user.setZazhiStatus(EnumYesOrNo.YES);
+        }
+        if (data.getDept()!=null&&data.getDept().getId()!=null){
+            user.setDept(data.getDept());
+        }else {
+            user.setDept(null);
         }
         user.setLizhiDate(data.getLizhiDate());
         user.setMobile(data.getMobile());
@@ -427,6 +437,12 @@ public class SystemUserController extends BaseController {
         if (user.getBangongqu() != null) {
             map.put("bangongquId", user.getBangongqu().getId());
             map.put("bangongquName", user.getBangongqu().getName());
+        }
+        if (user.getDept()!=null){
+            map.put("deptId",user.getDept().getId());
+            map.put("deptName",user.getDept().getName());
+        }else {
+            map.put("deptName","");
         }
         return map;
     }
