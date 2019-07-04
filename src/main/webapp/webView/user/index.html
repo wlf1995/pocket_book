@@ -36,14 +36,14 @@
                                 size="small"
                                 end-placeholder="结束日期">
                         </el-date-picker>
-                        <el-select v-model="deptId" size="small" placeholder="请选择部门">
-                            <el-option
-                                    v-for="item in deptList"
-                                    :key="item.index"
-                                    :label="item.name"
-                                    :value="item.index">
-                            </el-option>
-                        </el-select>
+                        <!--<el-select v-model="deptId" size="small" placeholder="请选择部门">-->
+                            <!--<el-option-->
+                                    <!--v-for="item in deptList"-->
+                                    <!--:key="item.index"-->
+                                    <!--:label="item.name"-->
+                                    <!--:value="item.index">-->
+                            <!--</el-option>-->
+                        <!--</el-select>-->
                         <el-button type="primary" size="small" @click="zlZhiClick" icon="el-icon-search">搜索</el-button>
                     </div>
                     <div align="center"><h3>离职入职统计</h3></div>

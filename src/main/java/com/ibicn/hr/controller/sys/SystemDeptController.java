@@ -33,7 +33,7 @@ public class SystemDeptController extends BaseController {
     SystemDeptDao systemDeptDao;
 
     @RequestMapping("list")
-    public Result list(SystemDept data, BaseModel baseModel, HttpServletRequest request) {
+    public Result list(SystemDept data, BaseModel baseModel) {
         Page<SystemDept> pr = systemDeptServiceI.list(data, baseModel.setOrder("asc"));
         List<SystemDept> content = pr.getContent();
         List<Map> list = new ArrayList<>();
@@ -44,13 +44,13 @@ public class SystemDeptController extends BaseController {
     }
 
     @RequestMapping("get")
-    public Result get(SystemDept data, HttpServletRequest request) {
+    public Result get(SystemDept data) {
         SystemDept role = systemDeptServiceI.getById(data.getId());
         return Result.ok(getByMap(role));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(SystemDept data, HttpServletRequest request) {
+    public Result saveOK(SystemDept data) {
         Result check = check(data);
         if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
             return check;
@@ -91,7 +91,7 @@ public class SystemDeptController extends BaseController {
     }
 
     @RequestMapping("deleteOK")
-    public Result deleteOK(Integer id, HttpServletRequest request) {
+    public Result deleteOK(Integer id) {
         if (id == null) {
             return Result.failure("未获取到办公区");
         }
@@ -112,7 +112,7 @@ public class SystemDeptController extends BaseController {
     }
 
     private Boolean isDie(Integer bijiao,Integer parent){
-        if (bijiao==parent){
+        if (bijiao.intValue()==parent){
             return true;
         }
         Specification<SystemDept> specification = (Specification<SystemDept>) (root, query, criteriaBuilder) -> {
