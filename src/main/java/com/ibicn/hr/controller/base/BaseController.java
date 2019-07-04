@@ -37,6 +37,9 @@ public class BaseController {
     @Autowired
     protected BangongquServiceI bangongquService;
 
+    @Autowired
+    protected SystemDeptServiceI systemDeptServiceI;
+
     protected HttpServletRequest getRequest() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         return request;
