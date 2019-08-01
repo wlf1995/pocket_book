@@ -1,16 +1,15 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.dao.sys.SystemUserDao;
+import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemUserServiceI;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.DateUtil;
+import com.ibicn.hr.util.PageResult;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +29,14 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class SystemUserServiceImpl implements SystemUserServiceI {
+public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implements SystemUserServiceI {
     @Autowired
     SystemUserDao systemUserDao;
+
+    @Autowired
+    public SystemUserServiceImpl(SystemUserDao baseDao) {
+        super(baseDao);
+    }
 
     @Override
     public SystemUser findByUserName(String username) {
@@ -74,8 +78,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     }
 
     @Override
-    public Page<SystemUser> list(SystemUser data, BaseModel baseModel) {
-        Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
+    public PageResult list(SystemUser data, BaseModel baseModel) {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (StringUtil.isNotEmpty(data.getBangongquId())) {
@@ -89,18 +92,8 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        Page<SystemUser> all = systemUserDao.findAll(specification, pageable);
+        PageResult all = super.pageList(specification, baseModel);
         return all;
-    }
-
-    @Override
-    public void save(SystemUser user) {
-        systemUserDao.save(user);
-    }
-
-    @Override
-    public void update(SystemUser user) {
-        systemUserDao.save(user);
     }
 
     @Override
@@ -155,7 +148,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     private EntityManager entityManager;
 
     @Override
-    public List<HashMap<String,Object>>  getRLzhiByDept(String beginDate, String endDate) {
+    public List<HashMap<String, Object>> getRLzhiByDept(String beginDate, String endDate) {
         String wheresql = "";
         String wheresql1 = "";
         if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
@@ -168,10 +161,10 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
                 "( SELECT count( u.id ) FROM systemuser u WHERE u.deptid = d.id " + wheresql1 + ") as lizhiCount " +
                 "FROM systemdept d  WHERE 1 = 1 GROUP BY d.id");
         if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
-            query.setParameter("beginDate",beginDate);
-            query.setParameter("endDate",endDate+ " 23:59:59");
+            query.setParameter("beginDate", beginDate);
+            query.setParameter("endDate", endDate + " 23:59:59");
         }
-        List<HashMap<String,Object>> resultList = query.getResultList();
+        List<HashMap<String, Object>> resultList = query.getResultList();
 
         return resultList;
     }

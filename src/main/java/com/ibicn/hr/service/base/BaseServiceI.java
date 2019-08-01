@@ -15,15 +15,15 @@ import java.util.Map;
  * @param <T>
  * @author 王立方
  */
-public interface BaseServiceJpaI<T> {
+public interface BaseServiceI<T> {
 
-    PageResult list(BaseModel baseModel);
+    PageResult pageList(BaseModel baseModel);
 
-    PageResult list(T data, BaseModel baseModel);
+    PageResult pageList(T data, BaseModel baseModel);
 
-    PageResult list(Specification<T> specification, BaseModel baseModel);
+    PageResult pageList(Specification<T> specification, BaseModel baseModel);
 
-    PageResult list(Specification<T> specification, Pageable pageable);
+    PageResult pageList(Specification<T> specification, Pageable pageable);
 
     List<T> all();
 

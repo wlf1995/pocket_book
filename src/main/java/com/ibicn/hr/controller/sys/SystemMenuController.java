@@ -6,7 +6,6 @@ import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.StringUtil;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +18,8 @@ import java.util.List;
 public class SystemMenuController extends BaseController {
 
     @RequestMapping("list")
-    public Result list(SystemMenu data, BaseModel baseModel, HttpServletRequest request) {
-        Page<SystemMenu> page = systemMenuServiceI.list(data, baseModel.setOrder("asc").setSort("id,sort"));
+    public Result list(SystemMenu data, BaseModel baseModel) {
+        PageResult page = systemMenuServiceI.list(data, baseModel.setOrder("asc").setSort("id,sort"));
         List<SystemMenu> content = page.getContent();
         List<Map> list=new ArrayList<>();
         for(SystemMenu menu:content){
@@ -30,13 +29,13 @@ public class SystemMenuController extends BaseController {
     }
 
     @RequestMapping("get")
-    public Result get(SystemMenu data, HttpServletRequest request) {
+    public Result get(SystemMenu data) {
         SystemMenu menu = systemMenuServiceI.getById(data.getId());
         return Result.ok(getByMap(menu));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(SystemMenu data, HttpServletRequest request) {
+    public Result saveOK(SystemMenu data) {
         SystemMenu menu = new SystemMenu();
         if (data.getParentMenu() != null && data.getParentMenu().getId() > 0) {
             Integer id = data.getParentMenu().getId();
@@ -62,7 +61,7 @@ public class SystemMenuController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(SystemMenu data, HttpServletRequest request) {
+    public Result updateOK(SystemMenu data) {
         SystemMenu menu = systemMenuServiceI.getById(data.getId());
         if (menu == null) {
             return Result.failure("未获取到菜单");
@@ -91,7 +90,7 @@ public class SystemMenuController extends BaseController {
     }
 
     @RequestMapping("getParent")
-    public Result getParentMenu(SystemMenu data, HttpServletRequest request) {
+    public Result getParentMenu(SystemMenu data) {
         List<SystemMenu> menuOrNotInMenu = systemMenuServiceI.getMenuOrNotInMenu(data.getName(), data.getId());
 
         List<Map> list=new ArrayList<>();

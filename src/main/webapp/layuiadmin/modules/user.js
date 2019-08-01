@@ -64,7 +64,6 @@ layui.define('form', function(exports){
               guid:getguid(),
           },
           done: function (ret) {
-              debugger
               $(othis).attr("src", ret.data);
               if (ret.code == 200) {
                   $(othis).attr("src", ret.data);

@@ -30,7 +30,7 @@ public class SystemDeptController extends BaseController {
 
     @RequestMapping("list")
     public Result list(SystemDept data, BaseModel baseModel) {
-        Page<SystemDept> pr = systemDeptServiceI.list(data, baseModel.setOrder("asc"));
+        PageResult pr = systemDeptServiceI.list(data, baseModel.setOrder("asc"));
         List<SystemDept> content = pr.getContent();
         List<Map> list = new ArrayList<>();
         for (SystemDept role : content) {
@@ -61,7 +61,7 @@ public class SystemDeptController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(SystemDept data, HttpServletRequest request) {
+    public Result updateOK(SystemDept data) {
         SystemDept systemDept = systemDeptServiceI.getById(data.getId());
         if (systemDept == null) {
             return Result.failure("未获取到部门");
@@ -90,7 +90,7 @@ public class SystemDeptController extends BaseController {
         if (id == null) {
             return Result.failure("未获取到办公区");
         }
-        systemDeptServiceI.delete(id);
+        systemDeptServiceI.deleteById(id);
         return Result.ok();
     }
     @RequestMapping("getByDict")

@@ -1,10 +1,8 @@
-/*
 package com.ibicn.hr.service.base;
 
 import com.ibicn.hr.dao.base.BaseDaoI;
 import com.ibicn.hr.util.BaseModel;
-import com.ibicn.hr.util.Pageutil;
-import com.ibicnCloud.util.PagedResult;
+import com.ibicn.hr.util.PageResult;
 import com.ibicnCloud.util.StringUtil;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
@@ -19,45 +17,44 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.*;
 
-*/
 /**
  * 基础业务逻辑类，其他service继承此service获得基本的业务
  *
  * @param <T>
  * @author 王立方
- *//*
+ */
 
-public class BaseServiceJpaImpl<T,ID> implements BaseServiceJpaI<T> {
+public class BaseServiceImpl<T> implements BaseServiceI<T> {
     @Autowired
     private EntityManager entityManager;
 
-    private BaseDaoI<T,ID> baseDao;
+    private BaseDaoI<T> baseDao;
 
-    public BaseServiceJpaImpl(BaseDaoI<T,ID> baseDao) {
+    public BaseServiceImpl(BaseDaoI<T> baseDao) {
         this.baseDao = baseDao;
     }
 
     @Override
-    public PagedResult list(BaseModel baseModel) {
+    public PageResult pageList(BaseModel baseModel) {
         Page<T> all = baseDao.findAll(getPageable(baseModel));
-        return Pageutil.getPageResult(all);
+        return PageResult.getPageResult(all);
     }
 
     @Override
-    public PagedResult list(T data, BaseModel baseModel) {
-        return this.list(baseModel);
+    public PageResult pageList(T data, BaseModel baseModel) {
+        return this.pageList(baseModel);
     }
 
     @Override
-    public PagedResult list(Specification<T> specification, BaseModel baseModel) {
-        PagedResult list = this.list(specification, getPageable(baseModel));
+    public PageResult pageList(Specification<T> specification, BaseModel baseModel) {
+        PageResult list = this.pageList(specification, getPageable(baseModel));
         return list;
     }
 
     @Override
-    public PagedResult list(Specification<T> specification, Pageable pageable) {
+    public PageResult pageList(Specification<T> specification, Pageable pageable) {
         Page<T> all = baseDao.findAll(specification, pageable);
-        PagedResult pageResult = Pageutil.getPageResult(all);
+        PageResult pageResult = PageResult.getPageResult(all);
         return pageResult;
     }
 
@@ -86,12 +83,12 @@ public class BaseServiceJpaImpl<T,ID> implements BaseServiceJpaI<T> {
 
     @Override
     public void deleteById(Integer id) {
-        baseDao.deleteById((ID) id);
+        baseDao.deleteById(id);
     }
 
     @Override
     public T getOne(Integer dataId) {
-        T one = baseDao.getOne((ID) dataId);
+        T one = baseDao.getOne(dataId);
         return one;
     }
 
@@ -234,4 +231,3 @@ public class BaseServiceJpaImpl<T,ID> implements BaseServiceJpaI<T> {
         }
     }
 }
-*/

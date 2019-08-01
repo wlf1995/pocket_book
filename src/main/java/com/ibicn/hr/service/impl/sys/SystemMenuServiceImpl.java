@@ -1,15 +1,16 @@
 package com.ibicn.hr.service.impl.sys;
 
 import com.ibicn.hr.ENUM.EnumMenuType;
+import com.ibicn.hr.dao.sys.SystemMenuDao;
 import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.entity.sys.SystemUser;
-import com.ibicn.hr.dao.sys.SystemMenuDao;
+import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemMenuServiceI;
 import com.ibicn.hr.util.BaseModel;
+import com.ibicn.hr.util.PageResult;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,11 +27,14 @@ import java.util.List;
 
 @Transactional
 @Service
-public class SystemMenuServiceImpl implements SystemMenuServiceI {
-
-
+public class SystemMenuServiceImpl extends BaseServiceImpl<SystemMenu> implements SystemMenuServiceI {
     @Autowired
     SystemMenuDao menuDao;
+
+    @Autowired
+    public SystemMenuServiceImpl(SystemMenuDao baseDao) {
+        super(baseDao);
+    }
 
     /**
      * 根据名称搜索菜单,如果传递一个菜单ID则不获取该菜单ID其他的
@@ -43,9 +47,9 @@ public class SystemMenuServiceImpl implements SystemMenuServiceI {
     public List<SystemMenu> getMenuOrNotInMenu(String name, int id) {
         Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if (StringUtil.isNotEmpty(name)&&!" ".equals(name)){
+            if (StringUtil.isNotEmpty(name) && !" ".equals(name)) {
                 // 第一个userId为CloudServerDao中的字段，第二个userId为参数
-                Predicate p1 = criteriaBuilder.like(root.get("name"), "%"+name+"%");
+                Predicate p1 = criteriaBuilder.like(root.get("name"), "%" + name + "%");
                 list.add(p1);
             }
             if (id > 0) {
@@ -71,7 +75,7 @@ public class SystemMenuServiceImpl implements SystemMenuServiceI {
         Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
-            if(type!=null){
+            if (type != null) {
                 Predicate p1 = criteriaBuilder.equal(root.get("type"), type.getIndex());
                 list.add(p1);
             }
@@ -131,7 +135,7 @@ public class SystemMenuServiceImpl implements SystemMenuServiceI {
             Join<Object, Object> parentMenu = root.join("parentMenu", JoinType.LEFT);
             Predicate p1 = criteriaBuilder.isNull(parentMenu.get("id"));
             list.add(p1);
-            if(type!=null){
+            if (type != null) {
                 Predicate p2 = criteriaBuilder.equal(root.get("type"), type.getIndex());
                 list.add(p2);
             }
@@ -187,31 +191,20 @@ public class SystemMenuServiceImpl implements SystemMenuServiceI {
     }
 
     @Override
-    public void save(SystemMenu menu) {
-        menuDao.save(menu);
-    }
-
-    @Override
-    public void update(SystemMenu menu) {
-        menuDao.save(menu);
-    }
-
-
-    @Override
-    public Page<SystemMenu> list(SystemMenu data, BaseModel baseModel) {
+    public PageResult list(SystemMenu data, BaseModel baseModel) {
         Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
 
         Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (StringUtil.isNotEmpty(data.getName())) {
-                Predicate p1 = criteriaBuilder.like(root.get("name"), "%"+data.getName()+"%");
+                Predicate p1 = criteriaBuilder.like(root.get("name"), "%" + data.getName() + "%");
                 list.add(p1);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
 
-        Page<SystemMenu> all = menuDao.findAll(specification, pageable);
+        PageResult all = super.pageList(specification, pageable);
         return all;
     }
 }

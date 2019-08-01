@@ -3,12 +3,13 @@ package com.ibicn.hr.service.sys;
 import com.ibicn.hr.ENUM.EnumMenuType;
 import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.service.base.BaseServiceI;
 import com.ibicn.hr.util.BaseModel;
-import org.springframework.data.domain.Page;
+import com.ibicn.hr.util.PageResult;
 
 import java.util.List;
 
-public interface SystemMenuServiceI{
+public interface SystemMenuServiceI extends BaseServiceI<SystemMenu> {
     /**
      * @Author 王立方
      * @Description 分页查询
@@ -16,7 +17,7 @@ public interface SystemMenuServiceI{
      * @param data, baseModel
      * @return org.springframework.data.domain.Page
      **/
-    Page<SystemMenu> list(SystemMenu data, BaseModel baseModel);
+    PageResult list(SystemMenu data, BaseModel baseModel);
     /**
      * 根据名称搜索菜单,如果传递一个菜单ID则不获取该菜单ID其他的
      * @param name
@@ -62,7 +63,4 @@ public interface SystemMenuServiceI{
 
     SystemMenu getById(Integer id);
 
-    void save(SystemMenu menu);
-
-    void update(SystemMenu menu);
 }

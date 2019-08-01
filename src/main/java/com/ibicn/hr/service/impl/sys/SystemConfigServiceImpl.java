@@ -1,7 +1,8 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.entity.sys.SystemConfig;
 import com.ibicn.hr.dao.sys.SystemConfigDao;
+import com.ibicn.hr.entity.sys.SystemConfig;
+import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemConfigServiceI;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,24 +14,24 @@ import javax.persistence.criteria.Predicate;
 import java.util.List;
 
 /**
- * 
  * @author abel
- *
  */
 @Slf4j
 @Service
 @Transactional
-public class SystemConfigServiceImpl  implements SystemConfigServiceI {
+public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfig> implements SystemConfigServiceI {
     @Autowired
-    SystemConfigDao configDao;
+    public SystemConfigServiceImpl(SystemConfigDao baseDao) {
+        super(baseDao);
+    }
 
     @Override
     public String getValue(String key) {
-        SystemConfig config=this.getConfig(key);
-        if(config!=null){
+        SystemConfig config = this.getConfig(key);
+        if (config != null) {
             return config.getMValue();
         }
-       return "";
+        return "";
     }
 
     private SystemConfig getConfig(String key) {
@@ -39,7 +40,7 @@ public class SystemConfigServiceImpl  implements SystemConfigServiceI {
             Predicate p1 = criteriaBuilder.equal(root.get("mKey"), key);
             return criteriaBuilder.and(p1);
         };
-        List<SystemConfig> result = configDao.findAll(specification);
+        List<SystemConfig> result = super.all(specification);
         if (result != null && result.size() == 1) {
             return result.get(0);
         } else {
@@ -50,21 +51,22 @@ public class SystemConfigServiceImpl  implements SystemConfigServiceI {
 
     @Override
     public void put(String key, String value) {
-        SystemConfig config=this.getConfig(key);
-        if(config==null){
-            config=new SystemConfig();
+        SystemConfig config = this.getConfig(key);
+        if (config == null) {
+            config = new SystemConfig();
             config.setMKey(key);
             config.setMValue(value);
-        }else{
+        } else {
             config.setMValue(value);
         }
-        configDao.save(config);
+        super.save(config);
     }
 
 
     @Override
     public void sendMail(String toAddress, String mailSubject, String mailBody) {
     }
+
     @Override
     public String getZongheUrl() {
         return this.getValue("ZongheUrl");

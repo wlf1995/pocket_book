@@ -20,7 +20,7 @@ public class PageResult<T> {
 
     public PageResult(Page page) {
         this.content = page.getContent();
-        this.total = page.getTotalPages();
+        this.total = (int) page.getTotalElements();
     }
 
     public PageResult(Page page, List list) {
@@ -28,10 +28,22 @@ public class PageResult<T> {
         this.total = page.getTotalPages();
     }
 
+    public PageResult(PageResult page, List list) {
+        this.content = list;
+        this.total = page.getTotal();
+    }
+
+
+    public static PageResult getPageResult(PageResult page, List list) {
+        PageResult pageUtil = new PageResult(page, list);
+        return pageUtil;
+    }
+
     public static PageResult getPageResult(Page page, List list) {
         PageResult pageUtil = new PageResult(page, list);
         return pageUtil;
     }
+
     public static PageResult getPageResult(Page page) {
         PageResult pageUtil = new PageResult(page);
         return pageUtil;

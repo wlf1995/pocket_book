@@ -1,15 +1,14 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.entity.sys.SystemDept;
 import com.ibicn.hr.dao.sys.SystemDeptDao;
+import com.ibicn.hr.entity.sys.SystemDept;
+import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemDeptServiceI;
 import com.ibicn.hr.util.BaseModel;
+import com.ibicn.hr.util.PageResult;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +20,17 @@ import java.util.List;
 
 @Transactional
 @Service
-public class SysDeptServiceImpl implements SystemDeptServiceI {
+public class SysDeptServiceImpl extends BaseServiceImpl<SystemDept> implements SystemDeptServiceI {
     @Autowired
     SystemDeptDao systemDeptDao;
 
+    @Autowired
+    public SysDeptServiceImpl(SystemDeptDao baseDao) {
+        super(baseDao);
+    }
+
     @Override
-    public Page list(SystemDept data, BaseModel baseModel){
-        Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
+    public PageResult list(SystemDept data, BaseModel baseModel) {
         Specification<SystemDept> specification = (Specification<SystemDept>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
@@ -37,8 +40,8 @@ public class SysDeptServiceImpl implements SystemDeptServiceI {
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        Page<SystemDept> all = systemDeptDao.findAll(specification, pageable);
-        return all;
+        PageResult list = super.pageList(specification, baseModel);
+        return list;
     }
 
     @Override
@@ -47,25 +50,9 @@ public class SysDeptServiceImpl implements SystemDeptServiceI {
     }
 
     @Override
-    public void save(SystemDept data) {
-        systemDeptDao.save(data);
-    }
-
-    @Override
-    public void update(SystemDept data) {
-        systemDeptDao.save(data);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        systemDeptDao.deleteById(id);
-    }
-
-
-    @Override
     public List<SystemDept> getAllBangonqu() {
-        List<SystemDept> list=systemDeptDao.findAll();
-        if(CollectionUtil.size(list)>0){
+        List<SystemDept> list = systemDeptDao.findAll();
+        if (CollectionUtil.size(list) > 0) {
             return list;
         }
         return Collections.emptyList();

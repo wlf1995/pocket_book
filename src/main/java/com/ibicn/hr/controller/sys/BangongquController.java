@@ -22,13 +22,13 @@ public class BangongquController extends BaseController {
 
     @RequestMapping("list")
     public Result list(Bangongqu data, BaseModel baseModel) {
-        Page<Bangongqu> pr = bangongquService.list(data, baseModel.setOrder("asc"));
-        List<Bangongqu> content = pr.getContent();
+        PageResult asc = bangongquService.list(data, baseModel.setOrder("asc"));
+        List<Bangongqu> content = asc.getContent();
         List<Map> list = new ArrayList<>();
         for (Bangongqu role : content) {
             list.add(getByMap(role));
         }
-        return Result.ok(PageResult.getPageResult(pr, list));
+        return Result.ok(PageResult.getPageResult(asc, list));
     }
 
     @RequestMapping("get")
@@ -68,7 +68,7 @@ public class BangongquController extends BaseController {
     }
 
     @RequestMapping("deleteOK")
-    public Result deleteOK(Integer id, HttpServletRequest request) {
+    public Result deleteOK(Integer id) {
         if (id == null) {
             return Result.failure("未获取到办公区");
         }

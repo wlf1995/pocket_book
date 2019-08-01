@@ -13,7 +13,6 @@ import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +32,9 @@ public class SystemUserController extends BaseController {
 
     @RequestMapping("list")
     public Result list(SystemUser data, BaseModel baseModel) {
-        Page<SystemUser> pr = userService.list(data, baseModel);
+        PageResult pr = userService.list(data, baseModel);
         List<SystemUser> result = pr.getContent();
-        Vector<Map> userVector = new Vector<>();
+        List<Map> userVector = new ArrayList<>();
         for (SystemUser user : result) {
             userVector.add(getByMap(user));
         }

@@ -1,9 +1,12 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.entity.sys.Bangongqu;
+import com.ibicn.hr.dao.base.BaseDaoI;
 import com.ibicn.hr.dao.sys.BangongquDao;
+import com.ibicn.hr.entity.sys.Bangongqu;
+import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.BangongquServiceI;
 import com.ibicn.hr.util.BaseModel;
+import com.ibicn.hr.util.PageResult;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +24,17 @@ import java.util.List;
 
 @Transactional
 @Service
-public class BangongquServiceImpl implements BangongquServiceI {
+public class BangongquServiceImpl extends BaseServiceImpl<Bangongqu> implements BangongquServiceI {
     @Autowired
     BangongquDao bangongquDao;
 
+    @Autowired
+    public BangongquServiceImpl(BaseDaoI<Bangongqu> baseDao) {
+        super(baseDao);
+    }
+
     @Override
-    public Page list(Bangongqu data, BaseModel baseModel){
+    public PageResult list(Bangongqu data, BaseModel baseModel) {
         Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
         Specification<Bangongqu> specification = (Specification<Bangongqu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
@@ -38,7 +46,7 @@ public class BangongquServiceImpl implements BangongquServiceI {
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
         Page<Bangongqu> all = bangongquDao.findAll(specification, pageable);
-        return all;
+        return PageResult.getPageResult(all);
     }
 
     @Override
@@ -46,15 +54,6 @@ public class BangongquServiceImpl implements BangongquServiceI {
         return bangongquDao.getOne(id);
     }
 
-    @Override
-    public void save(Bangongqu data) {
-        bangongquDao.save(data);
-    }
-
-    @Override
-    public void update(Bangongqu data) {
-        bangongquDao.save(data);
-    }
 
     @Override
     public void delete(Integer id) {
@@ -64,8 +63,8 @@ public class BangongquServiceImpl implements BangongquServiceI {
 
     @Override
     public List<Bangongqu> getAllBangonqu() {
-        List<Bangongqu> list=bangongquDao.findAll();
-        if(CollectionUtil.size(list)>0){
+        List<Bangongqu> list = bangongquDao.findAll();
+        if (CollectionUtil.size(list) > 0) {
             return list;
         }
         return Collections.emptyList();

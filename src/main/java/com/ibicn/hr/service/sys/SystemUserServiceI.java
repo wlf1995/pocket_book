@@ -2,8 +2,9 @@ package com.ibicn.hr.service.sys;
 
 
 import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.service.base.BaseServiceI;
 import com.ibicn.hr.util.BaseModel;
-import org.springframework.data.domain.Page;
+import com.ibicn.hr.util.PageResult;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * The Interface UserService.
  */
-public interface SystemUserServiceI {
+public interface SystemUserServiceI extends BaseServiceI<SystemUser> {
 
     SystemUser findByUserName(String userName);
 
@@ -51,11 +52,8 @@ public interface SystemUserServiceI {
      **/
     SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id);
 
-    Page<SystemUser> list(SystemUser data, BaseModel baseModel);
+    PageResult list(SystemUser data, BaseModel baseModel);
 
-    void save(SystemUser user);
-
-    void update(SystemUser user);
 
     SystemUser getById(Integer id);
 

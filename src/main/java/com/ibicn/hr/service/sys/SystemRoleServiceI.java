@@ -1,23 +1,20 @@
 package com.ibicn.hr.service.sys;
 
 import com.ibicn.hr.entity.sys.SystemRole;
+import com.ibicn.hr.service.base.BaseServiceI;
 import com.ibicn.hr.util.BaseModel;
-import org.springframework.data.domain.Page;
+import com.ibicn.hr.util.PageResult;
 
 import java.util.List;
 
-public interface SystemRoleServiceI   {
+public interface SystemRoleServiceI extends BaseServiceI<SystemRole> {
     /**
      * 获取所有橘色
      * @return
      */
     List<SystemRole> getAllRole();
 
-    Page<SystemRole> list(SystemRole data, BaseModel asc);
+    PageResult list(SystemRole data, BaseModel asc);
 
     SystemRole getById(Integer id);
-
-    void save(SystemRole role);
-
-    void update(SystemRole role);
 }

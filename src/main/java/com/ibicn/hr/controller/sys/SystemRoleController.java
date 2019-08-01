@@ -2,19 +2,17 @@ package com.ibicn.hr.controller.sys;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.entity.sys.SystemRole;
-import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -22,24 +20,24 @@ import java.util.*;
 public class SystemRoleController extends BaseController {
 
     @RequestMapping("list")
-    public Result list(SystemRole data, BaseModel baseModel, HttpServletRequest request) {
-        Page<SystemRole> pr = systemRoleServiceI.list(data, baseModel.setOrder("asc"));
+    public Result list(SystemRole data, BaseModel baseModel) {
+        PageResult pr = systemRoleServiceI.list(data, baseModel.setOrder("asc"));
         List<SystemRole> content = pr.getContent();
-        List<Map> list=new ArrayList<>();
-        for(SystemRole role:content){
+        List<Map> list = new ArrayList<>();
+        for (SystemRole role : content) {
             list.add(getByMap(role));
         }
-        return Result.ok(PageResult.getPageResult(pr,list));
+        return Result.ok(PageResult.getPageResult(pr, list));
     }
 
     @RequestMapping("get")
-    public Result get(SystemRole data, HttpServletRequest request) {
+    public Result get(SystemRole data) {
         SystemRole role = systemRoleServiceI.getById(data.getId());
         return Result.ok(getByMap(role));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(SystemRole data, HttpServletRequest request) {
+    public Result saveOK(SystemRole data) {
         SystemRole role = new SystemRole();
         Result check = check(data);
         if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
@@ -52,7 +50,7 @@ public class SystemRoleController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(SystemRole data, HttpServletRequest request) {
+    public Result updateOK(SystemRole data) {
         SystemRole role = systemRoleServiceI.getById(data.getId());
         if (role == null) {
             return Result.failure("未获取到角色");
@@ -70,10 +68,9 @@ public class SystemRoleController extends BaseController {
      * 授权页面数据展示
      *
      * @param data
-     * @param request
      */
     @RequestMapping("getAuthoData")
-    public Result getAllMenu(SystemRole data, HttpServletRequest request) {
+    public Result getAllMenu(SystemRole data) {
         SystemRole role = systemRoleServiceI.getById(data.getId());
         if (role == null) {
             return Result.failure("未获取到授权角色");
@@ -147,11 +144,11 @@ public class SystemRoleController extends BaseController {
         return Result.ok();
     }
 
-    private Map getByMap(SystemRole role){
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("id",role.getId());
-        map.put("name",role.getName());
-        map.put("createdTime",role.getCreatedTime());
+    private Map getByMap(SystemRole role) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", role.getId());
+        map.put("name", role.getName());
+        map.put("createdTime", role.getCreatedTime());
         return map;
     }
 }
