@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
-    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
     <link rel="stylesheet" href="/css/element/index.css">
 </head>
 <script src="/js/base.js"></script>
@@ -16,24 +16,24 @@
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
-            <div class="layui-card">
+            <div class="layui-card" id="formDIV">
                 <div class="layui-card-header">新增部门</div>
                 <div class="layui-card-body" style="padding: 15px;">
-
+                    <input type="hidden" name="id" id="id" v-model="data.id" update="true">
                     <div class="layui-form-item">
                         <label class="layui-form-label">部门名称<span style="color: red">*</span></label>
                         <div class="layui-input-block">
-                            <input type="text" name="name" save="true" placeholder="部门名称，15字以内" autocomplete="off"
+                            <input type="text" v-model="data.name"  name="name" update="true" placeholder="部门名称，15字以内" autocomplete="off"
                                    class="layui-input">
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">部门领导</label>
-                        <div class="layui-input-block" id="lingdao">
+                        <div class="layui-input-block" >
                             <el-select
-                                    v-model="value"
-                                    value-model="name"
+                                    v-model="sysUserId"
+                                    value-model="realName"
                                     filterable
                                     remote
                                     clearable
@@ -42,28 +42,28 @@
                                     :remote-method="remoteMethod"
                                     v-on:change="changeval()">
                                 <el-option
-                                        v-for="item in options"
+                                        v-for="item in useroptions"
                                         :key="item.id"
                                         :label="item.realName   "
                                         :value="item.id">
                                 </el-option>
                             </el-select>
-                            <input type="hidden" id="sysUser" name="sysUser.id" save="true" value="0">
+                            <input type="hidden" v-model="sysUserId" id="sysUser" name="sysUser.id" update="true" value="0">
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">父级部门</label>
-                        <div class="layui-input-block" id="parent">
-                            <el-select v-model="value" clearable filterable placeholder="请选择">
+                        <div class="layui-input-block" >
+                            <el-select v-model="parentDeptId" clearable filterable placeholder="请选择">
                                 <el-option
-                                        v-for="item in options"
+                                        v-for="item in parentoptions"
                                         :key="item.name"
                                         :label="item.name"
                                         :value="item.id">
                                 </el-option>
                             </el-select>
-                            <input type="hidden" v-model="value" name="parentDept.id" save="true" value="0">
+                            <input type="hidden" v-model="parentDeptId" name="parentDept.id" update="true" value="0">
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div class="layui-input-block">
                         <div class="layui-footer" style="left: 0;">
                             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="submit"
-                                    onclick="subimitdata('save','/systemdept/saveOK')">保存
+                                    onclick="subimitdata('update','/systemdept/updateOK')">保存
                             </button>
                             <a class="layui-btn layui-btn-primary" onclick="clowsview()">取消</a>
                         </div>
@@ -84,8 +84,7 @@
 <script src="/js/webView/base/systemdept.js"></script>
 <script>
     $(function () {
-        selectuser();
-        selectparent();
+
     });
 </script>
 </body>

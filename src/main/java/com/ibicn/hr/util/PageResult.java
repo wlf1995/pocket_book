@@ -10,7 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 public class PageResult<T> {
+    //总记录数
     private int total = 0;
+    //数据
     private List<T> content = new ArrayList<>();
 
     public PageResult() {
