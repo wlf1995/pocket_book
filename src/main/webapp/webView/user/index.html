@@ -37,12 +37,12 @@
                                 end-placeholder="结束日期">
                         </el-date-picker>
                         <!--<el-select v-model="deptId" size="small" placeholder="请选择部门">-->
-                            <!--<el-option-->
-                                    <!--v-for="item in deptList"-->
-                                    <!--:key="item.index"-->
-                                    <!--:label="item.name"-->
-                                    <!--:value="item.index">-->
-                            <!--</el-option>-->
+                        <!--<el-option-->
+                        <!--v-for="item in deptList"-->
+                        <!--:key="item.index"-->
+                        <!--:label="item.name"-->
+                        <!--:value="item.index">-->
+                        <!--</el-option>-->
                         <!--</el-select>-->
                         <el-button type="primary" size="small" @click="zlZhiClick" icon="el-icon-search">搜索</el-button>
                     </div>
@@ -102,8 +102,9 @@
                     // subtext: '入职/离职',
                     x: 'top'
                 }, data, "main");
+            } else {
+                layer.msg(response.data.msg);
             }
-            layer.msg(response.data.msg);
         })
     }
 
@@ -121,8 +122,9 @@
             if (response.data.code == '200') {
                 console.log(response.data)
                 zhuxingtu(response.data.data);
+            } else {
+                layer.msg(response.data.msg);
             }
-            layer.msg(response.data.msg);
         })
     }
 

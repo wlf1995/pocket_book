@@ -1,6 +1,6 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.bean.sys.SystemConfig;
+import com.ibicn.hr.entity.sys.SystemConfig;
 import com.ibicn.hr.dao.sys.SystemConfigDao;
 import com.ibicn.hr.service.sys.SystemConfigServiceI;
 import lombok.extern.slf4j.Slf4j;

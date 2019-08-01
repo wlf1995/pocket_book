@@ -1,6 +1,6 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.bean.sys.SystemDept;
+import com.ibicn.hr.entity.sys.SystemDept;
 import com.ibicn.hr.dao.sys.SystemDeptDao;
 import com.ibicn.hr.service.sys.SystemDeptServiceI;
 import com.ibicn.hr.util.BaseModel;

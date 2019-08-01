@@ -1,20 +1,16 @@
 package com.ibicn.hr.controller.sys;
 
 import com.ibicn.hr.ENUM.EnumBaseStatus;
-import com.ibicn.hr.bean.sys.SystemDept;
-import com.ibicn.hr.bean.sys.SystemUser;
+import com.ibicn.hr.entity.sys.SystemDept;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.dao.sys.SystemDeptDao;
 import com.ibicn.hr.util.BaseModel;
-import com.ibicn.hr.util.PageUtil;
+import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
-import com.ibicn.hr.util.StatusCode;
 import com.ibicnCloud.util.StringUtil;
-import org.apache.tools.ant.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +36,7 @@ public class SystemDeptController extends BaseController {
         for (SystemDept role : content) {
             list.add(getByMap(role));
         }
-        return Result.ok(PageUtil.getPageUtil(pr, list));
+        return Result.ok(PageResult.getPageResult(pr, list));
     }
 
     @RequestMapping("get")
@@ -52,7 +48,7 @@ public class SystemDeptController extends BaseController {
     @RequestMapping("saveOK")
     public Result saveOK(SystemDept data) {
         Result check = check(data);
-        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+        if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
         if(data.getParentDept()!=null&&data.getParentDept().getId()==0){
@@ -71,7 +67,7 @@ public class SystemDeptController extends BaseController {
             return Result.failure("未获取到部门");
         }
         Result check = check(data);
-        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+        if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
         if (data.getParentDept()!=null&&data.getParentDept().getId()!=null){

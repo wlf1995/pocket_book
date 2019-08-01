@@ -2,10 +2,9 @@ package com.ibicn.hr.controller.base;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ibicn.hr.bean.sys.SystemMenu;
-import com.ibicn.hr.bean.sys.SystemUser;
+import com.ibicn.hr.entity.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.service.sys.*;
-import com.ibicn.hr.util.CookieUtil;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.List;
 
 /**
  * @author wzg
- * @ClassName projectcontroller
+ * @ClassName BaseController
  * @date 2018年5月4日
  */
 public class BaseController {
@@ -53,6 +53,37 @@ public class BaseController {
 
 
     /**
+     * 得到当前登录用户
+     */
+    public SystemUser getUser() {
+        Principal principal = getRequest().getUserPrincipal();
+        String userName = principal.getName();
+        SystemUser curUser = null;
+        if (StringUtil.isNotBlank(userName)) {
+            curUser = userService.findByUserName(userName);
+        } else {
+            return null;
+        }
+        return curUser;
+    }
+
+    /**
+     * 判断是否是移动端
+     *
+     * @param request
+     * @return
+     */
+    public boolean isMobileClient(HttpServletRequest request) {
+        String agent = request.getHeader("User-Agent").toLowerCase();
+        if (agent.indexOf("ipad") > -1 || agent.indexOf("android") > -1 || agent.indexOf("phone") > -1
+                || agent.indexOf("tablet") > -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 递归查找子菜单
      *
      * @param id       当前菜单id
@@ -83,46 +114,5 @@ public class BaseController {
             object.put("childs", getChild(object.getInteger("id"), rootMenu));
         }
         return array;
-    }
-
-    /**
-     * 得到当前登录用户
-     */
-    public SystemUser getUser(HttpServletRequest request) {
-        String userName = CookieUtil.getCookieValue(request, "userName");
-        SystemUser curUser = null;
-        if (StringUtil.isNotBlank(userName)) {
-            curUser = userService.findByUserName(userName);
-        } else {
-            return null;
-        }
-        return curUser;
-    }
-
-    public SystemUser getUser() {
-        String userName = CookieUtil.getCookieValue(getRequest(), "userName");
-        SystemUser curUser = null;
-        if (StringUtil.isNotBlank(userName)) {
-            curUser = userService.findByUserName(userName);
-        } else {
-            return null;
-        }
-        return curUser;
-    }
-
-    /**
-     * 判断是否是移动端
-     *
-     * @param request
-     * @return
-     */
-    public boolean isMobileClient(HttpServletRequest request) {
-        String agent = request.getHeader("User-Agent").toLowerCase();
-        if (agent.indexOf("ipad") > -1 || agent.indexOf("android") > -1 || agent.indexOf("phone") > -1
-                || agent.indexOf("tablet") > -1) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

@@ -2,28 +2,24 @@ package com.ibicn.hr.controller.sys;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ibicn.hr.ENUM.EnumUserStatus;
 import com.ibicn.hr.ENUM.EnumYesOrNo;
-import com.ibicn.hr.bean.sys.Bangongqu;
-import com.ibicn.hr.bean.sys.SystemRole;
-import com.ibicn.hr.bean.sys.SystemUser;
 import com.ibicn.hr.controller.base.BaseController;
-import com.ibicn.hr.shiro.token.TokenManager;
-import com.ibicn.hr.util.*;
+import com.ibicn.hr.entity.sys.Bangongqu;
+import com.ibicn.hr.entity.sys.SystemRole;
+import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.util.BaseModel;
+import com.ibicn.hr.util.PageResult;
+import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.CollectionUtil;
-import com.ibicnCloud.util.MD5Util;
 import com.ibicnCloud.util.StringUtil;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.*;
 
 import static com.ibicn.hr.config.RespData.writeString;
@@ -32,6 +28,8 @@ import static com.ibicn.hr.config.RespData.writeString;
 @RestController
 @RequestMapping("/user")
 public class SystemUserController extends BaseController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping("list")
     public Result list(SystemUser data, BaseModel baseModel) {
@@ -41,7 +39,7 @@ public class SystemUserController extends BaseController {
         for (SystemUser user : result) {
             userVector.add(getByMap(user));
         }
-        PageUtil pageUtil = PageUtil.getPageUtil(pr, userVector);
+        PageResult pageUtil = PageResult.getPageResult(pr, userVector);
         return Result.ok(pageUtil);
     }
 
@@ -92,9 +90,9 @@ public class SystemUserController extends BaseController {
             return Result.failure("入职时间不能为空");
         }
 
-        if (data.getDept()!=null&&data.getDept().getId()!=null){
+        if (data.getDept() != null && data.getDept().getId() != null) {
 
-        }else {
+        } else {
             data.setDept(null);
         }
         Bangongqu byId = bangongquService.getById(StringUtil.parseInt(data.getBangongquId()));
@@ -102,7 +100,7 @@ public class SystemUserController extends BaseController {
         data.setRegTime(new Date());
         data.setCreatedTime(new Date());
         data.setUpdateedTime(new Date());
-        data.setPassword(MD5Util.md5(data.getPassword()));
+        data.setPassword(passwordEncoder.encode(data.getPassword()));
         data.setUpdatePassWordDay(new Date());
         data.setZazhiStatus(EnumYesOrNo.YES);
         userService.save(data);
@@ -151,17 +149,17 @@ public class SystemUserController extends BaseController {
         if (data.getRuzhiDate() == null) {
             return Result.failure("入职时间不能为空");
         }
-        if(data.getLizhiDate()!=null){
-            if(data.getLizhiDate().compareTo(data.getRuzhiDate())==-1){
+        if (data.getLizhiDate() != null) {
+            if (data.getLizhiDate().compareTo(data.getRuzhiDate()) == -1) {
                 return Result.failure("离职时间不能早于入职时间");
             }
             user.setZazhiStatus(EnumYesOrNo.NO);
-        }else {
+        } else {
             user.setZazhiStatus(EnumYesOrNo.YES);
         }
-        if (data.getDept()!=null&&data.getDept().getId()!=null){
+        if (data.getDept() != null && data.getDept().getId() != null) {
             user.setDept(data.getDept());
-        }else {
+        } else {
             user.setDept(null);
         }
         user.setLizhiDate(data.getLizhiDate());
@@ -176,11 +174,11 @@ public class SystemUserController extends BaseController {
         user.setEmail(data.getEmail());
         user.setUserName(data.getUserName());
         if (StringUtil.isNotBlank(data.getPassword())) {
-            user.setPassword(MD5Util.md5(data.getPassword()));
+            user.setPassword(passwordEncoder.encode(data.getPassword()));
             user.setUpdatePassWordDay(new Date());
         }
         Bangongqu byId = bangongquService.getById(StringUtil.parseInt(data.getBangongquId()));
-        if(byId==null){
+        if (byId == null) {
             return Result.failure("办公区不存在");
         }
         user.setBangongqu(byId);
@@ -189,66 +187,6 @@ public class SystemUserController extends BaseController {
         user.setUserStatus(data.getUserStatusIndex());
         userService.update(user);
         return Result.ok();
-    }
-
-    /**
-     * 登录方法
-     *
-     * @param user
-     * @return
-     */
-    @RequestMapping("/loginOK")
-    public Result loginOk(SystemUser user, String vercode, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
-        String code = (String) session.getAttribute("checkCode");
-        if (!code.equals(vercode)) {
-            return Result.failure("验证码不正确");
-        }
-
-        if (StringUtil.isEmpty(user.getUserName())) {
-            return Result.failure("用户名不能为空");
-        }
-        if (StringUtil.isEmpty(user.getPassword())) {
-            return Result.failure("密码不能为空");
-        }
-        SystemUser usesByNameAndBianhaoNoId = userService.getUsesByNameAndBianhaoNoId(user.getUserName(), user.getUserBianhao(), 0);
-        if (usesByNameAndBianhaoNoId == null) {
-            return Result.failure("此用户不存在");
-        }
-        if (usesByNameAndBianhaoNoId.getLizhiDate() != null) {
-            return Result.failure("此用户已离职");
-        }
-        if (usesByNameAndBianhaoNoId.getUserStatus() != null && usesByNameAndBianhaoNoId.getUserStatus().getIndex() == EnumUserStatus.TINGYONG.getIndex()) {
-            return Result.failure("此用户已停用");
-        }
-        try {
-            JSONObject jsonObject = new JSONObject();
-            SystemUser entity = TokenManager.login(user, false);
-            int dayNumber = userService.getUpdatePassWordDay(entity.getId());
-            jsonObject.put("dayNumber", dayNumber);
-            request.getSession().setAttribute("admin", entity);
-            jsonObject.put("id", entity.getId());
-            jsonObject.put("userName", entity.getUserName());
-            jsonObject.put("realName", entity.getRealName());
-            jsonObject.put("userBianhao", entity.getUserBianhao());
-            jsonObject.put("menus", "");
-            //将用户添加到cookie中 过期时间12个小时
-            CookieUtil.setCookie(request, response, "userName", user.getUserName(), 60 * 60 * 12, true);
-            CookieUtil.setCookie(request, response, "ZongheUrl", systemConfigService.getZongheUrl(), 60 * 60 * 12);
-            CookieUtil.setCookie(request, response, "heSystemId", systemConfigService.getZongheSystemId(), 60 * 60 * 12);
-            CookieUtil.setCookie(request, response, "ZongheToken", systemConfigService.getZongheToken(), 60 * 60 * 12);
-            return Result.ok(jsonObject);
-        } catch (IncorrectCredentialsException e) {
-            e.printStackTrace();
-            return Result.failure("密码错误");
-        } catch (LockedAccountException e) {
-            return Result.failure("登录失败，该用户已被冻结");
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            return Result.failure("该用户不存在");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Result.ok("出现错误");
     }
 
     /**
@@ -310,12 +248,6 @@ public class SystemUserController extends BaseController {
         return Result.ok();
     }
 
-    @RequestMapping("/loginout")
-    public Result logout() {
-        TokenManager.logout();
-        return Result.ok("退出成功");
-    }
-
     //根据用户名搜索
     @RequestMapping("/getSystemUserByName")
     public Result getSystemUserByName(SystemUser data, HttpServletRequest request) {
@@ -338,23 +270,12 @@ public class SystemUserController extends BaseController {
         return Result.ok(list);
     }
 
-    /**
-     * 获得验证码图片
-     */
-    @RequestMapping("/getImage")
-    public void getImage(HttpSession session, HttpServletResponse response, String t) {
-        try {
-            ImageUtil.getVerificationCode(session, response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 修改密码
      */
     @RequestMapping("/updatePassword")
-    public Result updatePassword(String oldPassword, String password, String repassword, HttpServletRequest request) {
+    public Result updatePassword(String oldPassword, String password, String repassword) {
         if (StringUtil.isBlank(oldPassword)) {
             return Result.failure("当前密码不能为空");
         }
@@ -364,14 +285,14 @@ public class SystemUserController extends BaseController {
         if (StringUtil.isBlank(repassword)) {
             return Result.failure("确认密码不能为空");
         }
-        if (!Md5Util.md5(oldPassword).equals(getUser(request).getPassword())) {
+        if (!passwordEncoder.encode(oldPassword).equals(getUser().getPassword())) {
             return Result.failure("当前密码错误");
         }
         if (!StringUtil.equals(password, repassword)) {
             return Result.failure("两次密码输入不一致");
         }
-        SystemUser user = userService.getById(getUser(request).getId());
-        user.setPassword(Md5Util.md5(repassword));
+        SystemUser user = userService.getById(getUser().getId());
+        user.setPassword(passwordEncoder.encode(repassword));
         user.setUpdatePassWordDay(new Date());
         userService.update(user);
         return Result.ok("修改成功");
@@ -392,14 +313,15 @@ public class SystemUserController extends BaseController {
         }
         return Result.ok(listUser);
     }
+
     /**
      * 入职离职总人数
      * 可根据部门进行统计,部门为空时为所有
      * 时间为空时为所有
      */
     @RequestMapping("getRLzhi")
-    public Result getRLzhi(Integer deptid,String beginDate,String endDate){
-        HashMap<String,Object> map= userService.getRLzhi(deptid,beginDate,endDate);
+    public Result getRLzhi(Integer deptid, String beginDate, String endDate) {
+        HashMap<String, Object> map = userService.getRLzhi(deptid, beginDate, endDate);
         return Result.ok(map);
     }
 
@@ -407,10 +329,11 @@ public class SystemUserController extends BaseController {
      * 入职离职总人数
      */
     @RequestMapping("getRLzhiByDept")
-    public Result getRLzhiByDept(String beginDate,String endDate){
-        List<HashMap<String,Object>> map= userService.getRLzhiByDept(beginDate,endDate);
+    public Result getRLzhiByDept(String beginDate, String endDate) {
+        List<HashMap<String, Object>> map = userService.getRLzhiByDept(beginDate, endDate);
         return Result.ok(map);
     }
+
     private Map getByMap(SystemUser user) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", user.getId());
@@ -438,13 +361,17 @@ public class SystemUserController extends BaseController {
             map.put("bangongquId", user.getBangongqu().getId());
             map.put("bangongquName", user.getBangongqu().getName());
         }
-        if (user.getDept()!=null){
-            map.put("deptId",user.getDept().getId());
-            map.put("deptName",user.getDept().getName());
-        }else {
-            map.put("deptName","");
+        if (user.getDept() != null) {
+            map.put("deptId", user.getDept().getId());
+            map.put("deptName", user.getDept().getName());
+        } else {
+            map.put("deptName", "");
         }
         return map;
     }
 
+    public static void main(String[] args) {
+        PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+        System.out.println(passwordEncoder.encode("123456"));
+    }
 }

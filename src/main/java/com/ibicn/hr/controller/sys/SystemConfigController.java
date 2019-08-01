@@ -42,7 +42,7 @@ public class SystemConfigController extends BaseController {
 
     @RequestMapping("/get")
     @ResponseBody
-    public Result get(String keyInfos, HttpServletRequest request) {
+    public Result get(String keyInfos) {
        return Result.ok(getJsonObject(keyInfos));
     }
 

@@ -1,6 +1,6 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.bean.sys.SystemRole;
+import com.ibicn.hr.entity.sys.SystemRole;
 import com.ibicn.hr.dao.sys.SystemRoleDao;
 import com.ibicn.hr.service.sys.SystemRoleServiceI;
 import com.ibicn.hr.util.BaseModel;

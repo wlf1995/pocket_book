@@ -1,18 +1,16 @@
 package com.ibicn.hr.controller.sys;
 
-import com.ibicn.hr.bean.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.util.BaseModel;
-import com.ibicn.hr.util.PageUtil;
+import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
-import com.ibicn.hr.util.StatusCode;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class SystemMenuController extends BaseController {
         for(SystemMenu menu:content){
             list.add(getByMap(menu));
         }
-        return Result.ok(PageUtil.getPageUtil(page,list));
+        return Result.ok(PageResult.getPageResult(page,list));
     }
 
     @RequestMapping("get")
@@ -50,7 +48,7 @@ public class SystemMenuController extends BaseController {
             }
         }
         Result check = check(data);
-        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+        if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
         menu.setPath(data.getPath());
@@ -80,7 +78,7 @@ public class SystemMenuController extends BaseController {
             menu.setParentMenu(null);
         }
         Result check = check(data);
-        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+        if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
         menu.setIcon(data.getIcon());

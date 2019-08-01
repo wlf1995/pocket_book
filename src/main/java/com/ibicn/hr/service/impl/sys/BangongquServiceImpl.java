@@ -1,6 +1,6 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.bean.sys.Bangongqu;
+import com.ibicn.hr.entity.sys.Bangongqu;
 import com.ibicn.hr.dao.sys.BangongquDao;
 import com.ibicn.hr.service.sys.BangongquServiceI;
 import com.ibicn.hr.util.BaseModel;

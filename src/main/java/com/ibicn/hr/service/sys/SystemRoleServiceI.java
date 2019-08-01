@@ -1,7 +1,6 @@
 package com.ibicn.hr.service.sys;
 
-import com.ibicn.hr.bean.sys.SystemMenu;
-import com.ibicn.hr.bean.sys.SystemRole;
+import com.ibicn.hr.entity.sys.SystemRole;
 import com.ibicn.hr.util.BaseModel;
 import org.springframework.data.domain.Page;
 

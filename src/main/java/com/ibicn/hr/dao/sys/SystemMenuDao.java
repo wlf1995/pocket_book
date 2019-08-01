@@ -1,6 +1,6 @@
 package com.ibicn.hr.dao.sys;
 
-import com.ibicn.hr.bean.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

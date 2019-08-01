@@ -2,13 +2,12 @@ package com.ibicn.hr.controller.sys;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ibicn.hr.bean.sys.SystemMenu;
-import com.ibicn.hr.bean.sys.SystemRole;
+import com.ibicn.hr.entity.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemRole;
 import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.util.BaseModel;
-import com.ibicn.hr.util.PageUtil;
+import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
-import com.ibicn.hr.util.StatusCode;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,7 @@ public class SystemRoleController extends BaseController {
         for(SystemRole role:content){
             list.add(getByMap(role));
         }
-        return Result.ok(PageUtil.getPageUtil(pr,list));
+        return Result.ok(PageResult.getPageResult(pr,list));
     }
 
     @RequestMapping("get")
@@ -43,7 +42,7 @@ public class SystemRoleController extends BaseController {
     public Result saveOK(SystemRole data, HttpServletRequest request) {
         SystemRole role = new SystemRole();
         Result check = check(data);
-        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+        if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
         role.setName(data.getName());
@@ -59,7 +58,7 @@ public class SystemRoleController extends BaseController {
             return Result.failure("未获取到角色");
         }
         Result check = check(data);
-        if (!check.getCode().equals(StatusCode.SUCCESS_CODE)) {
+        if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
         role.setName(data.getName());
@@ -107,7 +106,7 @@ public class SystemRoleController extends BaseController {
             JSONObject object = new JSONObject();
             object.put("id", menu.getId());
             object.put("name", menu.getName());
-            object.put("childs", this.getChild(menu.getId(), AllMenu));
+            object.put("childs", super.getChild(menu.getId(), AllMenu));
             menus.add(object);
         }
 

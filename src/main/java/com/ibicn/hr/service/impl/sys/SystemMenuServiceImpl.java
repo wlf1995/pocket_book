@@ -1,8 +1,8 @@
 package com.ibicn.hr.service.impl.sys;
 
 import com.ibicn.hr.ENUM.EnumMenuType;
-import com.ibicn.hr.bean.sys.SystemMenu;
-import com.ibicn.hr.bean.sys.SystemUser;
+import com.ibicn.hr.entity.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.dao.sys.SystemMenuDao;
 import com.ibicn.hr.service.sys.SystemMenuServiceI;
 import com.ibicn.hr.util.BaseModel;

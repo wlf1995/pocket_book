@@ -1,7 +1,7 @@
 package com.ibicn.hr.service.sys;
 
 
-import com.ibicn.hr.bean.sys.SystemUser;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.util.BaseModel;
 import org.springframework.data.domain.Page;
 
@@ -42,14 +42,14 @@ public interface SystemUserServiceI {
     List<String> getUserBianhaoByIds(String ids);
 
     /**
-     * @return com.ibicn.hr.bean.sys.SystemUser
+     * @return com.ibicn.hr.entity.sys.SystemUser
      * @Description 编辑用户时验证用户名，编号是不是重复
      * @Date 11:38 2019/2/22
      * @Param userName
      * @Param userBianhao
      * @Param id
      **/
-    SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, int id);
+    SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id);
 
     Page<SystemUser> list(SystemUser data, BaseModel baseModel);
 

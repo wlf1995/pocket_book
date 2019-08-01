@@ -1,6 +1,6 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.bean.sys.SystemUser;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.dao.sys.SystemUserDao;
 import com.ibicn.hr.service.sys.SystemUserServiceI;
 import com.ibicn.hr.util.BaseModel;
@@ -160,16 +160,16 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
         String wheresql1 = "";
         if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
 //            get("ruzhiDate"), DateUtil.getParseDate(beginDate), DateUtil.getParseDateTime(endDate + " 23:59:59"));
-            wheresql += " and ruzhiDate>= ?0 and ruzhiDate<=?1";
-            wheresql1 += " and lizhiDate>= ?0 and lizhiDate<=?1";
+            wheresql += " and ruzhiDate>= :beginDate and ruzhiDate<=:endDate";
+            wheresql1 += " and lizhiDate>= :beginDate and lizhiDate<=:endDate";
         }
         Query query = entityManager.createNativeQuery("SELECT d.id, d.NAME," +
                 "( SELECT count( u.id ) FROM systemuser u WHERE u.lizhidate IS NOT NULL AND u.deptid = d.id " + wheresql + " ) as ruzhiCount," +
                 "( SELECT count( u.id ) FROM systemuser u WHERE u.deptid = d.id " + wheresql1 + ") as lizhiCount " +
                 "FROM systemdept d  WHERE 1 = 1 GROUP BY d.id");
         if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
-            query.setParameter(0,beginDate);
-            query.setParameter(1,endDate+ " 23:59:59");
+            query.setParameter("beginDate",beginDate);
+            query.setParameter("endDate",endDate+ " 23:59:59");
         }
         List<HashMap<String,Object>> resultList = query.getResultList();
 
@@ -268,7 +268,7 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
     }
 
     /**
-     * @return com.ibicn.hr.bean.sys.SystemUser
+     * @return com.ibicn.hr.entity.sys.SystemUser
      * @Author 田华健
      * @Description 编辑用户时验证用户名，编号是不是重复
      * @Date 11:38 2019/2/22
@@ -277,10 +277,10 @@ public class SystemUserServiceImpl implements SystemUserServiceI {
      * @Param id
      **/
     @Override
-    public SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, int id) {
+    public SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id) {
         Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if (id != 0) {
+            if (id != null) {
                 Predicate p1 = criteriaBuilder.notEqual(root.get("id"), id);
                 list.add(p1);
             }

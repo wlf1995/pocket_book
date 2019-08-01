@@ -58,11 +58,15 @@ layui.define('form', function(exports){
   $body.on('click', '#LAY-user-get-vercode', function(){
       var othis = $(this);
       admin.req({
-          url: "/user/getImage",
+          url: "/getImage",
           type: "POST",
+          data: {
+              guid:getguid(),
+          },
           done: function (ret) {
+              debugger
               $(othis).attr("src", ret.data);
-              if (ret.code == 0) {
+              if (ret.code == 200) {
                   $(othis).attr("src", ret.data);
               } else {
                   layer.msg("请重试", {
@@ -80,8 +84,16 @@ layui.define('form', function(exports){
               });
           }
       });
-  });
+  }).click();
   
   //对外暴露的接口
   exports('user', {});
 });
+function getguid() {
+    var guid= 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+    localStorage.setItem("guid",guid);console.log(guid)
+    return guid;
+}

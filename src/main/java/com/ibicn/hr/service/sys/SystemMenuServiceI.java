@@ -1,8 +1,8 @@
 package com.ibicn.hr.service.sys;
 
 import com.ibicn.hr.ENUM.EnumMenuType;
-import com.ibicn.hr.bean.sys.SystemMenu;
-import com.ibicn.hr.bean.sys.SystemUser;
+import com.ibicn.hr.entity.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.util.BaseModel;
 import org.springframework.data.domain.Page;
 
