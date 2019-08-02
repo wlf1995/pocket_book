@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EnumBaseStatus implements IntegerValuedEnum  {
-	正常("正常", 0, "正常"),停用("停用", 1, "停用");
+	停用("停用", 0, "停用"),正常("正常", 1, "正常"),;
 	
 
 	// 成员变量
