@@ -140,37 +140,42 @@ public class Person extends BaseEntity implements Serializable {
      * 所在部门	department_id	int	外键	部门表的外键
      **/
     @ManyToOne
-    @JoinColumn(name = "department_id",nullable = false)
-    private Department department_id;
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
+    /**
+     * 所在部门 实体的适配字段,用来接收前台的值
+     **/
+    @Transient
+    private Integer department_id;
     /**
      * 对应的扫描文件
      * 由多的一方维护关系
      **/
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<SystemUser> systemUserSet;
 
     /**
      * 对应的扫描文件
      **/
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<Attachment> attachmentSet;
 
     /**
      * 对应的人事档案公司变动履历表
      **/
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<CompanyCV> companyCVSet;
 
     /**
      * 对应的学习和工作简历表
      **/
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<CV> cvSet;
 
     /**
      * 对应的家庭成员表
      **/
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<Family> familySet;
 }
