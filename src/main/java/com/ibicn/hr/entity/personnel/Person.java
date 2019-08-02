@@ -5,7 +5,6 @@ import com.ibicn.hr.ENUM.EnumXueli;
 import com.ibicn.hr.entity.base.BaseEntity;
 import com.ibicn.hr.entity.sys.Department;
 import com.ibicn.hr.entity.sys.SystemUser;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,56 +24,45 @@ import java.util.Set;
 @Entity
 @Table(name = "person")
 public class Person extends BaseEntity implements Serializable {
-    /**
-     * 主键
-     **/
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
-    private Integer id;
+
     /**
      * 档案编号	personNumber	varchar(50)		纸质档案的编号，不能重复
      **/
-    @Column(name = "personnumber",nullable = false)
+    @Column(name = "personnumber", nullable = false)
     private String personNumber;
 
     /**
      * 姓名	name	varchar(50)		人员的姓名
      **/
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
-    /**
-     * 所在部门	department_id	int	外键	部门表的外键
-     **/
-    @ManyToOne
-    @JoinColumn(name = "department_id",nullable = false)
-    private Department department_id;
+
 
     /**
      * 性别	sex	int		0为女，1为男
      **/
-    @Column(name = "sex",nullable = false)
+    @Column(name = "sex", nullable = false)
     private EnumSex sex;
 
     /**
      * 出生日期	birthday	dateTime		出生日期
      **/
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "birthday",nullable = false)
+    @Column(name = "birthday", nullable = false)
     private Date birthday;
 
     /**
      * 籍贯	native	varchar(50)		籍贯，比如北京市海淀区
      * native 为java 关键字,所以在后面加_
      **/
-    @Column(name = "native",nullable = false)
+    @Column(name = "native", nullable = false)
     private String native_;
 
 
     /**
      * 身份证号	idnumber	varchar(18)		身份证号，唯一验证
      **/
-    @Column(name = "idnumber",nullable = false)
+    @Column(name = "idnumber", nullable = false)
     private String idnumber;
 
     /**
@@ -138,7 +126,7 @@ public class Person extends BaseEntity implements Serializable {
      * 入职时间	workDate	datetime		入职的日期
      **/
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "workdate",nullable = false)
+    @Column(name = "workdate", nullable = false)
     private Date workDate;
 
     /**
@@ -148,34 +136,41 @@ public class Person extends BaseEntity implements Serializable {
     @Column(name = "leavedate")
     private Date leaveDate;
     //------------关联关系---------------//
+    /**
+     * 所在部门	department_id	int	外键	部门表的外键
+     **/
+    @ManyToOne
+    @JoinColumn(name = "department_id",nullable = false)
+    private Department department_id;
 
     /**
      * 对应的扫描文件
+     * 由多的一方维护关系
      **/
-    @OneToMany(cascade =CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
     private Set<SystemUser> systemUserSet;
 
     /**
      * 对应的扫描文件
      **/
-    @OneToMany(cascade =CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
     private Set<Attachment> attachmentSet;
 
     /**
      * 对应的人事档案公司变动履历表
      **/
-    @OneToMany(cascade =CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
     private Set<CompanyCV> companyCVSet;
 
     /**
      * 对应的学习和工作简历表
      **/
-    @OneToMany(cascade =CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
     private Set<CV> cvSet;
 
     /**
      * 对应的家庭成员表
      **/
-    @OneToMany(cascade =CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "person")
     private Set<Family> familySet;
 }

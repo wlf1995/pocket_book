@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibicn.hr.ENUM.EnumMenuType;
 import com.ibicn.hr.ENUM.EnumUtil;
+import com.ibicn.hr.entity.base.BaseEntity;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import lombok.Getter;
@@ -16,16 +17,8 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "systemMenu")
-public class systemMenu implements Serializable {
-
-    /**
-     * 主键
-     */
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Table(name = "SystemMenu")
+public class SystemMenu extends BaseEntity implements Serializable {
 
     /**
      * 菜单的名称
@@ -53,26 +46,9 @@ public class systemMenu implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    private systemMenu parent_id;
+    private SystemMenu parent_id;
     @Transient
     private String pid;
-    /**
-     * 创建的时间
-     */
-    @Column(name = "creattime")
-    private Date createdTime;
-
-    /**
-     * 最后修改的时间
-     */
-    @Column(name = "updatetime")
-    private Date updateedTime;
-
-    /**
-     * 修改的次数
-     */
-    @Column(name = "updatedcount")
-    private Integer updatedCount;
 
     /**
      * 菜单排序号
@@ -83,20 +59,20 @@ public class systemMenu implements Serializable {
     @JSONField(serialize = false)
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Set<systemMenu> childs = new HashSet<>();
+    private Set<SystemMenu> childs = new HashSet<>();
 
 
     @Transient
     @JSONField(serialize = false)
-    private List<systemMenu> sortChilds = new ArrayList<>();
+    private List<SystemMenu> sortChilds = new ArrayList<>();
 
 
     @JSONField(serialize = false)
-    @ManyToMany(targetEntity = systemRole.class)
+    @ManyToMany(targetEntity = SystemRole.class)
     @JoinTable(name = "systemRoleMenu",
             joinColumns = @JoinColumn(name = "systemMenu_id", referencedColumnName = "id", nullable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "systemRole_id", referencedColumnName = "id", nullable = false, updatable = false))
-    private Set<systemRole> roles = new HashSet<>();
+    private Set<SystemRole> roles = new HashSet<>();
 
     @JsonIgnore
     public void setType(String type) {
@@ -110,7 +86,7 @@ public class systemMenu implements Serializable {
         this.type = (EnumMenuType) EnumUtil.valueOf(EnumMenuType.class, typeIndex);
     }
 
-    public boolean isIfSetParent(systemMenu systemMenu) {
+    public boolean isIfSetParent(SystemMenu systemMenu) {
         if (systemMenu == null) {
             //如果是空，则该节点将被设置成根节点
             return true;
@@ -132,11 +108,11 @@ public class systemMenu implements Serializable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof systemMenu)) {
+        if (!(o instanceof SystemMenu)) {
             return false;
         }
-        systemMenu systemMenu = (com.ibicn.hr.entity.sys.systemMenu) o;
-        return systemMenu.id ==(this.id);
+        SystemMenu systemMenu = (SystemMenu) o;
+        return systemMenu.getId() ==(this.getId().intValue());
     }
 
     /**
@@ -149,7 +125,7 @@ public class systemMenu implements Serializable {
     /**
      * 是否是另一个的父节点
      */
-    public boolean isParentOf(systemMenu systemMenu) {
+    public boolean isParentOf(SystemMenu systemMenu) {
         if (systemMenu == null || this.equals(systemMenu)) {
             /*如果对方为空*/
             return false;
@@ -157,7 +133,7 @@ public class systemMenu implements Serializable {
             /*如果对方为根,返回FALSE*/
             return false;
         } else {
-            com.ibicn.hr.entity.sys.systemMenu parentMe = systemMenu.getParent_id();
+            SystemMenu parentMe = systemMenu.getParent_id();
             if (this.equals(parentMe)) {
                 /*如果对方的父节点是自己,则返回TRUE*/
                 return true;
@@ -177,12 +153,12 @@ public class systemMenu implements Serializable {
         return pid;
     }
 
-    public List<systemMenu> getSortChilds() {
+    public List<SystemMenu> getSortChilds() {
         if (CollectionUtil.size(this.childs) > 0) {
-            List<systemMenu> list = new ArrayList<>(this.childs);
-            Collections.sort(list, new Comparator<systemMenu>() {
+            List<SystemMenu> list = new ArrayList<>(this.childs);
+            Collections.sort(list, new Comparator<SystemMenu>() {
                 @Override
-                public int compare(systemMenu o1, systemMenu o2) {
+                public int compare(SystemMenu o1, SystemMenu o2) {
                     if (o1.getSort().intValue() == o2.getSort()) {
                         return o1.getId().compareTo(o2.getId());
                     } else {

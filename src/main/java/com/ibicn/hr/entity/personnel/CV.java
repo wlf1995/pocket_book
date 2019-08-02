@@ -19,13 +19,7 @@ import java.util.Date;
 @Entity
 @Table(name = "cv")
 public class CV extends BaseEntity implements Serializable {
-    /**
-     * 主键
-     **/
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+
     /**
      * 时间-简历开始时间
      **/

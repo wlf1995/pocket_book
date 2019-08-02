@@ -17,13 +17,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "family")
 public class Family  extends BaseEntity implements Serializable {
-    /**
-     * 主键
-     **/
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+
     /**
      * 成员姓名-成员姓名
      **/

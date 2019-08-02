@@ -17,13 +17,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "attachment")
 public class Attachment extends BaseEntity implements Serializable {
-    /**
-     * 主键
-     **/
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+
     /**
      * 扫描件名称-扫描件名称，比如身份证正面、身份证反面
      **/
@@ -36,7 +30,7 @@ public class Attachment extends BaseEntity implements Serializable {
     @Column(name = "attachmenturl",nullable = false)
     private String attachmentUrl;
 
-    /**
+      /**
      * 所属人事档案表
      **/
     @ManyToOne

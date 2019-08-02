@@ -13,15 +13,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "department")
 public class Department extends BaseEntity implements Serializable  {
-
-    /**
-     * 主键
-     */
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     /**
      * 部门名称
      */
