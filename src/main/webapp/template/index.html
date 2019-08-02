@@ -70,12 +70,12 @@
         </div>
         <ul class="layui-nav layui-nav-tree" lay-filter="test">
           <li class="layui-nav-item" v-for="item in menus">
-            <a href="javascript:;">{{item.name}}</a>
+            <a href="javascript:;">{{item.menuName}}</a>
             <dl class="layui-nav-child">
               <dd v-for="child in item.childs">
-                <a  href="javascript:;" v-bind:lay-href="child.path"  v-bind:lay-tips="child.name" lay-direction="2" style="height: 30px;vertical-align: middle; line-height: 30px;">
+                <a  href="javascript:;" v-bind:lay-href="child.path"  v-bind:lay-tips="child.menuName" lay-direction="2" style="height: 30px;vertical-align: middle; line-height: 30px;">
                   <i class="layui-icon layui-icon-danxuankuanghouxuan" style="font-weight: bold;color:#2894FF;margin-top: -14px"></i>
-                  <cite style="vertical-align: middle;">{{child.name}}</cite>
+                  <cite style="vertical-align: middle;">{{child.menuName}}</cite>
                 </a>
               </dd>
             </dl>

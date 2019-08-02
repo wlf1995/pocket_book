@@ -2,13 +2,10 @@ package com.ibicn.hr.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibicn.hr.dao.sys.SystemUserDao;
-import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.entity.sys.systemUser;
 import com.ibicn.hr.util.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -75,13 +72,11 @@ public class MyAuthenticationSuccessOrFailureHandler implements AuthenticationSu
     }
 
     private HashMap<String, Object> getUserMap(Authentication authentication) {
-        SystemUser byUserName = userDao.findByUserName(authentication.getName());
+        systemUser byUserName = userDao.findByUserName(authentication.getName());
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", byUserName.getId());
         map.put("realName", byUserName.getRealName());
         map.put("userName", byUserName.getUserName());
-        map.put("userBianhao", byUserName.getUserBianhao());
-        map.put("avatar", byUserName.getAvatar());
         return map;
     }
 }

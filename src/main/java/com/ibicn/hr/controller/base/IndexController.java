@@ -3,8 +3,8 @@ package com.ibicn.hr.controller.base;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ibicn.hr.ENUM.EnumMenuType;
-import com.ibicn.hr.entity.sys.SystemMenu;
-import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.entity.sys.systemMenu;
+import com.ibicn.hr.entity.sys.systemUser;
 import com.ibicn.hr.util.ImageUtil;
 import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.CollectionUtil;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -32,17 +31,17 @@ public class IndexController extends BaseController {
      */
     @RequestMapping(value = {"index", "/", ""}, method = RequestMethod.GET)
     public String index(Model model) {
-        SystemUser user = getUser();
-        List<SystemMenu> list = systemMenuServiceI.getMenuByUser(user);
+        systemUser user = getUser();
+        List<systemMenu> list = systemMenuServiceI.getMenuByUser(user);
         List<String> menuPaths = systemMenuServiceI.getMenyPathIdByUser(user, EnumMenuType.MENU);
         JSONArray array = new JSONArray();
         for (int i = 0; i < CollectionUtil.size(list); i++) {
             JSONObject object = new JSONObject();
-            object.put("name", list.get(i).getName());
+            object.put("name", list.get(i).getMenuName());
             object.put("path", list.get(i).getPath());
             JSONArray childarray = new JSONArray();
             if (CollectionUtil.size(list.get(i).getChilds()) > 0) {
-                List<SystemMenu> menus = list.get(i).getSortChilds();
+                List<systemMenu> menus = list.get(i).getSortChilds();
                 for (int j = 0; j < CollectionUtil.size(menus); j++) {
                     if (menus.get(j).getType().getIndex() == EnumMenuType.FEATURES.getIndex()) {
                         continue;
@@ -51,7 +50,7 @@ public class IndexController extends BaseController {
                         continue;
                     }
                     JSONObject childobj = new JSONObject();
-                    childobj.put("name", menus.get(j).getName());
+                    childobj.put("name", menus.get(j).getMenuName());
                     childobj.put("path", menus.get(j).getPath());
                     childarray.add(childobj);
                 }

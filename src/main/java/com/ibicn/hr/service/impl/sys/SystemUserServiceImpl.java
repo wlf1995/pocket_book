@@ -1,7 +1,7 @@
 package com.ibicn.hr.service.impl.sys;
 
 import com.ibicn.hr.dao.sys.SystemUserDao;
-import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.entity.sys.systemUser;
 import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemUserServiceI;
 import com.ibicn.hr.util.BaseModel;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implements SystemUserServiceI {
+public class SystemUserServiceImpl extends BaseServiceImpl<systemUser> implements SystemUserServiceI {
     @Autowired
     SystemUserDao systemUserDao;
 
@@ -39,8 +39,8 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
     }
 
     @Override
-    public SystemUser findByUserName(String username) {
-        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+    public systemUser findByUserName(String username) {
+        Specification<systemUser> specification = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (StringUtil.isNotEmpty(username)) {
                 Predicate p2 = criteriaBuilder.equal(root.get("userName"), username);
@@ -48,7 +48,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<SystemUser> list = systemUserDao.findAll(specification);
+        List<systemUser> list = systemUserDao.findAll(specification);
         if (CollectionUtil.size(list) == 0) {
             return null;
         } else {
@@ -57,8 +57,8 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
     }
 
     @Override
-    public List<SystemUser> getSystemUserByName(String name, int id) {
-        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+    public List<systemUser> getSystemUserByName(String name, int id) {
+        Specification<systemUser> specification = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (StringUtil.isNotEmpty(name)) {
                 Predicate p2 = criteriaBuilder.like(root.get("realName"), "%" + name + "%");
@@ -70,7 +70,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<SystemUser> list = systemUserDao.findAll(specification);
+        List<systemUser> list = systemUserDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
@@ -78,14 +78,9 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
     }
 
     @Override
-    public PageResult list(SystemUser data, BaseModel baseModel) {
-        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+    public PageResult list(systemUser data, BaseModel baseModel) {
+        Specification<systemUser> specification = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            if (StringUtil.isNotEmpty(data.getBangongquId())) {
-                Join<Object, Object> bangongqu = root.join("bangongqu");
-                Predicate id = criteriaBuilder.equal(bangongqu.get("id"), data.getBangongquId());
-                list.add(id);
-            }
             if (StringUtil.isNotEmpty(data.getRealName())) {
                 Predicate p2 = criteriaBuilder.like(root.get("realName"), "%" + data.getRealName() + "%");
                 list.add(p2);
@@ -97,14 +92,14 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
     }
 
     @Override
-    public SystemUser getById(Integer id) {
+    public systemUser getById(Integer id) {
         return systemUserDao.getOne(id);
     }
 
     @Override
     public HashMap<String, Object> getRLzhi(Integer deptid, String beginDate, String endDate) {
         //入职人数
-        Specification<SystemUser> specification1 = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+        Specification<systemUser> specification1 = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (deptid != null) {
                 Join<Object, Object> dept = root.join("dept");
@@ -120,7 +115,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
         //离职人数
-        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+        Specification<systemUser> specification = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (deptid != null) {
                 Join<Object, Object> dept = root.join("dept");
@@ -136,11 +131,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
 
-        long lizhiCount = systemUserDao.count(specification);
-        long ruzhiCount = systemUserDao.count(specification1);
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("lizhiCount", lizhiCount);
-        hashMap.put("ruzhiCount", ruzhiCount);
         return hashMap;
     }
 
@@ -160,18 +151,14 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
                 "( SELECT count( u.id ) FROM systemuser u WHERE u.lizhidate IS NOT NULL AND u.deptid = d.id " + wheresql + " ) as ruzhiCount," +
                 "( SELECT count( u.id ) FROM systemuser u WHERE u.deptid = d.id " + wheresql1 + ") as lizhiCount " +
                 "FROM systemdept d  WHERE 1 = 1 GROUP BY d.id");
-        if (StringUtil.isNotEmpty(beginDate) && StringUtil.isNotEmpty(endDate)) {
-            query.setParameter("beginDate", beginDate);
-            query.setParameter("endDate", endDate + " 23:59:59");
-        }
         List<HashMap<String, Object>> resultList = query.getResultList();
 
         return resultList;
     }
 
     @Override
-    public SystemUser getSystemUserByBianhao(String bianhao) {
-        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+    public systemUser getSystemUserByBianhao(String bianhao) {
+        Specification<systemUser> specification = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (StringUtil.isNotEmpty(bianhao)) {
                 Predicate p2 = criteriaBuilder.equal(root.get("userBianhao"), bianhao);
@@ -179,7 +166,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<SystemUser> list = systemUserDao.findAll(specification);
+        List<systemUser> list = systemUserDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list.get(0);
         }
@@ -201,8 +188,8 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
     }
 
     @Override
-    public List<SystemUser> getUser(String name, int id) {
-        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+    public List<systemUser> getUser(String name, int id) {
+        Specification<systemUser> specification = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (StringUtil.isNotEmpty(name)) {
                 Predicate p2 = criteriaBuilder.like(root.get("realName"), "%" + name + "%");
@@ -214,7 +201,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<SystemUser> list = systemUserDao.findAll(specification);
+        List<systemUser> list = systemUserDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
@@ -223,7 +210,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
 
 
     @Override
-    public List<SystemUser> getByCompany(Integer companyId) {
+    public List<systemUser> getByCompany(Integer companyId) {
 //        String hql = "from SystemUser where ? in elements (companys)";
 //        List<ListValues> values = new ArrayList<>();
 //        values.add(new ListValues(companyId, "int"));
@@ -248,15 +235,6 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             list1.add(StringUtil.parseInt(split[i]));
         }
 
-        List<SystemUser> list = systemUserDao.findAllById(list1);
-        List<String> bianhaoList = new ArrayList<>();
-
-        if (CollectionUtil.size(list) > 0) {
-            for (SystemUser user : list) {
-                bianhaoList.add(user.getUserBianhao());
-            }
-            return bianhaoList;
-        }
         return new ArrayList<String>();
     }
 
@@ -270,8 +248,8 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
      * @Param id
      **/
     @Override
-    public SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id) {
-        Specification<SystemUser> specification = (Specification<SystemUser>) (root, query, criteriaBuilder) -> {
+    public systemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id) {
+        Specification<systemUser> specification = (Specification<systemUser>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (id != null) {
                 Predicate p1 = criteriaBuilder.notEqual(root.get("id"), id);
@@ -287,7 +265,7 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUser> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<SystemUser> list = systemUserDao.findAll(specification);
+        List<systemUser> list = systemUserDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list.get(0);
         }

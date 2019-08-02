@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibicn.hr.ENUM.EnumMenuType;
 import com.ibicn.hr.ENUM.EnumUtil;
+import com.ibicn.hr.entity.base.BaseEntity;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.*;
 @Setter
 @Entity
 @Table(name = "systemMenu")
-public class systemMenu implements Serializable {
+public class systemMenu extends BaseEntity implements Serializable {
 
     /**
      * 主键
@@ -56,23 +57,6 @@ public class systemMenu implements Serializable {
     private systemMenu parent_id;
     @Transient
     private String pid;
-    /**
-     * 创建的时间
-     */
-    @Column(name = "creattime")
-    private Date createdTime;
-
-    /**
-     * 最后修改的时间
-     */
-    @Column(name = "updatetime")
-    private Date updateedTime;
-
-    /**
-     * 修改的次数
-     */
-    @Column(name = "updatedcount")
-    private Integer updatedCount;
 
     /**
      * 菜单排序号

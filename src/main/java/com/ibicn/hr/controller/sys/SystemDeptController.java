@@ -1,8 +1,8 @@
 package com.ibicn.hr.controller.sys;
 
 import com.ibicn.hr.ENUM.EnumBaseStatus;
-import com.ibicn.hr.entity.sys.SystemDept;
-import com.ibicn.hr.entity.sys.SystemUser;
+import com.ibicn.hr.entity.sys.department;
+import com.ibicn.hr.entity.sys.systemUser;
 import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.dao.sys.SystemDeptDao;
 import com.ibicn.hr.util.BaseModel;
@@ -10,7 +10,6 @@ import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -29,30 +27,30 @@ public class SystemDeptController extends BaseController {
     SystemDeptDao systemDeptDao;
 
     @RequestMapping("list")
-    public Result list(SystemDept data, BaseModel baseModel) {
+    public Result list(department data, BaseModel baseModel) {
         PageResult pr = systemDeptServiceI.list(data, baseModel.setOrder("asc"));
-        List<SystemDept> content = pr.getContent();
+        List<department> content = pr.getContent();
         List<Map> list = new ArrayList<>();
-        for (SystemDept role : content) {
+        for (department role : content) {
             list.add(getByMap(role));
         }
         return Result.ok(PageResult.getPageResult(pr, list));
     }
 
     @RequestMapping("get")
-    public Result get(SystemDept data) {
-        SystemDept role = systemDeptServiceI.getById(data.getId());
+    public Result get(department data) {
+        department role = systemDeptServiceI.getById(data.getId());
         return Result.ok(getByMap(role));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(SystemDept data) {
+    public Result saveOK(department data) {
         Result check = check(data);
         if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
-        if(data.getParentDept()!=null&&data.getParentDept().getId()==0){
-            data.setParentDept(null);
+        if(data.getParent_id()!=null&&data.getParent_id().getId()==0){
+            data.setParent_id(null);
         }
         data.setCreatedTime(new Date());
         data.setStatus(EnumBaseStatus.正常);
@@ -61,8 +59,8 @@ public class SystemDeptController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(SystemDept data) {
-        SystemDept systemDept = systemDeptServiceI.getById(data.getId());
+    public Result updateOK(department data) {
+        department systemDept = systemDeptServiceI.getById(data.getId());
         if (systemDept == null) {
             return Result.failure("未获取到部门");
         }
@@ -70,17 +68,16 @@ public class SystemDeptController extends BaseController {
         if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
         }
-        if (data.getParentDept()!=null&&data.getParentDept().getId()!=null){
-            Boolean die = this.isDie(data.getId(), data.getParentDept().getId());
+        if (data.getParent_id()!=null&&data.getParent_id().getId()!=null){
+            Boolean die = this.isDie(data.getId(), data.getParent_id().getId());
             if (die){
                 return Result.failure("设置父部门冲突,请重新选择");
             }
         }else {
-            data.setParentDept(null);
+            data.setParent_id(null);
         }
-        systemDept.setName(data.getName());
-        systemDept.setSysUser(data.getSysUser());
-        systemDept.setParentDept(data.getParentDept());
+        systemDept.setDepartmentName(data.getDepartmentName());
+        systemDept.setParent_id(data.getParent_id());
         systemDeptServiceI.update(systemDept);
         return Result.ok();
     }
@@ -95,12 +92,12 @@ public class SystemDeptController extends BaseController {
     }
     @RequestMapping("getByDict")
     public Result getByDict() {
-        List<SystemDept> content = systemDeptServiceI.getAllBangonqu();
+        List<department> content = systemDeptServiceI.getAllBangonqu();
         List<Map> list = new ArrayList<>();
-        for (SystemDept systemDept : content) {
+        for (department systemDept : content) {
             HashMap<String,Object> map=new HashMap<>();
             map.put("id", systemDept.getId());
-            map.put("name", systemDept.getName());
+            map.put("name", systemDept.getDepartmentName());
             list.add(map);
         }
         return Result.ok(list);
@@ -110,14 +107,14 @@ public class SystemDeptController extends BaseController {
         if (bijiao.intValue()==parent){
             return true;
         }
-        Specification<SystemDept> specification = (Specification<SystemDept>) (root, query, criteriaBuilder) -> {
+        Specification<department> specification = (Specification<department>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            Join<SystemDept, SystemDept> join = root.join("parentDept", JoinType.LEFT);
+            Join<department, department> join = root.join("parentDept", JoinType.LEFT);
             list.add(criteriaBuilder.equal(join.get("id"), bijiao));
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<SystemDept> all = systemDeptDao.findAll(specification);
-        for (SystemDept dept:all){
+        List<department> all = systemDeptDao.findAll(specification);
+        for (department dept:all){
             Boolean die = this.isDie(dept.getId(), parent);
             if (die){
                 return true;
@@ -126,35 +123,25 @@ public class SystemDeptController extends BaseController {
         return false;
     }
 
-    private Result check(SystemDept data) {
-        if (StringUtil.isBlank(data.getName())) {
+    private Result check(department data) {
+        if (StringUtil.isBlank(data.getDepartmentName())) {
             return Result.failure("名称不能为空");
         }
         return Result.ok();
     }
 
-    private Map getByMap(SystemDept data) {
+    private Map getByMap(department data) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", data.getId());
-        map.put("name", data.getName());
+        map.put("name", data.getDepartmentName());
         map.put("createdTime", data.getCreatedTime());
-        if (data.getSysUser()!=null){
-            SystemUser user=new SystemUser();
-            user.setId(data.getSysUser().getId());
-            user.setRealName(data.getSysUser().getRealName());
-            map.put("sysUser",user);
-            map.put("sysUserName",data.getSysUser().getRealName());
-            map.put("sysUserId",data.getSysUser().getId());
-        }else {
-            map.put("sysUserName","");
-        }
-        if (data.getParentDept()!=null){
-            SystemDept dept=new SystemDept();
-            dept.setId(data.getParentDept().getId());
-            dept.setName(data.getParentDept().getName());
+        if (data.getParent_id()!=null){
+            department dept=new department();
+            dept.setId(data.getParent_id().getId());
+            dept.setDepartmentName(data.getParent_id().getDepartmentName());
             map.put("parentDept",dept);
-            map.put("parentDeptName",data.getParentDept().getName());
-            map.put("parentDeptId",data.getParentDept().getId());
+            map.put("parentDeptName",data.getParent_id().getDepartmentName());
+            map.put("parentDeptId",data.getParent_id().getId());
         }else {
             map.put("parentDeptName","");
         }

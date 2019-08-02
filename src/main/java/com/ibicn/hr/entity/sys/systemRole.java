@@ -2,6 +2,7 @@ package com.ibicn.hr.entity.sys;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.ibicn.hr.entity.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name="systemRole")
-public class systemRole implements Serializable {
+public class systemRole extends BaseEntity implements Serializable {
 
     /**
      * 主键
@@ -31,23 +32,6 @@ public class systemRole implements Serializable {
     @Column(name ="rolename")
     private String roleName;
 
-    /**
-     * 创建的时间
-     */
-    @Column(name = "creattime")
-    private Date createdTime;
-
-    /**
-     * 最后修改的时间
-     */
-    @Column(name = "updatetime")
-    private Date updateedTime;
-
-    /**
-     * 修改的次数
-     */
-    @Column(name = "updatedcount")
-    private Integer updatedCount;
 
     @JSONField(serialize=false)
     @ManyToMany(targetEntity = systemUser.class,fetch = FetchType.EAGER)

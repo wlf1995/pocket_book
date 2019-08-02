@@ -1,10 +1,14 @@
 package com.ibicn.hr.entity.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibicn.hr.ENUM.EnumBaseStatus;
+import com.ibicn.hr.ENUM.EnumUserStatus;
+import com.ibicn.hr.ENUM.EnumUtil;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 import java.util.Date;
 @Getter
 @Setter
@@ -29,4 +33,17 @@ public class BaseEntity {
      **/
     @Column(name = "status")
     private EnumBaseStatus status;
+
+
+    @Transient
+    private String userStatusIndex;
+
+    @JsonIgnore
+    public void setStatus(String userStatus) {
+        this.status = (EnumBaseStatus) EnumUtil.valueOf(EnumBaseStatus.class, userStatus);
+    }
+    public void setUserStatusIndex(String userStatusIndex) {
+        this.status = (EnumBaseStatus) EnumUtil.valueOf(EnumBaseStatus.class, userStatusIndex);
+    }
+
 }
