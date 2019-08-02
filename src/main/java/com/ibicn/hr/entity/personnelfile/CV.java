@@ -31,13 +31,13 @@ public class CV extends BaseEntity implements Serializable {
      **/
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "begincvdate")
-    private Date beginCVDate;
+    private Date begincvDate;
     /**
      * 时间-简历结束时间
      **/
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "endcvdate")
-    private Date endCVDate;
+    private Date endcvDate;
     /**
      * 单位名称-学习或者工作单位的名称
      **/
