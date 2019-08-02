@@ -3,6 +3,7 @@ package com.ibicn.hr.entity.sys;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibicn.hr.ENUM.*;
+import com.ibicn.hr.entity.personnel.Person;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -116,16 +117,21 @@ public class SystemUser implements Serializable {
 
     @Transient
     private String deptid;
-    @ManyToMany(targetEntity = SystemRole.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = SystemRole.class)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "userid", referencedColumnName = "id", nullable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "roleid", referencedColumnName = "id", nullable = false, updatable = false))
     private Set<SystemRole> roles = new HashSet<SystemRole>();
 
+    @ManyToOne
+    @JoinColumn(name = "personid",nullable = false)
+    private Person person;
+
     @JsonIgnore
     public void setUserStatus(String userStatus) {
         this.userStatus = (EnumUserStatus) EnumUtil.valueOf(EnumUserStatus.class, userStatus);
     }
+
     public void setUserStatusIndex(String userStatusIndex) {
         this.userStatusIndex = userStatusIndex;
         this.userStatus = (EnumUserStatus) EnumUtil.valueOf(EnumUserStatus.class, userStatusIndex);
@@ -145,5 +151,6 @@ public class SystemUser implements Serializable {
         this.zhengzhiMianmaoIndex = zhengzhiMianmaoIndex;
         this.zhengzhiMianmao = (EnumZhengzhiMianmao) EnumUtil.valueOf(EnumZhengzhiMianmao.class, zhengzhiMianmaoIndex);
     }
+
 
 }

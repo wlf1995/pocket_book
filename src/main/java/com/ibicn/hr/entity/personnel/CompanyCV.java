@@ -1,4 +1,4 @@
-package com.ibicn.hr.entity.personnelfile;
+package com.ibicn.hr.entity.personnel;
 
 import com.ibicn.hr.ENUM.EnumLevel;
 import com.ibicn.hr.entity.base.BaseEntity;
@@ -50,5 +50,8 @@ public class CompanyCV  extends BaseEntity implements Serializable {
     @Column(name = "level")
     private EnumLevel level;
 
+    @ManyToOne
+    @JoinColumn(name="person_id",nullable = false)
+    private Person person;
 }
 

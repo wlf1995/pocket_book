@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EnumSex implements IntegerValuedEnum  {
-    男("男", 0, "男"),女("女", 1, "女");
+	女("女", 0, "女"),男("男", 1, "男"),;
 	// 成员变量
 	private String name;
 

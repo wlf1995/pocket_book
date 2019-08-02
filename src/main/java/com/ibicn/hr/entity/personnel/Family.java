@@ -1,4 +1,4 @@
-package com.ibicn.hr.entity.personnelfile;
+package com.ibicn.hr.entity.personnel;
 
 import com.ibicn.hr.entity.base.BaseEntity;
 import lombok.Getter;
@@ -50,5 +50,7 @@ public class Family  extends BaseEntity implements Serializable {
     @Column(name = "mobile")
     private String mobile;
 
-
+    @ManyToOne
+    @JoinColumn(name="person_id",nullable = false)
+    private Person person;
 }
