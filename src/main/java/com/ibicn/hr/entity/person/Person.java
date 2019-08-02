@@ -149,7 +149,7 @@ public class Person extends BaseEntity implements Serializable {
     @Transient
     private Integer department_id;
     /**
-     * 对应的扫描文件
+     * 对应的用户账号
      * 由多的一方维护关系
      **/
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
