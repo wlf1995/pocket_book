@@ -3,6 +3,7 @@ package com.ibicn.hr.config;
 import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.service.sys.SystemUserServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,4 +31,8 @@ public class UserAuditorAware implements AuditorAware<Integer> {
         return Optional.of(curUser.getId());
     }
 
+//    @Bean
+//    public UserAuditorAware setUserAuditorAware() {
+//        return new UserAuditorAware();
+//    }
 }
