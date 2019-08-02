@@ -1,4 +1,4 @@
-package com.ibicn.hr.config;
+package com.ibicn.hr.config.jpa;
 
 import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.service.sys.SystemUserServiceI;

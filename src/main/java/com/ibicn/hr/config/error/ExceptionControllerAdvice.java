@@ -1,4 +1,4 @@
-package com.ibicn.hr.config;
+package com.ibicn.hr.config.error;
 
 import com.ibicn.hr.util.Result;
 import lombok.extern.slf4j.Slf4j;
