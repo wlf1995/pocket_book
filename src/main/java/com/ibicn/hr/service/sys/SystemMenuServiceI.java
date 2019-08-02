@@ -4,22 +4,13 @@ import com.ibicn.hr.ENUM.EnumMenuType;
 import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.service.base.BaseServiceI;
-import com.ibicn.hr.util.BaseModel;
-import com.ibicn.hr.util.PageResult;
 
 import java.util.List;
 
 public interface SystemMenuServiceI extends BaseServiceI<SystemMenu> {
     /**
-     * @Author 王立方
-     * @Description 分页查询
-     * @Date 14:15 2019/7/2
-     * @param data, baseModel
-     * @return org.springframework.data.domain.Page
-     **/
-    PageResult list(SystemMenu data, BaseModel baseModel);
-    /**
      * 根据名称搜索菜单,如果传递一个菜单ID则不获取该菜单ID其他的
+     *
      * @param name
      * @param id
      * @return
@@ -28,12 +19,14 @@ public interface SystemMenuServiceI extends BaseServiceI<SystemMenu> {
 
     /**
      * 获取全部菜单
+     *
      * @return
      */
     List<SystemMenu> getAllMenu(EnumMenuType type);
 
     /**
      * 根据角色ID获取菜单
+     *
      * @param ids
      * @return
      */
@@ -42,6 +35,7 @@ public interface SystemMenuServiceI extends BaseServiceI<SystemMenu> {
 
     /**
      * 获取父节点为空的父级菜单
+     *
      * @return
      */
     List<SystemMenu> getPanentMenu(EnumMenuType type);

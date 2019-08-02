@@ -52,9 +52,6 @@ public interface SystemUserServiceI extends BaseServiceI<SystemUser> {
      **/
     SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id);
 
-    PageResult list(SystemUser data, BaseModel baseModel);
-
-
     SystemUser getById(Integer id);
 
     /**

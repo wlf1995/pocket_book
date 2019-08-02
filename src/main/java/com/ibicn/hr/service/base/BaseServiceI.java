@@ -16,7 +16,7 @@ import java.util.Map;
  * @author 王立方
  */
 public interface BaseServiceI<T> {
-
+    PageResult list(T data, BaseModel baseModel) ;
     PageResult pageList(BaseModel baseModel);
 
     PageResult pageList(T data, BaseModel baseModel);

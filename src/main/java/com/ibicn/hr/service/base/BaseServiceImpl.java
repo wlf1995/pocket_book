@@ -34,6 +34,13 @@ public class BaseServiceImpl<T> implements BaseServiceI<T> {
         this.baseDao = baseDao;
     }
 
+    //查询列表的方法,实际使用时需重写此方法
+    @Override
+    public PageResult list(T data, BaseModel baseModel) {
+        PageResult pageResult = this.pageList(data, baseModel);
+        return pageResult;
+    }
+
     @Override
     public PageResult pageList(BaseModel baseModel) {
         Page<T> all = baseDao.findAll(getPageable(baseModel));

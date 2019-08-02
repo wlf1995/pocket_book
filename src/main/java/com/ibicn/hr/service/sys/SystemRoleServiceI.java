@@ -14,7 +14,5 @@ public interface SystemRoleServiceI extends BaseServiceI<SystemRole> {
      */
     List<SystemRole> getAllRole();
 
-    PageResult list(SystemRole data, BaseModel asc);
-
     SystemRole getById(Integer id);
 }
