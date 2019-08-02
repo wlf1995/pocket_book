@@ -1,7 +1,7 @@
 package com.ibicn.hr.config.security;
 
-import com.ibicn.hr.entity.sys.systemRole;
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.SystemRole;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.dao.sys.SystemUserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,12 +27,12 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        systemUser user = userRepository.findByUserName(userName);
+        SystemUser user = userRepository.findByUserName(userName);
         if(user==null){
             throw new UsernameNotFoundException("用户不存在");
         }
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (systemRole role : user.getRoles()) {
+        for (SystemRole role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
         return new User(user.getUserName(), user.getPassword(), authorities);

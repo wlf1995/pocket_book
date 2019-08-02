@@ -1,7 +1,7 @@
 package com.ibicn.hr.controller.sys;
 
 import com.ibicn.hr.controller.base.BaseController;
-import com.ibicn.hr.entity.sys.officeArea;
+import com.ibicn.hr.entity.sys.OfficeArea;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
@@ -19,24 +19,24 @@ import java.util.Map;
 public class BangongquController extends BaseController {
 
     @RequestMapping("list")
-    public Result list(officeArea data, BaseModel baseModel) {
+    public Result list(OfficeArea data, BaseModel baseModel) {
         PageResult asc = bangongquService.list(data, baseModel.setOrder("asc"));
-        List<officeArea> content = asc.getContent();
+        List<OfficeArea> content = asc.getContent();
         List<Map> list = new ArrayList<>();
-        for (officeArea role : content) {
+        for (OfficeArea role : content) {
             list.add(getByMap(role));
         }
         return Result.ok(PageResult.getPageResult(asc, list));
     }
 
     @RequestMapping("get")
-    public Result get(officeArea data) {
-        officeArea role = bangongquService.getById(data.getId());
+    public Result get(OfficeArea data) {
+        OfficeArea role = bangongquService.getById(data.getId());
         return Result.ok(getByMap(role));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(officeArea data) {
+    public Result saveOK(OfficeArea data) {
         Result check = check(data);
         if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
@@ -46,8 +46,8 @@ public class BangongquController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(officeArea data) {
-        officeArea bangongqu = bangongquService.getById(data.getId());
+    public Result updateOK(OfficeArea data) {
+        OfficeArea bangongqu = bangongquService.getById(data.getId());
         if (bangongqu == null) {
             return Result.failure("未获取到办公区");
         }
@@ -73,9 +73,9 @@ public class BangongquController extends BaseController {
 
     @RequestMapping("getByDict")
     public Result getByDict() {
-        List<officeArea> content = bangongquService.getAllBangonqu();
+        List<OfficeArea> content = bangongquService.getAllBangonqu();
         List<Map> list = new ArrayList<>();
-        for (officeArea bangongqu : content) {
+        for (OfficeArea bangongqu : content) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("id", bangongqu.getId());
             map.put("name", bangongqu.getAreaName());
@@ -84,14 +84,14 @@ public class BangongquController extends BaseController {
         return Result.ok(list);
     }
 
-    private Result check(officeArea data) {
+    private Result check(OfficeArea data) {
         if (StringUtil.isBlank(data.getAreaName())) {
             return Result.failure("名称不能为空");
         }
         return Result.ok();
     }
 
-    private Map getByMap(officeArea data) {
+    private Map getByMap(OfficeArea data) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", data.getId());
         map.put("name", data.getAreaName());

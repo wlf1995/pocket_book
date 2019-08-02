@@ -1,7 +1,7 @@
 package com.ibicn.hr.service.impl.sys;
 
 import com.ibicn.hr.dao.sys.SystemRoleDao;
-import com.ibicn.hr.entity.sys.systemRole;
+import com.ibicn.hr.entity.sys.SystemRole;
 import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemRoleServiceI;
 import com.ibicn.hr.util.BaseModel;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class SystemRoleServiceImpl extends BaseServiceImpl<systemRole> implements SystemRoleServiceI {
+public class SystemRoleServiceImpl extends BaseServiceImpl<SystemRole> implements SystemRoleServiceI {
     @Autowired
     SystemRoleDao systemRoleDao;
 
@@ -30,8 +30,8 @@ public class SystemRoleServiceImpl extends BaseServiceImpl<systemRole> implement
     }
 
     @Override
-    public PageResult list(systemRole data, BaseModel baseModel) {
-        Specification<systemRole> specification = (Specification<systemRole>) (root, query, criteriaBuilder) -> {
+    public PageResult list(SystemRole data, BaseModel baseModel) {
+        Specification<SystemRole> specification = (Specification<SystemRole>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (StringUtil.isNotEmpty(data.getRoleName())) {
@@ -45,13 +45,13 @@ public class SystemRoleServiceImpl extends BaseServiceImpl<systemRole> implement
     }
 
     @Override
-    public systemRole getById(Integer id) {
+    public SystemRole getById(Integer id) {
         return systemRoleDao.getOne(id);
     }
 
     @Override
-    public List<systemRole> getAllRole() {
-        List<systemRole> list = systemRoleDao.findAll();
+    public List<SystemRole> getAllRole() {
+        List<SystemRole> list = systemRoleDao.findAll();
         if (CollectionUtil.size(list) > 0) {
             return list;
         }

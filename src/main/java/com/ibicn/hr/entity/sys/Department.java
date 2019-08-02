@@ -4,17 +4,15 @@ import com.ibicn.hr.ENUM.EnumBaseStatus;
 import com.ibicn.hr.entity.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "department")
-public class department extends BaseEntity implements Serializable  {
+public class Department extends BaseEntity implements Serializable  {
 
     /**
      * 主键
@@ -41,7 +39,7 @@ public class department extends BaseEntity implements Serializable  {
      */
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    private department parent_id;
+    private Department parent_id;
 
     /**
      * 0为停用状态，1为正常状态
@@ -55,6 +53,6 @@ public class department extends BaseEntity implements Serializable  {
      */
     @ManyToOne
     @JoinColumn(name = "officearea_id")
-    private officeArea officeArea_id;
+    private OfficeArea officeArea_id;
 
 }

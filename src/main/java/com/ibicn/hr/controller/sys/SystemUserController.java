@@ -2,18 +2,15 @@ package com.ibicn.hr.controller.sys;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ibicn.hr.ENUM.EnumYesOrNo;
 import com.ibicn.hr.controller.base.BaseController;
-import com.ibicn.hr.entity.sys.officeArea;
-import com.ibicn.hr.entity.sys.systemRole;
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.SystemRole;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageResult;
 import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,11 +28,11 @@ public class SystemUserController extends BaseController {
     private PasswordEncoder passwordEncoder;
 
     @RequestMapping("list")
-    public Result list(systemUser data, BaseModel baseModel) {
+    public Result list(SystemUser data, BaseModel baseModel) {
         PageResult pr = userService.list(data, baseModel);
-        List<systemUser> result = pr.getContent();
+        List<SystemUser> result = pr.getContent();
         List<Map> userVector = new ArrayList<>();
-        for (systemUser user : result) {
+        for (SystemUser user : result) {
             userVector.add(getByMap(user));
         }
         PageResult pageUtil = PageResult.getPageResult(pr, userVector);
@@ -43,17 +40,17 @@ public class SystemUserController extends BaseController {
     }
 
     @RequestMapping("get")
-    public Result get(systemUser data) {
-        systemUser user = userService.getById(data.getId());
+    public Result get(SystemUser data) {
+        SystemUser user = userService.getById(data.getId());
         return Result.ok(getByMap(user));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(systemUser data) {
+    public Result saveOK(SystemUser data) {
         if (StringUtil.isBlank(data.getUserName())) {
             return Result.failure("用户名必填");
         }
-        systemUser checkUser = userService.getUsesByNameAndBianhaoNoId(data.getUserName(), "", 0);
+        SystemUser checkUser = userService.getUsesByNameAndBianhaoNoId(data.getUserName(), "", 0);
         if (checkUser != null) {
             return Result.failure("用户名重复，请重新设置");
         }
@@ -69,12 +66,12 @@ public class SystemUserController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(systemUser data, HttpServletRequest request) {
-        systemUser user = userService.getById(data.getId());
+    public Result updateOK(SystemUser data, HttpServletRequest request) {
+        SystemUser user = userService.getById(data.getId());
         if (user == null) {
             return Result.failure("未获取到用户");
         }
-        systemUser checkUser = userService.getUsesByNameAndBianhaoNoId(data.getUserName(), "", data.getId());
+        SystemUser checkUser = userService.getUsesByNameAndBianhaoNoId(data.getUserName(), "", data.getId());
         if (checkUser != null) {
             return Result.failure("用户名重复，请重新设置");
         }
@@ -95,13 +92,13 @@ public class SystemUserController extends BaseController {
      * 用户角色授权
      */
     @RequestMapping("/authoUser")
-    public Result authoUser(systemUser data) {
-        systemUser user = userService.getById(data.getId());
+    public Result authoUser(SystemUser data) {
+        SystemUser user = userService.getById(data.getId());
         if (user == null) {
             return Result.failure("未获取到用户");
         }
         JSONArray array = new JSONArray();
-        List<systemRole> roles = systemRoleServiceI.getAllRole();
+        List<SystemRole> roles = systemRoleServiceI.getAllRole();
         for (int i = 0; i < CollectionUtil.size(roles); i++) {
             JSONObject object = new JSONObject();
             object.put("id", roles.get(i).getId());
@@ -110,7 +107,7 @@ public class SystemUserController extends BaseController {
         }
         List<Integer> checks = new ArrayList<>();
         if (CollectionUtil.size(user.getRoles()) > 0) {
-            for (systemRole role : user.getRoles()) {
+            for (SystemRole role : user.getRoles()) {
                 checks.add(role.getId());
             }
         }
@@ -125,8 +122,8 @@ public class SystemUserController extends BaseController {
      * 用户角色授权
      */
     @RequestMapping("/saveAutho")
-    public Result saveAutho(systemUser data, String ids) {
-        systemUser user = userService.getById(data.getId());
+    public Result saveAutho(SystemUser data, String ids) {
+        SystemUser user = userService.getById(data.getId());
         if (user == null) {
             return Result.failure("未获取到用户");
         }
@@ -134,12 +131,12 @@ public class SystemUserController extends BaseController {
             return Result.failure("必须要有一个角色");
         }
         String[] id = ids.split(",");
-        Set<systemRole> roles = new HashSet<>();
+        Set<SystemRole> roles = new HashSet<>();
         for (int i = 0; i < CollectionUtil.size(id); i++) {
             if (StringUtil.isEmpty(id[i])) {
                 continue;
             }
-            systemRole role = systemRoleServiceI.getById(StringUtil.parseInt(id[i]));
+            SystemRole role = systemRoleServiceI.getById(StringUtil.parseInt(id[i]));
             if (role == null) {
                 return Result.failure("未获取到角色");
             }
@@ -152,10 +149,10 @@ public class SystemUserController extends BaseController {
 
     //根据用户名搜索
     @RequestMapping("/getSystemUserByName")
-    public Result getSystemUserByName(systemUser data, HttpServletRequest request) {
-        List<systemUser> systemUserByName = userService.getSystemUserByName(data.getRealName(), data.getId());
+    public Result getSystemUserByName(SystemUser data, HttpServletRequest request) {
+        List<SystemUser> systemUserByName = userService.getSystemUserByName(data.getRealName(), data.getId());
         List<Map> list = new ArrayList<>();
-        for (systemUser user : systemUserByName) {
+        for (SystemUser user : systemUserByName) {
             list.add(getByMap(user));
         }
         return Result.ok(list);
@@ -163,10 +160,10 @@ public class SystemUserController extends BaseController {
 
     //仅根据用户名搜索
     @RequestMapping("/getbyname")
-    public Result getByName(systemUser data) {
-        List<systemUser> systemUserByName = userService.getSystemUserByName(data.getRealName(), 0);
+    public Result getByName(SystemUser data) {
+        List<SystemUser> systemUserByName = userService.getSystemUserByName(data.getRealName(), 0);
         List<Map> list = new ArrayList<>();
-        for (systemUser user : systemUserByName) {
+        for (SystemUser user : systemUserByName) {
             list.add(getByMap(user));
         }
         return Result.ok(list);
@@ -193,7 +190,7 @@ public class SystemUserController extends BaseController {
         if (!StringUtil.equals(password, repassword)) {
             return Result.failure("两次密码输入不一致");
         }
-        systemUser user = userService.getById(getUser().getId());
+        SystemUser user = userService.getById(getUser().getId());
         user.setPassword(passwordEncoder.encode(repassword));
         userService.update(user);
         return Result.ok("修改成功");
@@ -203,11 +200,11 @@ public class SystemUserController extends BaseController {
      * 根据id，和name获得用户，只获得用户的id和name
      */
     @RequestMapping("getuser")
-    public Result getuser(systemUser data) {
-        List<systemUser> list = userService.getUser(data.getRealName(), data.getId());
-        List<systemUser> listUser = new ArrayList<>();
-        for (systemUser user : list) {
-            systemUser user1 = new systemUser();
+    public Result getuser(SystemUser data) {
+        List<SystemUser> list = userService.getUser(data.getRealName(), data.getId());
+        List<SystemUser> listUser = new ArrayList<>();
+        for (SystemUser user : list) {
+            SystemUser user1 = new SystemUser();
             user1.setId(user.getId());
             user1.setRealName(user.getRealName());
             listUser.add(user1);
@@ -235,7 +232,7 @@ public class SystemUserController extends BaseController {
         return Result.ok(map);
     }
 
-    private Map getByMap(systemUser user) {
+    private Map getByMap(SystemUser user) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", user.getId());
         map.put("realName", user.getRealName());

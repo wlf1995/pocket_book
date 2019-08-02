@@ -1,7 +1,7 @@
 package com.ibicn.hr.service.impl.sys;
 
 import com.ibicn.hr.dao.sys.SystemDeptDao;
-import com.ibicn.hr.entity.sys.department;
+import com.ibicn.hr.entity.sys.Department;
 import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemDeptServiceI;
 import com.ibicn.hr.util.BaseModel;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class SysDeptServiceImpl extends BaseServiceImpl<department> implements SystemDeptServiceI {
+public class SysDeptServiceImpl extends BaseServiceImpl<Department> implements SystemDeptServiceI {
     @Autowired
     SystemDeptDao systemDeptDao;
 
@@ -30,8 +30,8 @@ public class SysDeptServiceImpl extends BaseServiceImpl<department> implements S
     }
 
     @Override
-    public PageResult list(department data, BaseModel baseModel) {
-        Specification<department> specification = (Specification<department>) (root, query, criteriaBuilder) -> {
+    public PageResult list(Department data, BaseModel baseModel) {
+        Specification<Department> specification = (Specification<Department>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (StringUtil.isNotEmpty(data.getDepartmentName())) {
@@ -45,13 +45,13 @@ public class SysDeptServiceImpl extends BaseServiceImpl<department> implements S
     }
 
     @Override
-    public department getById(Integer id) {
+    public Department getById(Integer id) {
         return systemDeptDao.getOne(id);
     }
 
     @Override
-    public List<department> getAllBangonqu() {
-        List<department> list = systemDeptDao.findAll();
+    public List<Department> getAllBangonqu() {
+        List<Department> list = systemDeptDao.findAll();
         if (CollectionUtil.size(list) > 0) {
             return list;
         }

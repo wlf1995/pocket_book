@@ -2,8 +2,8 @@ package com.ibicn.hr.controller.base;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ibicn.hr.entity.sys.systemMenu;
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.service.sys.*;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
@@ -55,10 +55,10 @@ public class BaseController {
     /**
      * 得到当前登录用户
      */
-    public systemUser getUser() {
+    public SystemUser getUser() {
         Principal principal = getRequest().getUserPrincipal();
         String userName = principal.getName();
-        systemUser curUser = null;
+        SystemUser curUser = null;
         if (StringUtil.isNotBlank(userName)) {
             curUser = userService.findByUserName(userName);
         } else {
@@ -90,10 +90,10 @@ public class BaseController {
      * @param rootMenu 要查找的列表
      * @return
      */
-    protected JSONArray getChild(Integer id, List<systemMenu> rootMenu) {
+    protected JSONArray getChild(Integer id, List<SystemMenu> rootMenu) {
         // 子菜单
         JSONArray array = new JSONArray();
-        for (systemMenu menu : rootMenu) {
+        for (SystemMenu menu : rootMenu) {
             // 遍历所有节点，将父菜单id与传过来的id比较
             if (menu.getParent_id() != null) {
                 if (menu.getParent_id().getId().equals(id)) {

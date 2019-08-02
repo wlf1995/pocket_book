@@ -1,13 +1,13 @@
 package com.ibicn.hr.service.sys;
 
-import com.ibicn.hr.entity.sys.officeArea;
+import com.ibicn.hr.entity.sys.OfficeArea;
 import com.ibicn.hr.service.base.BaseServiceI;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageResult;
 
 import java.util.List;
 
-public interface BangongquServiceI extends BaseServiceI<officeArea> {
+public interface BangongquServiceI extends BaseServiceI<OfficeArea> {
     void delete(Integer id);
 
     /**
@@ -15,9 +15,9 @@ public interface BangongquServiceI extends BaseServiceI<officeArea> {
      *
      * @return
      */
-    List<officeArea> getAllBangonqu();
+    List<OfficeArea> getAllBangonqu();
 
-    PageResult<officeArea> list(officeArea data, BaseModel asc);
+    PageResult<OfficeArea> list(OfficeArea data, BaseModel asc);
 
-    officeArea getById(Integer id);
+    OfficeArea getById(Integer id);
 }

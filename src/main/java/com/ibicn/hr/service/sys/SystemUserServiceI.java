@@ -1,7 +1,7 @@
 package com.ibicn.hr.service.sys;
 
 
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.service.base.BaseServiceI;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageResult;
@@ -12,13 +12,13 @@ import java.util.List;
 /**
  * The Interface UserService.
  */
-public interface SystemUserServiceI extends BaseServiceI<systemUser> {
+public interface SystemUserServiceI extends BaseServiceI<SystemUser> {
 
-    systemUser findByUserName(String userName);
+    SystemUser findByUserName(String userName);
 
-    List<systemUser> getSystemUserByName(String name, int id);
+    List<SystemUser> getSystemUserByName(String name, int id);
 
-    systemUser getSystemUserByBianhao(String bianhao);
+    SystemUser getSystemUserByBianhao(String bianhao);
 
     /**
      * 获取修改密码天数
@@ -35,10 +35,10 @@ public interface SystemUserServiceI extends BaseServiceI<systemUser> {
      * @param id
      * @return
      */
-    List<systemUser> getUser(String name, int id);
+    List<SystemUser> getUser(String name, int id);
 
 
-    List<systemUser> getByCompany(Integer companyId);
+    List<SystemUser> getByCompany(Integer companyId);
 
     List<String> getUserBianhaoByIds(String ids);
 
@@ -50,12 +50,12 @@ public interface SystemUserServiceI extends BaseServiceI<systemUser> {
      * @Param userBianhao
      * @Param id
      **/
-    systemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id);
+    SystemUser getUsesByNameAndBianhaoNoId(String userName, String userBianhao, Integer id);
 
-    PageResult list(systemUser data, BaseModel baseModel);
+    PageResult list(SystemUser data, BaseModel baseModel);
 
 
-    systemUser getById(Integer id);
+    SystemUser getById(Integer id);
 
     /**
      * @param

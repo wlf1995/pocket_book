@@ -2,7 +2,7 @@ package com.ibicn.hr.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibicn.hr.dao.sys.SystemUserDao;
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.util.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class MyAuthenticationSuccessOrFailureHandler implements AuthenticationSu
     }
 
     private HashMap<String, Object> getUserMap(Authentication authentication) {
-        systemUser byUserName = userDao.findByUserName(authentication.getName());
+        SystemUser byUserName = userDao.findByUserName(authentication.getName());
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", byUserName.getId());
         map.put("realName", byUserName.getRealName());

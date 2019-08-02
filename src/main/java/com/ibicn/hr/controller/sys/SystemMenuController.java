@@ -1,6 +1,6 @@
 package com.ibicn.hr.controller.sys;
 
-import com.ibicn.hr.entity.sys.systemMenu;
+import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.util.BaseModel;
 import com.ibicn.hr.util.PageResult;
@@ -17,28 +17,28 @@ import java.util.List;
 public class SystemMenuController extends BaseController {
 
     @RequestMapping("list")
-    public Result list(systemMenu data, BaseModel baseModel) {
+    public Result list(SystemMenu data, BaseModel baseModel) {
         PageResult page = systemMenuServiceI.list(data, baseModel.setOrder("asc").setSort("id,sort"));
-        List<systemMenu> content = page.getContent();
+        List<SystemMenu> content = page.getContent();
         List<Map> list=new ArrayList<>();
-        for(systemMenu menu:content){
+        for(SystemMenu menu:content){
             list.add(getByMap(menu));
         }
         return Result.ok(PageResult.getPageResult(page,list));
     }
 
     @RequestMapping("get")
-    public Result get(systemMenu data) {
-        systemMenu menu = systemMenuServiceI.getById(data.getId());
+    public Result get(SystemMenu data) {
+        SystemMenu menu = systemMenuServiceI.getById(data.getId());
         return Result.ok(getByMap(menu));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(systemMenu data) {
-        systemMenu menu = new systemMenu();
+    public Result saveOK(SystemMenu data) {
+        SystemMenu menu = new SystemMenu();
         if (data.getParent_id() != null && data.getParent_id().getId() > 0) {
             Integer id = data.getParent_id().getId();
-            systemMenu parent = systemMenuServiceI.getById(id);
+            SystemMenu parent = systemMenuServiceI.getById(id);
             if (menu.isIfSetParent(parent)) {
                 menu.setParent_id(parent);
             } else {
@@ -59,13 +59,13 @@ public class SystemMenuController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(systemMenu data) {
-        systemMenu menu = systemMenuServiceI.getById(data.getId());
+    public Result updateOK(SystemMenu data) {
+        SystemMenu menu = systemMenuServiceI.getById(data.getId());
         if (menu == null) {
             return Result.failure("未获取到菜单");
         }
         if (data.getParent_id() != null && data.getParent_id().getId() > 0) {
-            systemMenu parent = systemMenuServiceI.getById(data.getParent_id().getId());
+            SystemMenu parent = systemMenuServiceI.getById(data.getParent_id().getId());
             if (menu.isIfSetParent(parent)) {
                 menu.setParent_id(parent);
             } else {
@@ -87,18 +87,18 @@ public class SystemMenuController extends BaseController {
     }
 
     @RequestMapping("getParent")
-    public Result getParentMenu(systemMenu data) {
-        List<systemMenu> menuOrNotInMenu = systemMenuServiceI.getMenuOrNotInMenu(data.getMenuName(), data.getId());
+    public Result getParentMenu(SystemMenu data) {
+        List<SystemMenu> menuOrNotInMenu = systemMenuServiceI.getMenuOrNotInMenu(data.getMenuName(), data.getId());
 
         List<Map> list=new ArrayList<>();
-        for(systemMenu menu:menuOrNotInMenu){
+        for(SystemMenu menu:menuOrNotInMenu){
             list.add(getByMap(menu));
         }
         return Result.ok(list);
     }
 
 
-    private Result check(systemMenu data) {
+    private Result check(SystemMenu data) {
         if (StringUtil.isBlank(data.getPath())) {
             return Result.failure("路径不能为空");
         }
@@ -114,7 +114,7 @@ public class SystemMenuController extends BaseController {
         return Result.ok();
     }
 
-    private Map getByMap(systemMenu menu){
+    private Map getByMap(SystemMenu menu){
         HashMap<String,Object> map=new HashMap<>();
         map.put("id",menu.getId());
         map.put("name",menu.getMenuName());
@@ -123,7 +123,7 @@ public class SystemMenuController extends BaseController {
         map.put("type",menu.getType());
         map.put("createdTime",menu.getCreatedTime());
         if (menu.getParent_id()!=null){
-            systemMenu menu1=new systemMenu();
+            SystemMenu menu1=new SystemMenu();
             menu1.setId(menu.getParent_id().getId());
             menu1.setMenuName(menu.getParent_id().getMenuName());
             map.put("parentMenu",menu1);

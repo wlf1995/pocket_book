@@ -14,7 +14,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "officeArea")
-public class officeArea extends BaseEntity implements Serializable {
+public class OfficeArea extends BaseEntity implements Serializable {
     /**
      * id
      */

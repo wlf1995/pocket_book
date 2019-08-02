@@ -1,8 +1,7 @@
 package com.ibicn.hr.controller.sys;
 
 import com.ibicn.hr.ENUM.EnumBaseStatus;
-import com.ibicn.hr.entity.sys.department;
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.Department;
 import com.ibicn.hr.controller.base.BaseController;
 import com.ibicn.hr.dao.sys.SystemDeptDao;
 import com.ibicn.hr.util.BaseModel;
@@ -27,24 +26,24 @@ public class SystemDeptController extends BaseController {
     SystemDeptDao systemDeptDao;
 
     @RequestMapping("list")
-    public Result list(department data, BaseModel baseModel) {
+    public Result list(Department data, BaseModel baseModel) {
         PageResult pr = systemDeptServiceI.list(data, baseModel.setOrder("asc"));
-        List<department> content = pr.getContent();
+        List<Department> content = pr.getContent();
         List<Map> list = new ArrayList<>();
-        for (department role : content) {
+        for (Department role : content) {
             list.add(getByMap(role));
         }
         return Result.ok(PageResult.getPageResult(pr, list));
     }
 
     @RequestMapping("get")
-    public Result get(department data) {
-        department role = systemDeptServiceI.getById(data.getId());
+    public Result get(Department data) {
+        Department role = systemDeptServiceI.getById(data.getId());
         return Result.ok(getByMap(role));
     }
 
     @RequestMapping("saveOK")
-    public Result saveOK(department data) {
+    public Result saveOK(Department data) {
         Result check = check(data);
         if (!check.getCode().equals(Result.StatusCode.SUCCESS_CODE)) {
             return check;
@@ -59,8 +58,8 @@ public class SystemDeptController extends BaseController {
     }
 
     @RequestMapping("updateOK")
-    public Result updateOK(department data) {
-        department systemDept = systemDeptServiceI.getById(data.getId());
+    public Result updateOK(Department data) {
+        Department systemDept = systemDeptServiceI.getById(data.getId());
         if (systemDept == null) {
             return Result.failure("未获取到部门");
         }
@@ -92,9 +91,9 @@ public class SystemDeptController extends BaseController {
     }
     @RequestMapping("getByDict")
     public Result getByDict() {
-        List<department> content = systemDeptServiceI.getAllBangonqu();
+        List<Department> content = systemDeptServiceI.getAllBangonqu();
         List<Map> list = new ArrayList<>();
-        for (department systemDept : content) {
+        for (Department systemDept : content) {
             HashMap<String,Object> map=new HashMap<>();
             map.put("id", systemDept.getId());
             map.put("name", systemDept.getDepartmentName());
@@ -107,14 +106,14 @@ public class SystemDeptController extends BaseController {
         if (bijiao.intValue()==parent){
             return true;
         }
-        Specification<department> specification = (Specification<department>) (root, query, criteriaBuilder) -> {
+        Specification<Department> specification = (Specification<Department>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
-            Join<department, department> join = root.join("parentDept", JoinType.LEFT);
+            Join<Department, Department> join = root.join("parentDept", JoinType.LEFT);
             list.add(criteriaBuilder.equal(join.get("id"), bijiao));
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<department> all = systemDeptDao.findAll(specification);
-        for (department dept:all){
+        List<Department> all = systemDeptDao.findAll(specification);
+        for (Department dept:all){
             Boolean die = this.isDie(dept.getId(), parent);
             if (die){
                 return true;
@@ -123,20 +122,20 @@ public class SystemDeptController extends BaseController {
         return false;
     }
 
-    private Result check(department data) {
+    private Result check(Department data) {
         if (StringUtil.isBlank(data.getDepartmentName())) {
             return Result.failure("名称不能为空");
         }
         return Result.ok();
     }
 
-    private Map getByMap(department data) {
+    private Map getByMap(Department data) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", data.getId());
         map.put("name", data.getDepartmentName());
         map.put("createdTime", data.getCreatedTime());
         if (data.getParent_id()!=null){
-            department dept=new department();
+            Department dept=new Department();
             dept.setId(data.getParent_id().getId());
             dept.setDepartmentName(data.getParent_id().getDepartmentName());
             map.put("parentDept",dept);

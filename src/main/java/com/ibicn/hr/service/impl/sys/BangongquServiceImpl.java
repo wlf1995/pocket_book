@@ -2,7 +2,7 @@ package com.ibicn.hr.service.impl.sys;
 
 import com.ibicn.hr.dao.base.BaseDaoI;
 import com.ibicn.hr.dao.sys.BangongquDao;
-import com.ibicn.hr.entity.sys.officeArea;
+import com.ibicn.hr.entity.sys.OfficeArea;
 import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.BangongquServiceI;
 import com.ibicn.hr.util.BaseModel;
@@ -24,19 +24,19 @@ import java.util.List;
 
 @Transactional
 @Service
-public class BangongquServiceImpl extends BaseServiceImpl<officeArea> implements BangongquServiceI {
+public class BangongquServiceImpl extends BaseServiceImpl<OfficeArea> implements BangongquServiceI {
     @Autowired
     BangongquDao bangongquDao;
 
     @Autowired
-    public BangongquServiceImpl(BaseDaoI<officeArea> baseDao) {
+    public BangongquServiceImpl(BaseDaoI<OfficeArea> baseDao) {
         super(baseDao);
     }
 
     @Override
-    public PageResult list(officeArea data, BaseModel baseModel) {
+    public PageResult list(OfficeArea data, BaseModel baseModel) {
         Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
-        Specification<officeArea> specification = (Specification<officeArea>) (root, query, criteriaBuilder) -> {
+        Specification<OfficeArea> specification = (Specification<OfficeArea>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (StringUtil.isNotEmpty(data.getAreaName())) {
@@ -45,12 +45,12 @@ public class BangongquServiceImpl extends BaseServiceImpl<officeArea> implements
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        Page<officeArea> all = bangongquDao.findAll(specification, pageable);
+        Page<OfficeArea> all = bangongquDao.findAll(specification, pageable);
         return PageResult.getPageResult(all);
     }
 
     @Override
-    public officeArea getById(Integer id) {
+    public OfficeArea getById(Integer id) {
         return bangongquDao.getOne(id);
     }
 
@@ -62,8 +62,8 @@ public class BangongquServiceImpl extends BaseServiceImpl<officeArea> implements
 
 
     @Override
-    public List<officeArea> getAllBangonqu() {
-        List<officeArea> list = bangongquDao.findAll();
+    public List<OfficeArea> getAllBangonqu() {
+        List<OfficeArea> list = bangongquDao.findAll();
         if (CollectionUtil.size(list) > 0) {
             return list;
         }

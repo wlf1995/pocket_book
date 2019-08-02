@@ -1,4 +1,4 @@
-package com.ibicn.hr.entity.personnelfile;
+package com.ibicn.hr.entity.personnel;
 
 import com.ibicn.hr.entity.base.BaseEntity;
 import lombok.Getter;
@@ -54,4 +54,8 @@ public class CV extends BaseEntity implements Serializable {
      **/
     @Column(name = "jobtitle")
     private String jobTitle;
+
+    @ManyToOne
+    @JoinColumn(name="person_id",nullable = false)
+    private Person person;
 }

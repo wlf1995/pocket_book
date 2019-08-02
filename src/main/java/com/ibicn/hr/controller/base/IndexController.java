@@ -3,8 +3,8 @@ package com.ibicn.hr.controller.base;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ibicn.hr.ENUM.EnumMenuType;
-import com.ibicn.hr.entity.sys.systemMenu;
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.util.ImageUtil;
 import com.ibicn.hr.util.Result;
 import com.ibicnCloud.util.CollectionUtil;
@@ -31,8 +31,8 @@ public class IndexController extends BaseController {
      */
     @RequestMapping(value = {"index", "/", ""}, method = RequestMethod.GET)
     public String index(Model model) {
-        systemUser user = getUser();
-        List<systemMenu> list = systemMenuServiceI.getMenuByUser(user);
+        SystemUser user = getUser();
+        List<SystemMenu> list = systemMenuServiceI.getMenuByUser(user);
         List<String> menuPaths = systemMenuServiceI.getMenyPathIdByUser(user, EnumMenuType.MENU);
         JSONArray array = new JSONArray();
         for (int i = 0; i < CollectionUtil.size(list); i++) {
@@ -41,7 +41,7 @@ public class IndexController extends BaseController {
             object.put("path", list.get(i).getPath());
             JSONArray childarray = new JSONArray();
             if (CollectionUtil.size(list.get(i).getChilds()) > 0) {
-                List<systemMenu> menus = list.get(i).getSortChilds();
+                List<SystemMenu> menus = list.get(i).getSortChilds();
                 for (int j = 0; j < CollectionUtil.size(menus); j++) {
                     if (menus.get(j).getType().getIndex() == EnumMenuType.FEATURES.getIndex()) {
                         continue;

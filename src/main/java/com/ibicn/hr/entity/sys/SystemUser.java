@@ -1,8 +1,8 @@
 package com.ibicn.hr.entity.sys;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibicn.hr.ENUM.*;
+import com.ibicn.hr.entity.personnel.Person;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 @Getter
 @Entity
 @Table(name = "systemUser")
-public class systemUser implements Serializable {
+public class SystemUser implements Serializable {
 
     /**
      * 主键
@@ -73,22 +73,16 @@ public class systemUser implements Serializable {
     private Integer updatedCount;
 
 
-    @ManyToMany(targetEntity = systemRole.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = SystemRole.class, fetch = FetchType.EAGER)
     @JoinTable(name = "systemUserRole",
             joinColumns = @JoinColumn(name = "systemUser_id", referencedColumnName = "id", nullable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "systemRole_id", referencedColumnName = "id", nullable = false, updatable = false))
-    private Set<systemRole> roles = new HashSet<systemRole>();
+    private Set<SystemRole> roles = new HashSet<SystemRole>();
 
-    @JsonIgnore
-    public void setStatus(String userStatus) {
-        this.status = (EnumUserStatus) EnumUtil.valueOf(EnumUserStatus.class, userStatus);
-    }
-    public void setUserStatusIndex(String userStatusIndex) {
-        this.userStatusIndex = userStatusIndex;
-        this.status = (EnumUserStatus) EnumUtil.valueOf(EnumUserStatus.class, userStatusIndex);
-    }
+    @ManyToOne
+    @JoinColumn(name = "personid",nullable = false)
+    private Person person;
 
-    @Transient
-    private String userStatusIndex;
+
 
 }

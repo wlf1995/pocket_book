@@ -2,8 +2,8 @@ package com.ibicn.hr.service.impl.sys;
 
 import com.ibicn.hr.ENUM.EnumMenuType;
 import com.ibicn.hr.dao.sys.SystemMenuDao;
-import com.ibicn.hr.entity.sys.systemMenu;
-import com.ibicn.hr.entity.sys.systemUser;
+import com.ibicn.hr.entity.sys.SystemMenu;
+import com.ibicn.hr.entity.sys.SystemUser;
 import com.ibicn.hr.service.base.BaseServiceImpl;
 import com.ibicn.hr.service.sys.SystemMenuServiceI;
 import com.ibicn.hr.util.BaseModel;
@@ -27,7 +27,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implements SystemMenuServiceI {
+public class SystemMenuServiceImpl extends BaseServiceImpl<SystemMenu> implements SystemMenuServiceI {
     @Autowired
     SystemMenuDao menuDao;
 
@@ -44,8 +44,8 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
      * @return
      */
     @Override
-    public List<systemMenu> getMenuOrNotInMenu(String name, int id) {
-        Specification<systemMenu> specification = (Specification<systemMenu>) (root, query, criteriaBuilder) -> {
+    public List<SystemMenu> getMenuOrNotInMenu(String name, int id) {
+        Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (StringUtil.isNotEmpty(name) && !" ".equals(name)) {
                 // 第一个userId为CloudServerDao中的字段，第二个userId为参数
@@ -58,7 +58,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<systemMenu> list = menuDao.findAll(specification);
+        List<SystemMenu> list = menuDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
@@ -71,8 +71,8 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
      * @return
      */
     @Override
-    public List<systemMenu> getAllMenu(EnumMenuType type) {
-        Specification<systemMenu> specification = (Specification<systemMenu>) (root, query, criteriaBuilder) -> {
+    public List<SystemMenu> getAllMenu(EnumMenuType type) {
+        Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (type != null) {
@@ -81,7 +81,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<systemMenu> list = menuDao.findAll(specification);
+        List<SystemMenu> list = menuDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
@@ -95,11 +95,11 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
      * @return
      */
     @Override
-    public List<systemMenu> getMenyByRoleIds(String ids) {
+    public List<SystemMenu> getMenyByRoleIds(String ids) {
         if (StringUtil.isBlank(ids)) {
             return Collections.emptyList();
         }
-        Specification<systemMenu> specification = (Specification<systemMenu>) (root, query, criteriaBuilder) -> {
+        Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             Join<Object, Object> parentMenu = root.join("parentMenu", JoinType.LEFT);
@@ -115,7 +115,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
             list.add(in);
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<systemMenu> list = menuDao.findAll(specification);
+        List<SystemMenu> list = menuDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
@@ -128,8 +128,8 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
      * @return
      */
     @Override
-    public List<systemMenu> getPanentMenu(EnumMenuType type) {
-        Specification<systemMenu> specification = (Specification<systemMenu>) (root, query, criteriaBuilder) -> {
+    public List<SystemMenu> getPanentMenu(EnumMenuType type) {
+        Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             Join<Object, Object> parentMenu = root.join("parentMenu", JoinType.LEFT);
@@ -141,7 +141,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        List<systemMenu> list = menuDao.findAll(specification);
+        List<SystemMenu> list = menuDao.findAll(specification);
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
@@ -152,8 +152,8 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
      * 根据用户获取菜单树
      */
     @Override
-    public List<systemMenu> getMenuByUser(systemUser user) {
-        List<systemMenu> list = menuDao.getMenuByUser(user.getId());
+    public List<SystemMenu> getMenuByUser(SystemUser user) {
+        List<SystemMenu> list = menuDao.getMenuByUser(user.getId());
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
@@ -164,7 +164,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
      * 获取用户所有角色
      */
     @Override
-    public List<String> getRoleIdByUser(systemUser user) {
+    public List<String> getRoleIdByUser(SystemUser user) {
         List<String> list = menuDao.getRoleIdByUser(user.getId());
         if (CollectionUtil.size(list) > 0) {
             return list;
@@ -176,7 +176,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
      * 获取用户所有菜单路径
      */
     @Override
-    public List<String> getMenyPathIdByUser(systemUser user, EnumMenuType type) {
+    public List<String> getMenyPathIdByUser(SystemUser user, EnumMenuType type) {
         List<String> list = menuDao.getMenyPathIdByUser(user.getId(), type.getIndex());
         if (CollectionUtil.size(list) > 0) {
             return list;
@@ -185,16 +185,16 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<systemMenu> implement
     }
 
     @Override
-    public systemMenu getById(Integer id) {
-        systemMenu one = menuDao.getOne(id);
+    public SystemMenu getById(Integer id) {
+        SystemMenu one = menuDao.getOne(id);
         return one;
     }
 
     @Override
-    public PageResult list(systemMenu data, BaseModel baseModel) {
+    public PageResult list(SystemMenu data, BaseModel baseModel) {
         Pageable pageable = PageRequest.of(baseModel.getPage() - 1, baseModel.getLimit());
 
-        Specification<systemMenu> specification = (Specification<systemMenu>) (root, query, criteriaBuilder) -> {
+        Specification<SystemMenu> specification = (Specification<SystemMenu>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (StringUtil.isNotEmpty(data.getMenuName())) {
