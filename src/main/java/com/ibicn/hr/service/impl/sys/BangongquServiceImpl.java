@@ -1,6 +1,5 @@
 package com.ibicn.hr.service.impl.sys;
 
-import com.ibicn.hr.dao.base.BaseDaoI;
 import com.ibicn.hr.dao.sys.BangongquDao;
 import com.ibicn.hr.entity.sys.OfficeArea;
 import com.ibicn.hr.service.base.BaseServiceImpl;
@@ -10,7 +9,6 @@ import com.ibicn.hr.util.PageResult;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,11 +23,9 @@ import java.util.List;
 @Transactional
 @Service
 public class BangongquServiceImpl extends BaseServiceImpl<OfficeArea> implements BangongquServiceI {
-    @Autowired
-    BangongquDao bangongquDao;
 
     @Autowired
-    public BangongquServiceImpl(BaseDaoI<OfficeArea> baseDao) {
+    public BangongquServiceImpl(BangongquDao baseDao) {
         super(baseDao);
     }
 
@@ -45,25 +41,25 @@ public class BangongquServiceImpl extends BaseServiceImpl<OfficeArea> implements
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
         };
-        Page<OfficeArea> all = bangongquDao.findAll(specification, pageable);
-        return PageResult.getPageResult(all);
+        PageResult pageResult = super.pageList(specification, pageable);
+        return pageResult;
     }
 
     @Override
     public OfficeArea getById(Integer id) {
-        return bangongquDao.getOne(id);
+        return super.getOne(id);
     }
 
 
     @Override
     public void delete(Integer id) {
-        bangongquDao.deleteById(id);
+        super.deleteById(id);
     }
 
 
     @Override
     public List<OfficeArea> getAllBangonqu() {
-        List<OfficeArea> list = bangongquDao.findAll();
+        List<OfficeArea> list = super.all();
         if (CollectionUtil.size(list) > 0) {
             return list;
         }
