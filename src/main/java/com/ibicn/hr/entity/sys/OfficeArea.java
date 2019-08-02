@@ -32,4 +32,17 @@ public class OfficeArea extends BaseEntity implements Serializable {
      */
     @Column(name = "address",nullable = false)
     private String address;
+
+
+    /**
+     * 经度
+     */
+    @Column(name = "longitude")
+    private String longitude;
+    /**
+     * 纬度
+     */
+    @Column(name = "latitude")
+    private String latitude;
+
 }

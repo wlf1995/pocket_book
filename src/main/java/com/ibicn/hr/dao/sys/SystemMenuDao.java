@@ -24,6 +24,13 @@ public interface SystemMenuDao extends BaseDaoI<SystemMenu> {
     /**
      * 获取用户所有角色
      */
-    @Query(value = "SELECT DISTINCT (p.path) FROM systemmenu p, role_menu rp, user_role ur WHERE p.id = rp.menuid AND rp.roleid = ur.roleid AND ur.userid = ?1 AND p.type = ?2  group by p.path", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT (p.path) \n" +
+            "FROM systemmenu p, systemRoleMenu rp, systemUserRole ur \n" +
+            "WHERE \n" +
+            "p.id = rp.systemMenu_id \n" +
+            "AND rp.systemRole_id = ur.systemRole_id \n" +
+            "AND ur.systemUser_id = ?1 \n" +
+            "AND p.type = ?2  \n" +
+            "group by p.path", nativeQuery = true)
     List<String> getMenyPathIdByUser(Integer id, Integer type);
 }
