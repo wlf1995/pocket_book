@@ -56,9 +56,6 @@
                             <th lay-data="{field:'userName', width:80}">用户名</th>
                             <th lay-data="{field:'user', width:80}">用户编号</th>
                             <th lay-data="{field:'realName', width:80}">真实姓名</th>
-                            <th lay-data="{field:'banggongquName', width:80}">办公区</th>
-                            <th lay-data="{field:'banggongquName', width:80}">部门</th>
-                            <th lay-data="{field:'zazhiStatus', width:80}">在职状态</th>
                             <th lay-data="{field:'userStatus.name', width:80}">用户状态</th>
                             <th lay-data="{field:'createdTime', width:80, sort: true}">创建时间</th>
                             <th lay-data="{field:'caozuo', width:80, sort: true}">操作</th>
@@ -70,10 +67,7 @@
                             <td>{{it.userName}}</td>
                             <td>{{it.userBianhao}}</td>
                             <td>{{it.realName}}</td>
-                            <td>{{it.bangongquName}}</td>
-                            <td>{{it.deptName}}</td>
-                            <td><span v-if="it.zazhiStatus">{{it.zazhiStatus.name}}</span></td>
-                            <td>{{it.userStatus.name}}</td>
+                            <td>{{it.status.name}}</td>
                             <td>{{it.createdTime | FormatDate}}</td>
                             <td>
                                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail"
