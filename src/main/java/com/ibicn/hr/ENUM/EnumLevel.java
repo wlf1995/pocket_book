@@ -34,11 +34,13 @@ public enum EnumLevel implements IntegerValuedEnum  {
 	}
 	
 	// get set 方法
+	@Override
 	public String getName() {
 		return name;
 	}
 
 
+	@Override
 	public int getIndex() {
 		return index;
 	}
