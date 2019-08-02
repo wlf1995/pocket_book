@@ -2,13 +2,9 @@ package com.ibicn.hr.controller.base;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ibicn.hr.entity.person.CompanyCV;
 import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.entity.sys.SystemUser;
-import com.ibicn.hr.service.person.AttachmentServiceI;
-import com.ibicn.hr.service.person.CVServiceI;
-import com.ibicn.hr.service.person.FamilyServiceI;
-import com.ibicn.hr.service.person.PersonServiceI;
+import com.ibicn.hr.service.person.*;
 import com.ibicn.hr.service.sys.*;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
@@ -52,7 +48,7 @@ public class BaseController {
     @Autowired
     protected CVServiceI cvServiceI;
     @Autowired
-    protected CompanyCV companyCV;
+    protected CompanyCVServiceI companyCVServiceI;
     @Autowired
     protected FamilyServiceI familyServiceI;
 
