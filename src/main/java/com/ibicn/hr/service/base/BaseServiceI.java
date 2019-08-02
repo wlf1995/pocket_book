@@ -58,6 +58,8 @@ public interface BaseServiceI<T> {
 
     void delete(T data);
 
+    void delete(Integer id);
+
     void deleteById(Integer id);
 
     T getOne(Integer id);

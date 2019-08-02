@@ -89,6 +89,11 @@ public class BaseServiceImpl<T> implements BaseServiceI<T> {
     }
 
     @Override
+    public void delete(Integer id) {
+        baseDao.deleteById(id);
+    }
+
+    @Override
     public void deleteById(Integer id) {
         baseDao.deleteById(id);
     }
