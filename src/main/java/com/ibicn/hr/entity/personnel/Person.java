@@ -3,7 +3,7 @@ package com.ibicn.hr.entity.personnel;
 import com.ibicn.hr.ENUM.EnumSex;
 import com.ibicn.hr.ENUM.EnumXueli;
 import com.ibicn.hr.entity.base.BaseEntity;
-import com.ibicn.hr.entity.sys.SystemDept;
+import com.ibicn.hr.entity.sys.Department;
 import com.ibicn.hr.entity.sys.SystemUser;
 import lombok.Data;
 import lombok.Getter;
@@ -48,7 +48,7 @@ public class Person extends BaseEntity implements Serializable {
      **/
     @ManyToOne
     @JoinColumn(name = "department_id",nullable = false)
-    private SystemDept department_id;
+    private Department department_id;
 
     /**
      * 性别	sex	int		0为女，1为男

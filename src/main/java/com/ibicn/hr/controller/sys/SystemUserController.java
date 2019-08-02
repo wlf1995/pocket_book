@@ -59,7 +59,7 @@ public class SystemUserController extends BaseController {
         }
 
         data.setCreatedTime(new Date());
-        data.setUpdatedTime(new Date());
+        data.setUpdateedTime(new Date());
         data.setPassword(passwordEncoder.encode(data.getPassword()));
         userService.save(data);
         return Result.ok();
@@ -83,7 +83,6 @@ public class SystemUserController extends BaseController {
 
         user.setUserName(data.getUserName());
         user.setRealName(data.getRealName());
-        user.setStatus(data.getUserStatusIndex());
         userService.update(user);
         return Result.ok();
     }
@@ -237,7 +236,6 @@ public class SystemUserController extends BaseController {
         map.put("id", user.getId());
         map.put("realName", user.getRealName());
         map.put("userName", user.getUserName());
-        map.put("userStatusIndex", user.getUserStatusIndex());
         map.put("createdTime", user.getCreatedTime());
         map.put("status", user.getStatus());
         return map;
