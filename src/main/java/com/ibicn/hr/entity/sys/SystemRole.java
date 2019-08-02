@@ -19,7 +19,7 @@ public class SystemRole extends BaseEntity implements Serializable {
     /**
      * 角色的名称
      */
-    @Column(name ="rolename")
+    @Column(name ="rolename",nullable = false)
     private String roleName;
 
     @JSONField(serialize=false)

@@ -19,9 +19,9 @@ public class SystemConfig implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "mkey")
+    @Column(name = "mkey",nullable = false)
     private String mKey;
 
-    @Column(name = "mvalue", columnDefinition = "TEXT")
+    @Column(name = "mvalue", columnDefinition = "TEXT",nullable = false)
     private String mValue;
 }

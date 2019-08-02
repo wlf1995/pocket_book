@@ -21,20 +21,20 @@ public class SystemUser extends BaseEntity implements Serializable {
      * 登录系统的用户名
      */
     @NotNull
-    @Column(name = "username")
+    @Column(name = "username",nullable = false)
     private String userName;
 
     /**
      * 登录系统的密码
      */
     @JSONField(serialize = false)
-    @Column(name = "password")
+    @Column(name = "password",nullable = false)
     private String password;
 
     /**
      * 登录人的真实名字
      */
-    @Column(name = "realname")
+    @Column(name = "realname",nullable = false)
     private String realName;
 
     @ManyToMany(targetEntity = SystemRole.class, fetch = FetchType.EAGER)

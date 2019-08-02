@@ -23,21 +23,21 @@ public class SystemMenu extends BaseEntity implements Serializable {
     /**
      * 菜单的名称
      */
-    @Column(name = "menuname")
+    @Column(name = "menuname",nullable = false)
     private String menuName;
 
     /**
      * 菜单的访问url路径
      */
-    @Column(name = "path")
+    @Column(name = "path",nullable = false)
     private String path;
 
     /**
      * 0为菜单，1为功能。功能只校验权限，不做显示。
      */
-    @Column(name = "type")
-    @Enumerated
+    @Column(name = "type",nullable = false)
     private EnumMenuType type;
+
     @Transient
     private String typeIndex;
 
@@ -54,7 +54,7 @@ public class SystemMenu extends BaseEntity implements Serializable {
      * 菜单排序号
      */
     @Column(name = "sort")
-    private Integer sort;
+    private Integer sort=0;
 
     @JSONField(serialize = false)
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)

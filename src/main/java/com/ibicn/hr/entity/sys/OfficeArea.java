@@ -18,7 +18,7 @@ public class OfficeArea extends BaseEntity implements Serializable {
     /**
      * 办公区名
      */
-    @Column(name = "areaname")
+    @Column(name = "areaname",nullable = false)
     private String areaName;
 
     /**
@@ -30,6 +30,6 @@ public class OfficeArea extends BaseEntity implements Serializable {
     /**
      * 办公区的地址位置
      */
-    @Column(name = "address")
+    @Column(name = "address",nullable = false)
     private String address;
 }

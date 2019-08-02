@@ -16,7 +16,7 @@ public class Department extends BaseEntity implements Serializable  {
     /**
      * 部门名称
      */
-    @Column(name = "departmentname")
+    @Column(name = "departmentname",nullable = false)
     private String departmentName;
 
     /**
@@ -31,13 +31,6 @@ public class Department extends BaseEntity implements Serializable  {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Department parent_id;
-
-    /**
-     * 0为停用状态，1为正常状态
-     */
-    @Column(name = "status")
-    private EnumBaseStatus status;
-
 
     /**
      * 办公区的外键
