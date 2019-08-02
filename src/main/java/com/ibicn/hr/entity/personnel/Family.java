@@ -21,12 +21,12 @@ public class Family  extends BaseEntity implements Serializable {
     /**
      * 成员姓名-成员姓名
      **/
-    @Column(name = "name")
+    @Column(name = "name",nullable = false)
     private String name;
     /**
      * 与本人关系-比如 父亲、母亲
      **/
-    @Column(name = "relation")
+    @Column(name = "relation",nullable = false)
     private String relation;
     /**
      * 工作单位-工作单位

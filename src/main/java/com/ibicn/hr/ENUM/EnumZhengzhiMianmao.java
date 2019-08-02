@@ -3,7 +3,7 @@ package com.ibicn.hr.ENUM;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
- * 性别
+ * 政治面貌
  * @author Administrator
  *
  */

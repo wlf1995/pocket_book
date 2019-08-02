@@ -24,23 +24,23 @@ public class CV extends BaseEntity implements Serializable {
      * 时间-简历开始时间
      **/
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "begincvdate")
+    @Column(name = "begincvdate",nullable = false)
     private Date begincvDate;
     /**
      * 时间-简历结束时间
      **/
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "endcvdate")
+    @Column(name = "endcvdate",nullable = false)
     private Date endcvDate;
     /**
      * 单位名称-学习或者工作单位的名称
      **/
-    @Column(name = "companyname")
+    @Column(name = "companyname",nullable = false)
     private String companyName;
     /**
      * 主要工作 -主要从事工作内容
      **/
-    @Column(name = "job")
+    @Column(name = "job",nullable = false)
     private String job;
 
     /**
