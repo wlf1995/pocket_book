@@ -1,6 +1,5 @@
 package com.ibicn.hr.entity.sys;
 
-import com.ibicn.hr.ENUM.EnumBaseStatus;
 import com.ibicn.hr.entity.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,11 +11,11 @@ import java.io.Serializable;
 @Setter
 @Entity
 @Table(name = "department")
-public class Department extends BaseEntity implements Serializable  {
+public class Department extends BaseEntity implements Serializable {
     /**
      * 部门名称
      */
-    @Column(name = "departmentname",nullable = false)
+    @Column(name = "departmentname", nullable = false)
     private String departmentName;
 
     /**
