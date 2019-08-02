@@ -2,6 +2,7 @@ package com.ibicn.hr.entity.sys;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.ibicn.hr.entity.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name="SystemRole")
-public class SystemRole implements Serializable {
+public class SystemRole extends BaseEntity implements Serializable {
     /**
      * 角色的名称
      */

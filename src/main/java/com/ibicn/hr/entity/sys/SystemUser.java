@@ -1,6 +1,7 @@
 package com.ibicn.hr.entity.sys;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.ibicn.hr.entity.base.BaseEntity;
 import com.ibicn.hr.entity.personnel.Person;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Getter
 @Entity
 @Table(name = "systemUser")
-public class SystemUser implements Serializable {
+public class SystemUser extends BaseEntity implements Serializable {
     /**
      * 登录系统的用户名
      */

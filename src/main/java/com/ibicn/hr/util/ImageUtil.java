@@ -1,7 +1,5 @@
 package com.ibicn.hr.util;
 
-import com.ibicn.hr.config.RespData;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

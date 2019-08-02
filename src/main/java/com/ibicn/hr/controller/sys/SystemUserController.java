@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-import static com.ibicn.hr.config.RespData.writeString;
-
-
 @RestController
 @RequestMapping("/user")
 public class SystemUserController extends BaseController {
@@ -57,9 +54,6 @@ public class SystemUserController extends BaseController {
         if (data.getStatus() == null) {
             return Result.failure("用户状态不能为空");
         }
-
-        data.setCreatedTime(new Date());
-        data.setUpdateedTime(new Date());
         data.setPassword(passwordEncoder.encode(data.getPassword()));
         userService.save(data);
         return Result.ok();
@@ -113,7 +107,6 @@ public class SystemUserController extends BaseController {
         JSONObject result = new JSONObject();
         result.put("roles", array);
         result.put("checks", checks);
-        writeString("", result);
         return Result.ok(result);
     }
 
