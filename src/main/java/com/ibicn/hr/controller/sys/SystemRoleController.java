@@ -32,7 +32,7 @@ public class SystemRoleController extends BaseController {
 
     @RequestMapping("get")
     public Result get(SystemRole data) {
-        SystemRole role = systemRoleServiceI.getById(data.getId());
+        SystemRole role = systemRoleServiceI.getOne(data.getId());
         return Result.ok(getByMap(role));
     }
 
@@ -51,7 +51,7 @@ public class SystemRoleController extends BaseController {
 
     @RequestMapping("updateOK")
     public Result updateOK(SystemRole data) {
-        SystemRole role = systemRoleServiceI.getById(data.getId());
+        SystemRole role = systemRoleServiceI.getOne(data.getId());
         if (role == null) {
             return Result.failure("未获取到角色");
         }
@@ -71,7 +71,7 @@ public class SystemRoleController extends BaseController {
      */
     @RequestMapping("getAuthoData")
     public Result getAllMenu(SystemRole data) {
-        SystemRole role = systemRoleServiceI.getById(data.getId());
+        SystemRole role = systemRoleServiceI.getOne(data.getId());
         if (role == null) {
             return Result.failure("未获取到授权角色");
         }
@@ -115,7 +115,7 @@ public class SystemRoleController extends BaseController {
 
     @RequestMapping("saveAutho")
     public Result saveAutho(Integer roleid, String ids) {
-        SystemRole role = systemRoleServiceI.getById(roleid);
+        SystemRole role = systemRoleServiceI.getOne(roleid);
         if (role == null) {
             return Result.failure("未获取到授权角色");
         }
@@ -125,7 +125,7 @@ public class SystemRoleController extends BaseController {
         String[] id = ids.split(",");
         Set<SystemMenu> menus = new HashSet<>();
         for (int i = 0; i < CollectionUtil.size(id); i++) {
-            SystemMenu menu = systemMenuServiceI.getById(StringUtil.parseInt(id[i]));
+            SystemMenu menu = systemMenuServiceI.getOne(StringUtil.parseInt(id[i]));
             if (menu == null) {
                 return Result.failure("未获取到授权菜单");
             }

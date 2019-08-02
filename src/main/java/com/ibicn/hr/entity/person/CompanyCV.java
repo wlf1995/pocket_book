@@ -1,4 +1,4 @@
-package com.ibicn.hr.entity.personnel;
+package com.ibicn.hr.entity.person;
 
 import com.ibicn.hr.ENUM.EnumLevel;
 import com.ibicn.hr.ENUM.EnumUtil;

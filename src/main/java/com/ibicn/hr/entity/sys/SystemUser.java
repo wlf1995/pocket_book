@@ -2,7 +2,7 @@ package com.ibicn.hr.entity.sys;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.ibicn.hr.entity.base.BaseEntity;
-import com.ibicn.hr.entity.personnel.Person;
+import com.ibicn.hr.entity.person.Person;
 import lombok.Getter;
 import lombok.Setter;
 

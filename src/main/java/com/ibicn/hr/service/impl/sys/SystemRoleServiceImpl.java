@@ -45,11 +45,6 @@ public class SystemRoleServiceImpl extends BaseServiceImpl<SystemRole> implement
     }
 
     @Override
-    public SystemRole getById(Integer id) {
-        return systemRoleDao.getOne(id);
-    }
-
-    @Override
     public List<SystemRole> getAllRole() {
         List<SystemRole> list = systemRoleDao.findAll();
         if (CollectionUtil.size(list) > 0) {

@@ -128,7 +128,7 @@ public class SystemUserController extends BaseController {
             if (StringUtil.isEmpty(id[i])) {
                 continue;
             }
-            SystemRole role = systemRoleServiceI.getById(StringUtil.parseInt(id[i]));
+            SystemRole role = systemRoleServiceI.getOne(StringUtil.parseInt(id[i]));
             if (role == null) {
                 return Result.failure("未获取到角色");
             }

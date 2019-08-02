@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>卫多多台帐-新增台帐</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/css/element/index.css">
+    <style>
+        .foot {
+            box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .05);
+            background-color: #fff;
+            left: 0px;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            height: 44px;
+            line-height: 44px;
+        }
+        html, body {
+            height: 100%;
+            background-color: #00000000;
+            margin: 0px;
+        }
+    </style>
+    <script src="/js/base.js"></script>
+</head>
+<body>
+<div id="save">
+    <el-card v-loading.fullscreen.lock="loading" class="box-card">
+        <div slot="header">
+            <span>新增记录</span>
+        </div>
+        <el-form :model="formobj" :rules="rules" ref="ruleForm" size="small" label-width="125px">
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="台帐时间" prop="accountTime">
+                        <el-date-picker
+                                style="width: 80%;"
+                                v-model="formobj.accountTime"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="台帐时间">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="公司" prop="companyId">
+                        <el-select
+                                style="width: 80%;"
+                                v-model="formobj.companyId"
+                                filterable
+                                placeholder="请选择公司"
+                                @change="changeCompany"
+                                :loading="loading">
+                            <el-option
+                                    v-for="company in companyList"
+                                    :key="company.companyid"
+                                    :label="company.companyName"
+                                    :value="company.companyid">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="贸易商" prop="tradersId">
+                        <el-select
+                                style="width: 80%;"
+                                v-model="formobj.tradersId"
+                                filterable
+                                placeholder="请选择贸易商"
+                                :loading="loading">
+                            <el-option
+                                    v-for="traders in tradersList"
+                                    :key="traders.tradersId"
+                                    :label="traders.tradersName"
+                                    :value="traders.tradersId">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="9">
+                    <el-form-item label="客户" prop="customerId">
+                        <el-select
+                                style="width: 80%;"
+                                v-model="formobj.customerId"
+                                filterable
+                                clearable
+                                placeholder="请选择客户"
+                                :loading="loading"
+                                v-on:change="changCustomer()">
+                            <el-option
+                                    v-for="customer in customerList"
+                                    :key="customer.customerId"
+                                    :label="customer.customerName"
+                                    :value="customer.customerId">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="联系人" prop="linmMan">
+                        <el-input v-model="formobj.linmMan" placeholder="请输入客户联系人" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="联系电话" prop="mobile">
+                        <el-input v-model="formobj.mobile" placeholder="请输入客户联系电话" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="销售业务员" prop="xiaoshouSalesmanId">
+                        <el-select
+                                style="width: 80%;"
+                                v-model="formobj.xiaoshouSalesmanId"
+                                filterable
+                                clearable
+                                placeholder="销售业务员">
+                            <el-option
+                                    v-for="user in userList"
+                                    :key="user.id"
+                                    :label="user.realName"
+                                    :value="user.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="供应商" prop="supplierValue">
+                        <el-select
+                                style="width: 80%;"
+                                v-model="formobj.supplierId"
+                                filterable
+                                clearable
+                                @change="changSupplier"
+                                placeholder="供应商">
+                            <el-option
+                                    v-for="supplier in supplierList"
+                                    :key="supplier.supplierId"
+                                    :label="supplier.supplierName"
+                                    :value="supplier.supplierId">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="采购业务员" prop="caigouSalesmanId">
+                        <el-select style="width: 80%;"
+                                   v-model="formobj.caigouSalesmanId"
+                                   filterable
+                                   clearable
+                                   placeholder="采购业务员">
+                            <el-option
+                                    v-for="user in userList"
+                                    :key="user.id"
+                                    :label="user.realName"
+                                    :value="user.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="商务" prop="shangwuId">
+                        <el-select style="width: 80%;"
+                                   v-model="formobj.shangwuId"
+                                   filterable
+                                   clearable
+                                   placeholder="商务">
+                            <el-option
+                                    v-for="user in userList"
+                                    :key="user.id"
+                                    :label="user.realName"
+                                    :value="user.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="商品" prop="productId">
+                        <el-select style="width: 80%;"
+                                   v-model="formobj.productId"
+                                   filterable
+                                   clearable
+                                   placeholder="商品"
+                                   :loading="loading">
+                            <el-option
+                                    v-for="product in productList"
+                                    :key="product.productId"
+                                    :label="product.productName"
+                                    :value="product.productId">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="商品型号" prop="productModel">
+                        <el-input v-model="formobj.productModel" placeholder="商品型号" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="数量" prop="count">
+                        <el-input-number v-model="formobj.count" :controls="false"
+                                         placeholder="数量" style="width: 80%;"></el-input-number>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="采购价是否含税" prop="caigouPriceIsTaxIndex">
+                        <el-select style="width: 80%;"
+                                   v-model="formobj.caigouPriceIsTaxIndex"
+                                   reserve-keyword
+                                   placeholder="采购价是否含税">
+                            <el-option
+                                    v-for="item in enumYesOrNo"
+                                    :key="item.index"
+                                    :label="item.name"
+                                    :value="item.index">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="采购单价" prop="purchasePrice">
+                        <el-input v-model="formobj.purchasePrice" placeholder="采购单价" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="采购优惠金额" prop="caigouYouhui">
+                        <el-input-number v-model="formobj.caigouYouhui" :controls="false"
+                                         placeholder="采购优惠金额" style="width: 80%;"></el-input-number>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="采购额" prop="purchaseMoney">
+                        <el-input v-model="getPurchaseMoney" readonly placeholder="采购额"
+                                  style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="含税指导价" prop="zhidaoPriceWithTax">
+                        <el-input v-model="formobj.zhidaoPriceWithTax" @change="zhidaoPriceWithTaxChange"
+                                  placeholder="含税销售指导价"
+                                  style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="不含税指导价" prop="zhidaoPriceNoTax">
+                        <el-input v-model="formobj.zhidaoPriceNoTax" @change="zhidaoPriceNoTaxChange"
+                                  placeholder="不含税销售指导价"
+                                  style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="销售价是否含税" prop="xiaoshouPriceIsTaxIndex">
+                        <el-select style="width: 80%;"
+                                   v-model="formobj.xiaoshouPriceIsTaxIndex"
+                                   reserve-keyword
+                                   placeholder="销售价是否含税">
+                            <el-option
+                                    v-for="item in enumYesOrNo"
+                                    :key="item.index"
+                                    :label="item.name"
+                                    :value="item.index">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="销售单价" prop="sellingPrice">
+                        <el-input-number v-model="formobj.sellingPrice" :controls="false"
+                                         placeholder="销售单价" style="width: 80%;"></el-input-number>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="销售额" prop="sellingMoney">
+                        <el-input v-model="getSellingMoney" readonly placeholder="销售额"
+                                  style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="杂费/优惠" prop="youhui">
+                        <el-input v-model="formobj.youhui" placeholder="杂费/优惠" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="客户应付款" prop="customerYingMoney">
+                        <el-input v-model="getCustomerYingMoney" readonly placeholder="客户应付款金额"
+                                  style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="客户已付款" prop="customerMoney">
+                        <el-input v-model="formobj.customerMoney" readonly placeholder="客户已付款金额"
+                                  style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <!--只在销售价格为不含税时显示贸易商点数和贸易商付款-->
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="贸易商点数" prop="pointRate">
+                        <el-input v-model="formobj.pointRate" placeholder="贸易商点数" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="贸易商付款" prop="tradersMoney">
+                        <el-input v-model="getTradersMoney" readonly placeholder="贸易商付款"
+                                  style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="溢出金额" prop="yichuMoney">
+                        <el-input-number v-model="formobj.yichuMoney" :controls="false"
+                                         placeholder="客户付款溢出金额" style="width: 80%;"></el-input-number>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="公司利润" prop="profit">
+                        <el-input v-model="getProfit" readonly placeholder="公司利润" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="司机姓名" prop="driverName">
+                        <el-input v-model="formobj.driverName" placeholder="司机姓名" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="司机电话" prop="phone">
+                        <el-input v-model="formobj.phone" placeholder="司机电话" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="身份证" prop="iDNumber">
+                        <el-input v-model="formobj.iDNumber" placeholder="身份证" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="驾驶证" prop="driverLicense">
+                        <el-input v-model="formobj.driverLicense" placeholder="驾驶证" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="9">
+                    <el-form-item label="行驶证" prop="drivingLicense">
+                        <el-input v-model="formobj.drivingLicense" placeholder="行驶证" style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="9">
+                    <el-form-item label="佩戴安全帽" prop="enumYesOrNo">
+                        <el-select style="width: 80%;"
+                                   v-model="formobj.isSafetyHatIndex"
+                                   filterable
+                                   reserve-keyword
+                                   placeholder="是否需要佩戴安全帽">
+                            <el-option
+                                    v-for="item in enumYesOrNo"
+                                    :key="item.index"
+                                    :label="item.name"
+                                    :value="item.index">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="18">
+                    <el-form-item label="备注">
+                        <el-input type="textarea" v-model="formobj.note"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+        <div style="height: 70px;">
+            <div class="foot">
+                <el-button @click="saveOk" type="primary">保存</el-button>
+                <el-button @click="clowsview">关闭</el-button>
+            </div>
+        </div>
+    </el-card>
+</div>
+<script>
+    var vm = new Vue({
+            el: "#save",
+            data: {
+                companyList: [],
+                customerList: [],//客户
+                productList: [],//商品
+                supplierList: [],//供应商
+                tradersList: [],//贸易商
+                userList: [],//商务,销售,采购
+                enumYesOrNo: [],
+                formobj: {
+                    accountTime: '',
+                    companyId: 3,
+                    caigouSalesmanId: '',
+                    tradersId: '',
+                    xiaoshouSalesmanId: '',
+                    shangwuId: '',
+                    customerId: '',
+                    linmMan: '',
+                    mobile: '',
+                    productId: '',
+                    supplierId: '',
+                    productModel: '',
+                    zhidaoPriceWithTax: '',
+                    zhidaoPriceNoTax: '',
+                    count: '',
+                    driverName: '',
+                    phone: '',
+                    iDNumber: '',
+                    driverLicense: '',
+                    drivingLicense: '',
+                    isSafetyHatIndex: '',
+                    caigouPriceIsTaxIndex: 1,
+                    purchasePrice: '',
+                    caigouYouhui: '',
+                    purchaseMoney: '',
+                    xiaoshouPriceIsTaxIndex: 0,
+                    sellingPrice: '',
+                    sellingMoney: '',
+                    youhui: '',
+                    customerYingMoney: 0,
+                    customerMoney: 0,
+                    pointRate: 0.965,
+                    tradersMoney: '',
+                    yichuMoney: '',
+                    profit: '',
+                    note: '',
+                },
+                rules: {
+                    accountTime: [{type: 'string', required: true, message: '请选择日期', trigger: 'change'}],
+                    companyId: [{required: true, message: '请选择公司', trigger: 'change'},],
+                    xiaoshouSalesmanId: [{required: true, message: '请选择销售业务员', trigger: 'change'},],
+                    shangwuId: [{required: true, message: '请选择商务', trigger: 'change'},],
+                    customerId: [{required: true, message: '请选择客户', trigger: 'change'},],
+                    productId: [{required: true, message: '请选择商品', trigger: 'change'},],
+                    supplierId: [{required: true, message: '请选择供应商', trigger: 'change'},],
+                    count: [{required: true, message: '请输入数量', trigger: 'blur'},],
+                    caigouPriceIsTaxIndex: [{required: true, message: '请选择采购价是否含税', trigger: 'change'},],
+                    purchasePrice: [{required: true, message: '请输入采购单价', trigger: 'blur'},],
+                    xiaoshouPriceIsTaxIndex: [{required: true, message: '请选择销售价是否含税', trigger: 'change'},],
+                    sellingPrice: [{required: true, message: '请输入销售价', trigger: 'blur'},],
+                },
+                loading: false,
+            },
+            created: function () {
+                this.enumYesOrNo = getEnums("EnumYesOrNo");
+                //这里设定了公司
+                this.companyList = getDictByName();
+                this.changeCompany();
+            },
+            computed: {
+                getPurchaseMoney: function () {//采购额=(采购单价-返利)*数量, 添加时没有返利
+                    if (isNaN(this.formobj.purchasePrice) || isNaN(this.formobj.count)) {
+                        return;
+                    }
+                    if (isNaN(this.formobj.caigouYouhui)) {
+                        this.formobj.caigouYouhui = 0;
+                    }
+                    this.formobj.purchaseMoney = (this.formobj.purchasePrice * this.formobj.count - this.formobj.caigouYouhui).toFixed(2);
+                    return this.formobj.purchaseMoney
+                },
+                getSellingMoney: function () {//销售额=销售单价*数量
+                    if (isNaN(this.formobj.sellingPrice) || isNaN(this.formobj.count)) {
+                        return
+                    }
+                    this.formobj.sellingMoney = (this.formobj.sellingPrice * this.formobj.count).toFixed(2);
+                    return this.formobj.sellingMoney
+                },
+                getCustomerYingMoney: function () {//客户应付款金额=销售额-优惠
+                    if (isNaN(this.formobj.sellingPrice) || isNaN(this.formobj.count)) {
+                        return 0;
+                    }
+                    if (isNaN(this.formobj.youhui)) {
+                        this.formobj.youhui = 0;
+                    }
+                    this.formobj.customerYingMoney = (this.formobj.sellingPrice * this.formobj.count - this.formobj.youhui).toFixed(2)
+                    return this.formobj.customerYingMoney;
+                },
+                getTradersMoney: function () {//贸易商付款=客户不含税付款/点数
+                    if (isNaN(this.formobj.sellingPrice) || isNaN(this.formobj.count)) {
+                        return
+                    }
+                    if (this.formobj.pointRate == 0) {
+                        return;
+                    }
+                    //销售价不含税,并且采购价含税时计算贸易商付款
+                    if (this.formobj.xiaoshouPriceIsTaxIndex != 1 && this.formobj.caigouPriceIsTaxIndex == 1) {
+                        this.formobj.tradersMoney = (this.formobj.customerMoney / this.formobj.pointRate).toFixed(2);
+                        return this.formobj.tradersMoney;
+                    }
+                },
+                getProfit: function () {//公司利润 1.销售价含税 公司利润=客户付款-采购额 2.销售价不含税 公司利润= 贸易商付款-采购额
+                    if (isNaN(this.formobj.customerMoney)) {
+                        this.formobj.customerMoney = 0;
+                    }
+                    //销售价和采购价相同, 同时含税或者不含税
+                    if (this.formobj.xiaoshouPriceIsTaxIndex == this.formobj.caigouPriceIsTaxIndex) {
+                        //销售价和采购价,同时含税  公司利润=客户付款-采购额
+                        if (isNaN(this.formobj.purchaseMoney)) {
+                            this.formobj.purchaseMoney = 0;
+                        }
+                        this.formobj.profit = this.formobj.customerMoney - this.formobj.purchaseMoney;
+
+                    } else if (this.formobj.xiaoshouPriceIsTaxIndex != 1 && this.formobj.caigouPriceIsTaxIndex == 1) {
+                        //销售价不含税,采购价含税  公司利润= 贸易商付款-采购额
+                        if (isNaN(this.formobj.tradersMoney)) {
+                            this.formobj.tradersMoney = 0;
+                        }
+                        this.formobj.profit = this.formobj.tradersMoney - this.formobj.purchaseMoney;
+                    } else if (this.formobj.xiaoshouPriceIsTaxIndex == 1 && this.formobj.caigouPriceIsTaxIndex != 1) {
+                        //销售价含税,采购价不含税  公司利润= 客户已付款* 贸易商点数-采购额
+                        if (isNaN(this.formobj.pointRate)) {
+                            this.formobj.pointRate = 0;
+                        }
+                        this.formobj.profit = (this.formobj.customerMoney * this.formobj.pointRate) - this.formobj.purchaseMoney;
+                    }
+                    this.formobj.profit = Number(this.formobj.profit).toFixed(2);
+                    return this.formobj.profit;
+                }
+            },
+            methods: {
+                saveOk: function () {//保存
+                    this.$refs["ruleForm"].validate(function (valid) {
+                        if (valid) {
+                            vm.loading=true;
+                            axios({
+                                method: 'post',
+                                url: '/wddLedger/saveOk',
+                                params: vm.formobj,
+                            }).then(function (res) {
+                                vm.loading=false;
+                                if (res.data.code == 200) {
+                                    clowsview();
+                                }
+                                vm.$message(res.data.msg);
+                            })
+                        } else {
+                            vm.$message("有必填项为空");
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+                ,
+                clowsview: function () {
+                    clowsview();
+                }
+                ,
+                changCustomer: function () {//客户选择事件
+                    this.formobj.linmMan = '';
+                    this.formobj.mobile = '';
+                    for (var i = 0; i < this.customerList.length; i++) {
+                        var custome = this.customerList[i];
+                        if (custome.customerId != this.formobj.customerId) {
+                            continue
+                        }
+                        this.formobj.linmMan = custome.linkMan//客户联系人
+                        if (custome.landLine) {//联系座机
+                            this.formobj.mobile = custome.landLine
+                        } else {//联系手机
+                            this.formobj.mobile = custome.mobile
+                        }
+                        //如果客户关联的销售人员不为空，则设置销售人员
+                        if (custome.xiaoshouId) {
+                            this.formobj.xiaoshouSalesmanId = custome.xiaoshouId;
+                        } else {
+                            this.formobj.xiaoshouSalesmanId = "";
+                        }
+                        break;
+                    }
+                },
+                changSupplier: function () {//客户选择事件
+                    this.formobj.caigouSalesmanId = '';
+                    for (var i = 0; i < this.supplierList.length; i++) {
+                        var supplier = this.supplierList[i];
+                        if (supplier.supplierId != this.formobj.supplierId) {
+                            continue
+                        }
+                        //如果客户关联的销售人员不为空，则设置销售人员
+                        if (supplier.caigouUser) {
+                            this.formobj.caigouSalesmanId = supplier.caigouUser.id;
+                        } else {
+                            this.formobj.caigouSalesmanId = "";
+                        }
+                        break;
+                    }
+                },
+                changeCompany: function () {
+                    //修改公司后把对应的东西清空
+                    this.formobj.caigouSalesmanId = '';
+                    this.formobj.tradersId = '';
+                    this.formobj.xiaoshouSalesmanId = '';
+                    this.formobj.linmMan = '';
+                    this.formobj.mobile = '';
+                    this.formobj.shangwuId = '';
+                    this.formobj.customerId = '';
+                    this.formobj.productId = '';
+                    this.formobj.supplierId = '';
+                    if (!this.formobj.companyId) {
+                        return;
+                    }
+                    this.customerList = getDictByName("customers", this.formobj.companyId);
+                    this.productList = getDictByName("products", this.formobj.companyId);
+                    this.supplierList = getDictByName("suppliers", this.formobj.companyId);
+                    this.tradersList = getDictByName("traders",this.formobj.companyId);
+                    this.userList = getDictByName("user", this.formobj.companyId);
+                },
+                zhidaoPriceWithTaxChange: function () {//计算不含税指导价
+                    if (isNaN(this.formobj.zhidaoPriceWithTax) || isNaN(this.formobj.pointRate)) {
+                        return;
+                    }
+                    this.formobj.zhidaoPriceNoTax = (this.formobj.zhidaoPriceWithTax * this.formobj.pointRate).toFixed(2)
+                },
+                zhidaoPriceNoTaxChange: function () {//计算含税指导价
+                    if (isNaN(this.formobj.zhidaoPriceNoTax) || isNaN(this.formobj.pointRate)) {
+                        return;
+                    }
+                    if (this.formobj.pointRate == 0) {//不能除以0
+                        return;
+                    }
+                    this.formobj.zhidaoPriceWithTax = (this.formobj.zhidaoPriceNoTax / this.formobj.pointRate).toFixed(2)
+                },
+            }
+        })
+    ;
+</script>
+</body>
+</html>

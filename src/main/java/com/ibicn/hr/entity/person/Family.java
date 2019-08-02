@@ -1,4 +1,4 @@
-package com.ibicn.hr.entity.personnel;
+package com.ibicn.hr.entity.person;
 
 import com.ibicn.hr.entity.base.BaseEntity;
 import lombok.Getter;
