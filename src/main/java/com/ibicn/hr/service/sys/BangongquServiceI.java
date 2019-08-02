@@ -6,8 +6,6 @@ import com.ibicn.hr.service.base.BaseServiceI;
 import java.util.List;
 
 public interface BangongquServiceI extends BaseServiceI<OfficeArea> {
-    void delete(Integer id);
-
     /**
      * 获取所有办公区
      *
