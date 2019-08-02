@@ -21,11 +21,6 @@ public class OfficeArea extends BaseEntity implements Serializable {
     @Column(name = "areaname",nullable = false)
     private String areaName;
 
-    /**
-     * 编号
-     */
-    @Column(name = "bianhao")
-    private String bianhao;
 
     /**
      * 办公区的地址位置

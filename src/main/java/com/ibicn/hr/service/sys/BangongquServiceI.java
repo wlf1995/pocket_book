@@ -13,5 +13,4 @@ public interface BangongquServiceI extends BaseServiceI<OfficeArea> {
      */
     List<OfficeArea> getAllBangonqu();
 
-    OfficeArea getById(Integer id);
 }

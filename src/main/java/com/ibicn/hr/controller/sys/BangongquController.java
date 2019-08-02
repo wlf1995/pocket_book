@@ -9,6 +9,7 @@ import com.ibicnCloud.util.StringUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +31,8 @@ public class BangongquController extends BaseController {
     }
 
     @RequestMapping("get")
-    public Result get(OfficeArea data) {
-        OfficeArea role = bangongquService.getById(data.getId());
+    public Result get(Integer id) {
+        OfficeArea role = bangongquService.getOne(id);
         return Result.ok(getByMap(role));
     }
 
@@ -47,7 +48,7 @@ public class BangongquController extends BaseController {
 
     @RequestMapping("updateOK")
     public Result updateOK(OfficeArea data) {
-        OfficeArea bangongqu = bangongquService.getById(data.getId());
+        OfficeArea bangongqu = bangongquService.getOne(data.getId());
         if (bangongqu == null) {
             return Result.failure("未获取到办公区");
         }
@@ -56,7 +57,6 @@ public class BangongquController extends BaseController {
             return check;
         }
         bangongqu.setAreaName(data.getAreaName());
-        bangongqu.setBianhao(data.getBianhao());
         bangongqu.setAddress(data.getAddress());
         bangongquService.update(bangongqu);
         return Result.ok();
@@ -92,12 +92,12 @@ public class BangongquController extends BaseController {
     }
 
     private Map getByMap(OfficeArea data) {
+        SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", data.getId());
         map.put("name", data.getAreaName());
-        map.put("bianhao", data.getBianhao());
         map.put("address", data.getAddress());
-        map.put("createdTime", data.getCreatedTime());
+        map.put("createdTime", sf.format(data.getCreatedTime()));
         return map;
     }
 }

@@ -36,7 +36,7 @@ public class BangongquServiceImpl extends BaseServiceImpl<OfficeArea> implements
             List<Predicate> list = new ArrayList<>();
             // 第一个userId为CloudServerDao中的字段，第二个userId为参数
             if (StringUtil.isNotEmpty(data.getAreaName())) {
-                Predicate p1 = criteriaBuilder.like(root.get("name"), data.getAreaName());
+                Predicate p1 = criteriaBuilder.like(root.get("areaName"), data.getAreaName());
                 list.add(p1);
             }
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
@@ -44,18 +44,6 @@ public class BangongquServiceImpl extends BaseServiceImpl<OfficeArea> implements
         PageResult pageResult = super.pageList(specification, pageable);
         return pageResult;
     }
-
-    @Override
-    public OfficeArea getById(Integer id) {
-        return super.getOne(id);
-    }
-
-
-    @Override
-    public void delete(Integer id) {
-        super.deleteById(id);
-    }
-
 
     @Override
     public List<OfficeArea> getAllBangonqu() {
