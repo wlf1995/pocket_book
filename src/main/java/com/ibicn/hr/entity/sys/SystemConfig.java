@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Entity
 @Getter
 @Setter
-@Table(name = "systemconfig")
+@Table(name = "SystemConfig")
 public class SystemConfig implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

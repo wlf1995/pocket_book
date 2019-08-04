@@ -2,7 +2,6 @@ package com.ibicn.hr.entity.sys;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.ibicn.hr.entity.base.BaseEntity;
-import com.ibicn.hr.entity.person.Person;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,7 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
-@Table(name = "systemUser")
+@Table(name = "SystemUser")
 public class SystemUser extends BaseEntity implements Serializable {
     /**
      * 登录系统的用户名
@@ -42,10 +41,4 @@ public class SystemUser extends BaseEntity implements Serializable {
             joinColumns = @JoinColumn(name = "systemUser_id", referencedColumnName = "id", nullable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "systemRole_id", referencedColumnName = "id", nullable = false, updatable = false))
     private Set<SystemRole> roles = new HashSet<SystemRole>();
-
-    @ManyToOne
-    @JoinColumn(name = "personid", nullable = false)
-    private Person person;
-
-
 }
