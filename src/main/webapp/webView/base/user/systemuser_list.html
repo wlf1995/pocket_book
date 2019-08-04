@@ -27,20 +27,6 @@
                                        autocomplete="off" class="layui-input" search="true">
                             </div>
                         </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">办公区</label>
-                            <div class="layui-input-inline">
-                                <el-select v-model="bgvalue" filterable placeholder="请选择办公区">
-                                    <el-option
-                                            v-for="item in bangongquList"
-                                            :key="item.id"
-                                            :label="item.name"
-                                            :value="item.id">
-                                    </el-option>
-                                </el-select>
-                                <input type="hidden" v-model="bgvalue" name="bangongquId" search="true">
-                            </div>
-                        </div>
                         <button class="layui-btn layui-btn-normal" lay-submit lay-filter="submit" id="search">搜索
                         </button>
                         <a class="layui-btn" id="opensave" style="width: 250px; background-color: #00a65a">新增用户</a>

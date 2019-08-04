@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ibicn.hr.entity.sys.SystemMenu;
 import com.ibicn.hr.entity.sys.SystemUser;
-import com.ibicn.hr.service.person.*;
 import com.ibicn.hr.service.sys.*;
 import com.ibicnCloud.util.CollectionUtil;
 import com.ibicnCloud.util.StringUtil;
@@ -34,23 +33,6 @@ public class BaseController {
 
     @Autowired
     protected SystemRoleServiceI systemRoleServiceI;
-
-    @Autowired
-    protected BangongquServiceI bangongquService;
-
-    @Autowired
-    protected SystemDeptServiceI systemDeptServiceI;
-
-    @Autowired
-    protected PersonServiceI personServiceI;
-    @Autowired
-    protected AttachmentServiceI attachmentServiceI;
-    @Autowired
-    protected CVServiceI cvServiceI;
-    @Autowired
-    protected CompanyCVServiceI companyCVServiceI;
-    @Autowired
-    protected FamilyServiceI familyServiceI;
 
     protected HttpServletRequest getRequest() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

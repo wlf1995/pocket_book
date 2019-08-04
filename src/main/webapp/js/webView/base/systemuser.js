@@ -9,15 +9,8 @@ function load() {
         data: {
             bgvalue:'',
             datas: [],
-            bangongquList:[],
         },
         created: function () {
-            axios({
-                method: 'post',
-                url: '/bangongqu/getByDict',
-            }).then(function (response) {
-                vm.bangongquList=response.data.data;
-            })
             this.list();
         },
         updated: function () {
@@ -151,7 +144,6 @@ function getdata(id) {
             sexoptions:[],
             xuelioptions:[],
             zhengzhiMianmaooptions:[],
-            bangongquList:[],
             deptList:[],
             data: [],
             statusoption:[],
@@ -176,18 +168,6 @@ function getdata(id) {
                 getdata.sex= response.data.data.sex.index;
                 getdata.zhengzhiMianmao= response.data.data.zhengzhiMianmao.index;
                 getdata.changeval();
-            })
-            axios({
-                method: 'post',
-                url: '/bangongqu/getByDict',
-            }).then(function (response) {
-                getdata.bangongquList=response.data.data;
-            })
-            axios({
-                method: 'post',
-                url: '/systemdept/getByDict',
-            }).then(function (response) {
-                getdata.deptList=response.data.data;
             })
         },
         methods:{
@@ -242,38 +222,22 @@ function userStatus() {
         data: {
             value:'',
             bgvalue:'',
-            deptvalue:'',
             xueli:'',
             sex:'',
             chushengRiqi:'',
             ruzhiDate:'',
             lizhiDate:'',
-            chushengRiqi:'',
             zhengzhiMianmao:'',
             options: [],
             sexoptions:[],
             xuelioptions:[],
             zhengzhiMianmaooptions:[],
-            bangongquList:[],
-            deptList:[],
         },
         created: function () {
             this.options=getEnums("EnumUserStatus");
             this.sexoptions=getEnums("EnumSex");
             this.zhengzhiMianmaooptions=getEnums("EnumZhengzhiMianmao");
             this.xuelioptions=getEnums("EnumXueli");
-            axios({
-                method: 'post',
-                url: '/bangongqu/getByDict',
-            }).then(function (response) {
-                selecttype.bangongquList=response.data.data;
-            })
-            axios({
-                method: 'post',
-                url: '/systemdept/getByDict',
-            }).then(function (response) {
-                selecttype.deptList=response.data.data;
-            })
         },
         methods:{
             changeval:function () {
