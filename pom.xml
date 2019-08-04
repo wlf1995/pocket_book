@@ -12,7 +12,7 @@
     <artifactId>hr</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>hr</name>
+    <name>pocket_book</name>
     <description>人事信息管理系统</description>
 
     <properties>
